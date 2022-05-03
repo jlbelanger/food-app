@@ -1,0 +1,25 @@
+button {
+	cursor: pointer;
+}
+
+.button--danger {
+	background-color: $formosa-color-danger;
+
+	&:hover,
+	&:active,
+	&:focus {
+		background-color: scale-color($formosa-color-danger, $lightness: -15%);
+	}
+}
+
+.button--link {
+	background-color: transparent;
+	border-color: transparent;
+	color: $blue;
+
+	&:hover,
+	&:active,
+	&:focus {
+		background-color: transparent;
+	}
+}

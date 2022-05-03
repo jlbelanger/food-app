@@ -1,0 +1,9 @@
+a {
+	color: $blue;
+
+	&:hover,
+	&:active,
+	&:focus {
+		text-decoration: none;
+	}
+}

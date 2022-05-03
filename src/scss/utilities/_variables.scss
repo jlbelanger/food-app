@@ -1,0 +1,34 @@
+$white: #fff;
+$off-white: #f9f9f9;
+$lightest-gray: #ddd;
+$darkest-gray: #222;
+$black: #000;
+
+$blue: #06c;
+
+$pink: #f38;
+$light-pink: scale-color($pink, $lightness: 70%, $saturation: -25%);
+
+$red: #f66;
+$dark-red: #c33;
+
+$body-background-color: $off-white;
+$font-size: 16px;
+$max-width: 1200px;
+$nav-height: 44px;
+
+$formosa-button-background-color: $pink;
+$formosa-button-border-color: scale-color($pink, $lightness: -15%, $saturation: -25%);
+
+$formosa-color-danger: $red;
+
+$formosa-field-error-color: $dark-red;
+
+$formosa-input-border-radius: 4px;
+
+$formosa-label-error-color: $dark-red;
+
+$formosa-spinner-color: transparent;
+$formosa-spinner-color-alternate: $pink;
+
+$formosa-toast-bottom: $nav-height;

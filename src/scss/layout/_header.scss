@@ -1,0 +1,45 @@
+#header {
+	align-items: center;
+	display: flex;
+	top: 0;
+}
+
+#header__contain {
+	display: flex;
+	justify-content: center;
+
+	.nav__link {
+		flex: 0 0 auto;
+		padding: 16px;
+	}
+
+	.nav__button {
+		background-color: transparent;
+		border-radius: 0;
+		border-width: 0;
+		font-weight: normal;
+		margin: 0;
+		padding: 0 16px;
+		text-transform: none;
+	}
+
+	.nav__button,
+	.nav__link {
+		height: #{$nav-height - 1px};
+	}
+
+	.nav__link--active {
+		background: $body-background-color;
+		color: $black;
+	}
+}
+
+#title {
+	align-items: center;
+	display: flex;
+	flex: 1 1 auto;
+	font-size: 20px;
+	font-weight: normal;
+	justify-content: center;
+	margin: 4px 0 0;
+}

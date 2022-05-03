@@ -1,0 +1,32 @@
+* {
+	box-sizing: border-box;
+}
+
+body {
+	background: $body-background-color;
+	color: $black;
+	font-family: $formosa-input-font-family;
+	font-size: $font-size;
+	margin: $nav-height 0;
+}
+
+#header,
+#footer {
+	background: $black;
+	color: $white;
+	height: $nav-height;
+	left: 0;
+	position: fixed;
+	right: 0;
+	z-index: 9997;
+}
+
+.contain {
+	margin: 0 auto;
+	max-width: $max-width;
+	width: 100%;
+}
+
+#article {
+	padding: 1px 16px 16px;
+}

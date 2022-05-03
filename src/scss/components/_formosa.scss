@@ -1,0 +1,22 @@
+.formosa-message,
+.formosa-toast {
+	border-radius: $formosa-input-border-radius;
+}
+
+.formosa-postfix {
+	background: $light-pink;
+	border-color: scale-color($light-pink, $lightness: -5%);
+
+	&:hover,
+	&:active,
+	&:focus {
+		background: scale-color($light-pink, $lightness: -10%);
+		border-color: scale-color($light-pink, $lightness: -15%);
+	}
+}
+
+.formosa-button,
+.formosa-field__input {
+	border-bottom-width: 4px;
+	padding-bottom: #{$formosa-button-padding - 4px};
+}
