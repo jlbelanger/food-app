@@ -41,6 +41,7 @@
 		"@testing-library/jest-dom": "^5.16.1",
 		"@testing-library/react": "^12.1.2",
 		"@testing-library/user-event": "^13.5.0",
+		"cypress": "^9.2.0",
 		"eslint": "^8.5.0",
 		"eslint-config-airbnb": "^19.0.2",
 		"eslint-plugin-import": "^2.25.3",
