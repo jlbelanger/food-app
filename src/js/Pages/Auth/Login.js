@@ -23,6 +23,9 @@ export default function Login() {
 				row={row}
 				setRow={setRow}
 			>
+				{/* eslint-disable-next-line react/jsx-one-expression-per-line */}
+				<p>For a demo, use the username <b>demo</b> and the password <b>demo</b>.</p>
+
 				<Field
 					autoCapitalize="none"
 					autoComplete="username"

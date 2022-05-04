@@ -43,9 +43,12 @@ export default function Edit() {
 				preventEmptyRequest
 				row={row}
 				setRow={setRow}
+				showMessage={false}
 				successToastText="Username changed successfully."
 			>
 				<h2>Change username</h2>
+
+				<Message />
 
 				<Field
 					autoComplete="username"

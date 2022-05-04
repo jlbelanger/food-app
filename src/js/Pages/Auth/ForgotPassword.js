@@ -18,7 +18,6 @@ export default function ForgotPassword() {
 				setRow={setRow}
 				successMessageText="If there is an account with this email address, you will receive a password reset email shortly."
 			>
-
 				<Field
 					autoComplete="email"
 					label="Email"
