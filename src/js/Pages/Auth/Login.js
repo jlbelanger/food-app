@@ -1,8 +1,8 @@
 import { Field, Form, Submit } from '@jlbelanger/formosa';
 import React, { useState } from 'react';
 import Auth from '../../Utilities/Auth';
+import { Link } from 'react-router-dom';
 import MetaTitle from '../../MetaTitle';
-import { NavLink } from 'react-router-dom';
 
 export default function Login() {
 	const [row, setRow] = useState({});
@@ -53,7 +53,7 @@ export default function Login() {
 				<Submit
 					label="Log in"
 					postfix={(
-						<NavLink className="formosa-button button--link" to="/forgot-password">Forgot your password?</NavLink>
+						<Link className="formosa-button button--link" to="/forgot-password">Forgot your password?</Link>
 					)}
 				/>
 			</Form>
