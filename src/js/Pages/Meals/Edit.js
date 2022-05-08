@@ -36,7 +36,7 @@ export default function Edit() {
 		return null;
 	}
 
-	const favourite = (e) => {
+	const favourite = () => {
 		const isFavourite = !row.is_favourite;
 		const body = {
 			data: {

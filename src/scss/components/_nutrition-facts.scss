@@ -51,10 +51,6 @@ $breakpoint2: $image-width + ($list-width + $margin + $article-padding) * 2;
 		vertical-align: bottom;
 	}
 
-	.formosa-suffix {
-		position: static;
-	}
-
 	@media screen and (min-width: $breakpoint1) {
 		.nutrition-facts--no-image & {
 			flex-direction: row;

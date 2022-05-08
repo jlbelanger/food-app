@@ -34,4 +34,9 @@ a.formosa-button {
 
 .formosa-suffix {
 	padding-left: 4px;
+	position: static;
+}
+
+.formosa-responsive {
+	margin-top: $margin;
 }

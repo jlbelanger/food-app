@@ -67,7 +67,14 @@ export default function Fields({ readOnly, row }) {
 	const isVisible = (attribute) => (!readOnly || row[attribute] !== null);
 
 	const servingSizeDisabled = !!row.id;
-	const attributes = { className: 'nutrition-facts__input', labelClassName: 'nutrition-facts__label', readOnly, size: 4, type: 'number' };
+	const attributes = {
+		className: 'nutrition-facts__input',
+		inputmode: 'numeric',
+		labelClassName: 'nutrition-facts__label',
+		pattern: '[0-9.]*',
+		readOnly,
+		size: 4,
+	};
 	const attributesSection = { ...attributes, labelClassName: 'nutrition-facts__label nutrition-facts__label--section' };
 	const attributesVitamin = { ...attributes, labelClassName: 'nutrition-facts__label nutrition-facts__label--vitamin' };
 	const src = row.front_image ? `${process.env.REACT_APP_API_URL}${row.front_image}` : null;
