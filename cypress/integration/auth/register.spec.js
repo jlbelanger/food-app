@@ -60,7 +60,7 @@ describe('register', () => {
 
 			// Delete.
 			cy.visit('/profile');
-			cy.get('.button--danger').click();
+			cy.get('.formosa-button--danger').click();
 			cy.location('pathname').should('eq', '/');
 		});
 	});

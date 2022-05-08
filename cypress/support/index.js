@@ -1,7 +1,7 @@
 import './commands';
 
 beforeEach(() => {
-	Cypress.Cookies.preserveOnce('food_id', 'food_token');
+	Cypress.Cookies.preserveOnce('food_user', 'food_token');
 });
 
 Cypress.Commands.add('login', () => {

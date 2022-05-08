@@ -5,7 +5,25 @@
 @import 'layout/header';
 @import 'layout/footer';
 @import 'components/buttons';
+@import 'components/favourite';
+@import 'components/food';
 @import 'components/formosa';
 @import 'components/headings';
 @import 'components/hrs';
 @import 'components/links';
+@import 'components/nutrition-facts';
+@import 'components/search';
+@import 'components/tables';
+
+p {
+	margin: $margin 0 0;
+}
+
+svg {
+	pointer-events: none;
+}
+
+#add-another-container {
+	font-size: 16px;
+	margin-left: 8px;
+}

@@ -1,9 +1,58 @@
 h1 {
-	font-size: 20px;
-	text-shadow: 2px 2px $white;
+	align-items: center;
+	display: flex;
+	font-size: 18px;
+	font-weight: normal;
+	margin: 0 auto;
+	max-width: $max-width;
+	padding: 0 16px;
+
+	.formosa-button {
+		font-size: 16px;
+		margin-left: 8px;
+		padding: 4px 8px 0;
+		white-space: nowrap;
+	}
 }
 
 h2 {
 	font-size: 18px;
-	text-shadow: 2px 2px $white;
+	margin: $margin 0 0;
+}
+
+#heading {
+	background: $darkest-gray;
+	color: $white;
+	left: 0;
+	position: fixed;
+	right: 0;
+	top: $nav-height;
+	z-index: 1;
+
+	.verified {
+		margin-right: 8px;
+		order: -1;
+
+		path {
+			fill: $white;
+		}
+	}
+}
+
+.heading-text {
+	display: inline-block;
+	flex: 1 1 auto;
+	height: $nav-height;
+	line-height: $nav-height;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.heading-small {
+	margin-left: 4px;
+}
+
+#heading-spacer {
+	height: $nav-height;
 }

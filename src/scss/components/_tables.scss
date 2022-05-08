@@ -1,0 +1,76 @@
+table {
+	border-collapse: collapse;
+	border-color: $lightest-gray;
+	border-style: solid;
+	border-width: 1px;
+	margin: $margin #{-1 * $article-padding} 0;
+	width: calc(100% + #{$article-padding * 2});
+
+	td {
+		border-color: $lightest-gray;
+		border-style: solid;
+		border-width: 1px 0 0;
+	}
+
+	td,
+	th {
+		padding: 0;
+	}
+
+	tr:nth-of-type(odd) {
+		td {
+			background-color: $white;
+		}
+	}
+
+	@media screen and (min-width: $max-width) {
+		margin-left: 0;
+		margin-right: 0;
+		width: 100%;
+	}
+}
+
+.column--fave {
+	white-space: nowrap;
+	width: $button-size;
+}
+
+.column--size {
+	white-space: nowrap;
+	width: 62px;
+}
+
+.column--units {
+	white-space: nowrap;
+	width: 110px;
+}
+
+.table-link {
+	display: block;
+	padding: 8px 0;
+}
+
+.table-button {
+	background: transparent;
+	border-color: $yellow;
+	border-radius: 0;
+	border-style: solid;
+	border-width: 0 0 4px;
+	font-weight: bold;
+	height: $button-size;
+	padding: 0 0 0 12px;
+	width: 100%;
+}
+
+.caret {
+	margin-left: 4px;
+	white-space: nowrap;
+
+	&.flip {
+		transform: scaleY(-1);
+	}
+
+	&.hide {
+		visibility: hidden;
+	}
+}

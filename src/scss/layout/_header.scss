@@ -27,11 +27,6 @@
 	.nav__link {
 		height: #{$nav-height - 1px};
 	}
-
-	.nav__link--active {
-		background: $body-background-color;
-		color: $black;
-	}
 }
 
 #title {

@@ -1,8 +1,8 @@
 import Cookies from 'js-cookie';
 
 export default class Auth {
-	static login(id, token, remember) {
-		Cookies.set(`${process.env.REACT_APP_COOKIE_PREFIX}_id`, id, Auth.attributes(remember));
+	static login(user, token, remember) {
+		Cookies.set(`${process.env.REACT_APP_COOKIE_PREFIX}_user`, JSON.stringify(user), Auth.attributes(remember));
 		Cookies.set(`${process.env.REACT_APP_COOKIE_PREFIX}_token`, token, Auth.attributes(remember));
 	}
 
@@ -18,13 +18,23 @@ export default class Auth {
 	}
 
 	static logout() {
-		Cookies.remove(`${process.env.REACT_APP_COOKIE_PREFIX}_id`);
+		Cookies.remove(`${process.env.REACT_APP_COOKIE_PREFIX}_user`);
 		Cookies.remove(`${process.env.REACT_APP_COOKIE_PREFIX}_token`);
 		window.location.href = window.location.origin + process.env.PUBLIC_URL;
 	}
 
 	static id() {
-		return Cookies.get(`${process.env.REACT_APP_COOKIE_PREFIX}_id`);
+		const user = Auth.user();
+		return user ? JSON.parse(user).id : null;
+	}
+
+	static isAdmin() {
+		const user = Auth.user();
+		return user ? JSON.parse(user).is_admin : false;
+	}
+
+	static user() {
+		return Cookies.get(`${process.env.REACT_APP_COOKIE_PREFIX}_user`);
 	}
 
 	static token() {
@@ -32,6 +42,6 @@ export default class Auth {
 	}
 
 	static isLoggedIn() {
-		return !!Auth.id() && !!Auth.token();
+		return !!Auth.user() && !!Auth.token();
 	}
 }

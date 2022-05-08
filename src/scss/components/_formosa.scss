@@ -16,7 +16,22 @@
 }
 
 .formosa-button,
-.formosa-field__input {
+.formosa-field__input,
+.formosa-file-input-wrapper {
 	border-bottom-width: 4px;
 	padding-bottom: #{$formosa-button-padding - 4px};
+}
+
+a.formosa-button {
+	text-decoration: none;
+}
+
+.formosa-field--read-only .formosa-field__input,
+[disabled] {
+	background-color: $lightest-gray;
+	color: $dark-gray;
+}
+
+.formosa-suffix {
+	padding-left: 4px;
 }

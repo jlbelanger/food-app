@@ -1,0 +1,27 @@
+.heart {
+	background: none;
+	border: 0;
+	height: $button-size;
+	line-height: 1;
+	padding: 0;
+	width: $button-size;
+
+	&:focus {
+		box-shadow: inset 0 0 0 $formosa-focus-border-width $formosa-focus-box-shadow-color;
+	}
+}
+
+.favourite {
+	path {
+		fill: none;
+		stroke: $gray;
+		stroke-linecap: round;
+		stroke-width: 1px;
+	}
+}
+
+.unfavourite {
+	path {
+		fill: $pink;
+	}
+}

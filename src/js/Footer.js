@@ -9,6 +9,7 @@ export default function Footer() {
 				{Auth.isLoggedIn() ? (
 					<>
 						<NavLink activeClassName="nav__link--active" className="nav__link" exact to="/">Diary</NavLink>
+						<NavLink activeClassName="nav__link--active" className="nav__link" to="/food">Food</NavLink>
 					</>
 				) : (
 					<>

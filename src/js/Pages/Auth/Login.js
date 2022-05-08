@@ -8,7 +8,7 @@ export default function Login() {
 	const [row, setRow] = useState({});
 
 	const afterSubmit = (response) => {
-		Auth.login(response.id, response.token, response.remember);
+		Auth.login(response.user, response.token, response.remember);
 		window.location.reload();
 	};
 

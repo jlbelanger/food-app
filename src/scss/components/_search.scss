@@ -1,0 +1,27 @@
+#search-container {
+	align-items: center;
+	display: flex;
+	position: relative;
+
+	input {
+		padding-right: $button-size;
+	}
+
+	label {
+		margin-right: 8px;
+	}
+
+	svg {
+		bottom: 0;
+		height: $button-size;
+		padding: 12px;
+		position: absolute;
+		right: 0;
+		top: 0;
+		width: $button-size;
+
+		path {
+			fill: $gray;
+		}
+	}
+}

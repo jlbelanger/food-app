@@ -1,6 +1,8 @@
 $white: #fff;
 $off-white: #f9f9f9;
 $lightest-gray: #ddd;
+$gray: #999;
+$dark-gray: #444;
 $darkest-gray: #222;
 $black: #000;
 
@@ -9,16 +11,23 @@ $blue: #06c;
 $pink: #f38;
 $light-pink: scale-color($pink, $lightness: 70%, $saturation: -25%);
 
-$red: #f66;
+$yellow: #fd0;
+$dark-yellow: scale-color($yellow, $lightness: -10%, $saturation: -15%);
+
+$red: #f33;
 $dark-red: #c33;
 
 $body-background-color: $off-white;
+$button-size: 44px;
+$article-padding: 16px;
 $font-size: 16px;
+$margin: 20px;
 $max-width: 1200px;
-$nav-height: 44px;
+$nav-height: $button-size;
 
 $formosa-button-background-color: $pink;
 $formosa-button-border-color: scale-color($pink, $lightness: -15%, $saturation: -25%);
+$formosa-button-danger-border-color: $dark-red;
 
 $formosa-color-danger: $red;
 
@@ -26,9 +35,15 @@ $formosa-field-error-color: $dark-red;
 
 $formosa-input-border-radius: 4px;
 
+$formosa-margin-large: $margin;
+
 $formosa-label-error-color: $dark-red;
 
+$formosa-responsive-breakpoint: 700px;
+
 $formosa-spinner-color: transparent;
+$formosa-spinner-border-width: 8px;
 $formosa-spinner-color-alternate: $pink;
 
 $formosa-toast-bottom: $nav-height;
+$formosa-toast-padding: 12px;

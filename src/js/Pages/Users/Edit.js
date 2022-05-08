@@ -20,7 +20,7 @@ export default function Edit() {
 				});
 		}
 		return () => {};
-	});
+	}, []);
 
 	if (error) {
 		return (
@@ -157,7 +157,7 @@ export default function Edit() {
 
 				<Message />
 
-				<Submit className="button--danger" label="Delete" />
+				<Submit className="formosa-button--danger" label="Delete" />
 			</Form>
 		</>
 	);

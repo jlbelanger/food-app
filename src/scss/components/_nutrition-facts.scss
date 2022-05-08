@@ -1,0 +1,150 @@
+$list-width: 260px;
+$image-width: 300px;
+$breakpoint1: $image-width + $list-width + $margin + ($article-padding * 2);
+$breakpoint2: $image-width + ($list-width + $margin + $article-padding) * 2;
+
+#nutrition-facts {
+	display: flex;
+	flex-direction: column;
+	margin-top: 4px;
+	width: 100%;
+
+	.formosa-field--read-only {
+		.formosa-field__input,
+		.formosa-field__input--select,
+		.formosa-field__input--textarea,
+		.formosa-file-input-wrapper {
+			background-color: transparent;
+			border-color: transparent;
+			border-width: 1px;
+			padding-left: 0;
+			padding-right: 0;
+		}
+	}
+
+	@media screen and (min-width: $breakpoint1) {
+		flex-direction: row;
+	}
+}
+
+#nutrition-facts__fields {
+	display: flex;
+	flex-direction: column;
+
+	.formosa-field {
+		align-items: center;
+		display: flex;
+		margin-top: 0;
+		padding: 4px 0;
+	}
+
+	.formosa-field,
+	.nutrition-facts__section {
+		& + .formosa-field,
+		& + .nutrition-facts__section {
+			border-top: 1px solid $black;
+		}
+	}
+
+	.formosa-label-wrapper {
+		margin-bottom: 0;
+		vertical-align: bottom;
+	}
+
+	.formosa-suffix {
+		position: static;
+	}
+
+	@media screen and (min-width: $breakpoint1) {
+		.nutrition-facts--no-image & {
+			flex-direction: row;
+		}
+	}
+
+	@media screen and (min-width: $breakpoint2) {
+		flex-direction: row;
+	}
+}
+
+#nutrition-facts__link {
+	align-self: center;
+	font-size: 0;
+	margin-bottom: 12px;
+
+	@media screen and (min-width: $breakpoint1) {
+		align-self: flex-start;
+		margin-bottom: 0;
+		margin-left: auto;
+		order: 3;
+
+		&.sticky {
+			position: fixed;
+			top: #{$nav-height * 2 + 8px};
+			z-index: 1;
+		}
+	}
+}
+
+.nutrition-facts__list {
+	align-self: flex-start;
+	background: $white;
+	border-color: $white;
+	border-style: solid;
+	border-width: 0 4px;
+	margin-right: $margin;
+	outline: 1px solid $black;
+	padding: 0;
+	width: 100%;
+
+	@media screen and (min-width: $breakpoint1) {
+		width: $list-width;
+	}
+}
+
+.nutrition-facts__section {
+	padding: 0 0 0 16px;
+
+	&:empty {
+		display: none;
+	}
+}
+
+.nutrition-facts__input {
+	margin-left: 4px;
+	padding-bottom: 0;
+	padding-top: 0;
+	text-align: right;
+}
+
+.nutrition-facts__label--section {
+	font-weight: normal;
+}
+
+.nutrition-facts__label--vitamin {
+	font-weight: normal;
+}
+
+#vitamins {
+	box-shadow: -1px -6px 0 $black, 1px -6px 0 $black;
+	margin-top: 6px;
+
+	.formosa-label-wrapper {
+		flex: 1 1 auto;
+	}
+
+	&:empty {
+		display: none;
+	}
+
+	@media screen and (min-width: $breakpoint1) {
+		.nutrition-facts--no-image & {
+			box-shadow: none;
+			margin-top: 0;
+		}
+	}
+
+	@media screen and (min-width: $breakpoint2) {
+		box-shadow: none;
+		margin-top: 0;
+	}
+}
