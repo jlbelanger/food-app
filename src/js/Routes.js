@@ -6,6 +6,9 @@ import FoodList from './Pages/Food/List';
 import FoodNew from './Pages/Food/New';
 import ForgotPassword from './Pages/Auth/ForgotPassword';
 import Login from './Pages/Auth/Login';
+import MealEdit from './Pages/Meals/Edit';
+import MealList from './Pages/Meals/List';
+import MealNew from './Pages/Meals/New';
 import Profile from './Pages/Users/Edit';
 import React from 'react';
 import Register from './Pages/Auth/Register';
@@ -31,6 +34,9 @@ export default function Routes() {
 			<Route exact path="/food"><FoodList /></Route>
 			<Route exact path="/food/new"><FoodNew /></Route>
 			<Route exact path="/food/:id(\d+)"><FoodEdit /></Route>
+			<Route exact path="/meals"><MealList /></Route>
+			<Route exact path="/meals/new"><MealNew /></Route>
+			<Route exact path="/meals/:id(\d+)"><MealEdit /></Route>
 			<Route><Error404 /></Route>
 		</Switch>
 	);
