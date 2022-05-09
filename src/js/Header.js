@@ -10,7 +10,11 @@ export default function Header() {
 			.then(() => {
 				Auth.logout();
 			})
-			.catch(() => {
+			.catch((response) => {
+				if (response.status === 401) {
+					Auth.logout();
+					return;
+				}
 				formosaState.addToast('Error.', 'error');
 			});
 	};
