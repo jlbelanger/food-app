@@ -69,7 +69,7 @@ export default function Fields({ readOnly, row }) {
 	const servingSizeDisabled = !!row.id;
 	const attributes = {
 		className: 'nutrition-facts__input',
-		inputmode: 'numeric',
+		inputMode: 'numeric',
 		labelClassName: 'nutrition-facts__label',
 		pattern: '[0-9.]*',
 		readOnly,

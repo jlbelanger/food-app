@@ -166,9 +166,9 @@ export default function Edit() {
 					/>
 					<Field label="Activity level" name="activity_level" options={activityLevels} type="select" />
 					<Field label="Sex" name="sex" options={sexes} type="select" />
-					<Field inputmode="numeric" label="Age" name="age" pattern="[0-9]*" size={5} />
+					<Field inputMode="numeric" label="Age" name="age" pattern="[0-9]*" size={5} />
 					<Field
-						inputmode="numeric"
+						inputMode="numeric"
 						label="Height"
 						name="height"
 						pattern="[0-9]*"
