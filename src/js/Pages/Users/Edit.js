@@ -11,18 +11,16 @@ export default function Edit() {
 	const [error, setError] = useState(false);
 	const [isMeasurementUnitsDisabled, setIsMeasurementUnitsDisabled] = useState(true);
 	useEffect(() => {
-		if (row === null) {
-			Api.get(`users/${id}`)
-				.then((response) => {
-					setRow(response);
-					if (!response.measurement_units) {
-						setIsMeasurementUnitsDisabled(false);
-					}
-				})
-				.catch((response) => {
-					setError(response.status);
-				});
-		}
+		Api.get(`users/${id}?fields[trackables]=name,slug&include=trackables`)
+			.then((response) => {
+				setRow(response);
+				if (!response.measurement_units) {
+					setIsMeasurementUnitsDisabled(false);
+				}
+			})
+			.catch((response) => {
+				setError(response.status);
+			});
 		return () => {};
 	}, []);
 
@@ -189,6 +187,36 @@ export default function Edit() {
 					/>
 					<Submit label="Save" />
 				</div>
+			</MyForm>
+
+			<hr />
+
+			<MyForm
+				afterSubmit={() => {
+					Auth.setTrackables(row.trackables);
+				}}
+				id={row.id}
+				method="PUT"
+				path="users"
+				preventEmptyRequest
+				relationshipNames={['trackables']}
+				row={row}
+				setRow={setRow}
+				showMessage={false}
+				successToastText="Tracking settings updated successfully."
+			>
+				<h2>Tracking</h2>
+
+				<Message />
+
+				<Field
+					name="trackables"
+					listClassName="formosa-radio--inline"
+					type="checkbox-list"
+					url="trackables?fields[trackables]=name,slug&sort=slug"
+				/>
+
+				<Submit label="Save" />
 			</MyForm>
 
 			<hr />

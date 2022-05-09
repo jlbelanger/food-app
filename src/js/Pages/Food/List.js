@@ -2,6 +2,8 @@ import { Api, FormosaContext } from '@jlbelanger/formosa';
 import { filterByKeys, sortByKey } from '../../Utilities/Table';
 import React, { useContext, useEffect, useState } from 'react';
 import { ReactComponent as ArrowIcon } from '../../../svg/arrow.svg';
+import Auth from '../../Utilities/Auth';
+import { colorsLight } from '../../Utilities/Colors';
 import Error from '../../Error';
 import { ReactComponent as HeartIcon } from '../../../svg/heart.svg';
 import { Link } from 'react-router-dom';
@@ -15,18 +17,22 @@ export default function List() {
 	const [searchValue, setSearchValue] = useState('');
 	const [rows, setRows] = useState(null);
 	const [filteredRows, setFilteredRows] = useState([]);
+	const [trackables, setTrackables] = useState(null);
 	const [error, setError] = useState(false);
 	useEffect(() => {
-		if (rows === null) {
-			Api.get('food?fields[food]=is_favourite,is_verified,name,serving_size,serving_units,slug&sort=slug')
-				.then((response) => {
-					setRows(response);
-					setFilteredRows(response);
-				})
-				.catch((response) => {
-					setError(response.status);
-				});
-		}
+		const foodFields = Auth.trackables().concat(['is_favourite,is_verified,name,serving_size,serving_units,slug']);
+		Api.get(`food?fields[food]=${foodFields.join(',')}&sort=slug`)
+			.then((response) => {
+				setRows(response);
+				setFilteredRows(response);
+			})
+			.catch((response) => {
+				setError(response.status);
+			});
+		Api.get(`trackables?fields[trackables]=name,slug,units&filter[slug][in]=${Auth.trackables().join(',')}`)
+			.then((response) => {
+				setTrackables(response);
+			});
 		return () => {};
 	}, []);
 
@@ -120,6 +126,9 @@ export default function List() {
 						<th>{tableButton('slug', 'Name')}</th>
 						<th className="column--size">{tableButton('serving_size', 'Size')}</th>
 						<th className="column--units">{tableButton('serving_units', 'Units')}</th>
+						{trackables.map((trackable) => (
+							<th key={trackable.id}>{tableButton(trackable.slug, trackable.name)}</th>
+						))}
 					</tr>
 				</thead>
 				<tbody>
@@ -138,6 +147,11 @@ export default function List() {
 							<td><Link className="table-link" to={`/food/${row.id}`}>{row.name}</Link></td>
 							<td className="column--size">{row.serving_size}</td>
 							<td className="column--units">{row.serving_units}</td>
+							{trackables.map((trackable, i) => (
+								<td className="center" key={trackable.id} style={{ backgroundColor: colorsLight[i + 1] }}>
+									{row[trackable.slug] !== null ? `${row[trackable.slug].toLocaleString()} ${trackable.units || ''}` : ''}
+								</td>
+							))}
 						</tr>
 					))}
 				</tbody>
