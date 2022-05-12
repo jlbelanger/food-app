@@ -22,7 +22,7 @@ export default function Edit() {
 				setError(response.status);
 			});
 		return () => {};
-	}, []);
+	}, [id]);
 
 	if (error) {
 		return (

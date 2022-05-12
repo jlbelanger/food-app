@@ -14,17 +14,15 @@ export default function Edit() {
 	const [error, setError] = useState(false);
 	const history = useHistory();
 	useEffect(() => {
-		if (row === null) {
-			Api.get(`meals/${id}`)
-				.then((response) => {
-					setRow(response);
-				})
-				.catch((response) => {
-					setError(response.status);
-				});
-		}
+		Api.get(`meals/${id}`)
+			.then((response) => {
+				setRow(response);
+			})
+			.catch((response) => {
+				setError(response.status);
+			});
 		return () => {};
-	}, []);
+	}, [id]);
 
 	if (error) {
 		return (

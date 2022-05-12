@@ -17,7 +17,7 @@ export default function List() {
 	const [searchValue, setSearchValue] = useState('');
 	const [rows, setRows] = useState(null);
 	const [filteredRows, setFilteredRows] = useState([]);
-	const [trackables, setTrackables] = useState(null);
+	const [trackables, setTrackables] = useState([]);
 	const [error, setError] = useState(false);
 	useEffect(() => {
 		const foodFields = Auth.trackables().concat(['is_favourite,is_verified,name,serving_size,serving_units,slug']);

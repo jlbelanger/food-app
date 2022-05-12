@@ -17,16 +17,14 @@ export default function List() {
 	const [filteredRows, setFilteredRows] = useState([]);
 	const [error, setError] = useState(false);
 	useEffect(() => {
-		if (rows === null) {
-			Api.get('meals?fields[meals]=is_favourite,name&sort=name')
-				.then((response) => {
-					setRows(response);
-					setFilteredRows(response);
-				})
-				.catch((response) => {
-					setError(response.status);
-				});
-		}
+		Api.get('meals?fields[meals]=is_favourite,name&sort=name')
+			.then((response) => {
+				setRows(response);
+				setFilteredRows(response);
+			})
+			.catch((response) => {
+				setError(response.status);
+			});
 		return () => {};
 	}, []);
 
