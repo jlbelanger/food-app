@@ -11,7 +11,7 @@ export default function Header() {
 				Auth.logout();
 			})
 			.catch((response) => {
-				if (response.status === 401) {
+				if (response.status === 401 || response.status === 404) {
 					Auth.logout();
 					return;
 				}
