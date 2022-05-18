@@ -11,8 +11,20 @@ export default function App() {
 		Api.setToken(Auth.token());
 	}
 
+	// Accessibility: skip to content (https://www.bignerdranch.com/blog/web-accessibility-skip-navigation-links/).
+	const onClick = (e) => {
+		const id = e.target.getAttribute('href').split('#')[1];
+		const elem = document.getElementById(id);
+		elem.setAttribute('tabindex', -1);
+		elem.addEventListener('blur', () => {
+			elem.removeAttribute('tabindex');
+		});
+		elem.focus();
+	};
+
 	return (
 		<BrowserRouter>
+			<a href="#article" id="skip" onClick={onClick}>Skip to content</a>
 			<main id="main">
 				<FormContainer>
 					<Header />
