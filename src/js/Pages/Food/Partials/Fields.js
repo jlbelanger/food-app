@@ -103,10 +103,17 @@ export default function Fields({ readOnly, row }) {
 						linkAttributes={{ rel: 'noreferrer', target: '_blank' }}
 						linkImage
 						name="front_image"
+						note="Upload a photo of the front of the package."
 						readOnly={readOnly}
 						type="file"
 					/>
-					<Field accept="image/*" label="Info image" name="info_image" type="file" />
+					<Field
+						accept="image/*"
+						label="Info image"
+						name="info_image"
+						note="Upload a photo of the nutritional information."
+						type="file"
+					/>
 					<div className="formosa-field formosa-field--serving_size">
 						<Label htmlFor="serving_size" label="Serving size" required />
 						<div className="formosa-input-wrapper">
