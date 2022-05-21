@@ -52,6 +52,21 @@ export default function Edit() {
 			</MetaTitle>
 
 			<MyForm
+				afterSubmit={(response) => {
+					const newRow = { ...row };
+					let hasChanged = false;
+					if (response.front_image !== row.front_image) {
+						newRow.front_image = response.front_image;
+						hasChanged = true;
+					}
+					if (response.info_image !== row.info_image) {
+						newRow.info_image = response.info_image;
+						hasChanged = true;
+					}
+					if (hasChanged) {
+						setRow(newRow);
+					}
+				}}
 				htmlId="edit-form"
 				id={id}
 				method="PUT"
