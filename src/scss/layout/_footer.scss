@@ -19,7 +19,7 @@
 	align-items: center;
 	border-color: transparent;
 	border-style: solid;
-	border-width: 0 0 3px;
+	border-width: 3px 0;
 	display: flex;
 	flex: 1 1 auto;
 	justify-content: center;
@@ -31,6 +31,6 @@
 }
 
 .nav__link--active {
-	border-color: $yellow;
+	border-bottom-color: $yellow;
 	color: $yellow;
 }
