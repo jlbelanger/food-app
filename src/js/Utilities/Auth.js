@@ -7,7 +7,9 @@ export default class Auth {
 	}
 
 	static attributes(remember) {
-		const attributes = {};
+		const attributes = {
+			sameSite: 'lax',
+		};
 		if (remember) {
 			attributes.expires = 365;
 		}
