@@ -39,7 +39,7 @@ export default class Auth {
 		let user = Auth.user();
 		user = user ? JSON.parse(user) : [];
 		user.trackables = trackables.map((trackable) => (trackable.slug));
-		Cookies.set(`${process.env.REACT_APP_COOKIE_PREFIX}_user`, JSON.stringify(user)); // TODO: Remember?
+		Cookies.set(`${process.env.REACT_APP_COOKIE_PREFIX}_user`, JSON.stringify(user), Auth.attributes(user.remember));
 	}
 
 	static trackables() {
