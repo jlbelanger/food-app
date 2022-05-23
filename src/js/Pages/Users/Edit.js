@@ -136,9 +136,12 @@ export default function Edit() {
 
 				{showBmi ? (
 					/* eslint-disable react/jsx-one-expression-per-line */
+					<p>Your BMI is <b>{bmi}</b>{bmiNote}.</p>
+				) : (
+					<p>Fill out the fields below to see your BMI.</p>
+				)}
+				{maintenanceCalories && (
 					<p>
-						Your BMI is <b>{bmi}</b>{bmiNote}.
-						<br />
 						You should be eating <b>{`${maintenanceCalories.toLocaleString()} calories`}</b> a day to maintain your current weight.
 						<br />
 						{`You should not consume any less than ${row.sex === 'f' ? '1,200' : '1,500'} calories per day.`}
@@ -151,8 +154,6 @@ export default function Edit() {
 						</span>
 					</p>
 					/* eslint-enable react/jsx-one-expression-per-line */
-				) : (
-					<p>Fill out the fields below to see your BMI.</p>
 				)}
 
 				<div className="formosa-responsive">
