@@ -1,7 +1,7 @@
 import { React, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-export default function MetaTitle({ children, small, title }) {
+export default function MetaTitle({ before, children, small, title }) {
 	useEffect(() => {
 		let metaTitle = title;
 		if (process.env.REACT_APP_TITLE) {
@@ -17,13 +17,14 @@ export default function MetaTitle({ children, small, title }) {
 	return (
 		<>
 			<div id="heading">
-				<h1>
-					<span className="heading-text">
+				<div id="heading-inner">
+					{before}
+					<h1>
 						{title}
 						{small && <small className="heading-small">{small}</small>}
-					</span>
+					</h1>
 					{children}
-				</h1>
+				</div>
 			</div>
 			<div id="heading-spacer" />
 		</>
@@ -31,12 +32,14 @@ export default function MetaTitle({ children, small, title }) {
 }
 
 MetaTitle.propTypes = {
+	before: PropTypes.node,
 	children: PropTypes.node,
 	small: PropTypes.string,
 	title: PropTypes.string,
 };
 
 MetaTitle.defaultProps = {
+	before: null,
 	children: null,
 	small: '',
 	title: '',
