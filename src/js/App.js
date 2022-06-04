@@ -11,6 +11,10 @@ export default function App() {
 		Api.setToken(Auth.token());
 	}
 
+	document.addEventListener('formosaApiRequest', () => {
+		Auth.refresh();
+	});
+
 	// Accessibility: skip to content (https://www.bignerdranch.com/blog/web-accessibility-skip-navigation-links/).
 	const onClick = (e) => {
 		const id = e.target.getAttribute('href').split('#')[1];

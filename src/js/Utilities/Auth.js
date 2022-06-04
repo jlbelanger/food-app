@@ -6,6 +6,14 @@ export default class Auth {
 		Cookies.set(`${process.env.REACT_APP_COOKIE_PREFIX}_token`, token, Auth.attributes(remember));
 	}
 
+	static refresh() {
+		let user = Auth.user();
+		user = user ? JSON.parse(user) : null;
+		if (user.remember) {
+			Auth.login(user, Auth.token(), user.remember);
+		}
+	}
+
 	static attributes(remember) {
 		const attributes = {
 			sameSite: 'lax',

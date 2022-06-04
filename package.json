@@ -22,7 +22,7 @@
 		"eject": "react-scripts eject"
 	},
 	"dependencies": {
-		"@jlbelanger/formosa": "jlbelanger/formosa#a1661c52718067417f34113ef909a1a7855d9af7",
+		"@jlbelanger/formosa": "jlbelanger/formosa#061c94ac1fa3fcd072001dfddbe2f134f588a2ce",
 		"dotenv": "10.0.0",
 		"get-value": "^3.0.1",
 		"js-cookie": "^3.0.1",
