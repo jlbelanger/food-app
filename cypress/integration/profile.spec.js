@@ -3,6 +3,128 @@ describe('profile', () => {
 		cy.login();
 	});
 
+	describe('when updating BMI settings', () => {
+		// TODO: Measurement units, weight.
+		describe('when clearing settings', () => {
+			it('works', () => {
+				cy.visit('/profile');
+				cy.get('[name="activity_level"]').select('');
+				cy.get('[name="sex"]').select('');
+				cy.get('[name="age"]').clear();
+				cy.get('[name="height"]').clear();
+				cy.get('#save-bmi').click();
+				cy.contains('BMI settings updated successfully.').should('exist');
+				cy.get('#bmi').should('not.exist');
+				cy.get('#calories').should('not.exist');
+			});
+		});
+
+		describe('when adding BMI settings', () => {
+			it('works', () => {
+				cy.visit('/profile');
+				cy.get('[name="activity_level"]').select('moderately active');
+				cy.get('[name="sex"]').select('');
+				cy.get('[name="age"]').clear().type('30');
+				cy.get('[name="height"]').clear().type('65');
+				cy.get('#save-bmi').click();
+				cy.contains('BMI settings updated successfully.').should('exist');
+				cy.get('#bmi').invoke('text').should('equal', 'Your BMI is 21.50 (normal - 18.5–24.9).');
+				cy.get('#calories').should('not.exist');
+			});
+		});
+
+		describe('when adding BMI and calories settings', () => {
+			it('works', () => {
+				cy.visit('/profile');
+				cy.get('[name="activity_level"]').select('moderately active');
+				cy.get('[name="sex"]').select('male');
+				cy.get('[name="age"]').clear().type('30');
+				cy.get('[name="height"]').clear().type('65');
+				cy.get('#save-bmi').click();
+				cy.contains('BMI settings updated successfully.').should('exist');
+				cy.get('#bmi').invoke('text').should('equal', 'Your BMI is 21.50 (normal - 18.5–24.9).');
+				cy.get('#calories').invoke('text').should('equal', 'You should be eating 2,120 calories a day to maintain your current weight.'
+				+ 'You should not consume any less than 1,500 calories per day.'
+				+ 'To lose one pound a week, you should be eating 1,620 calories a day.'
+				+ 'There are 3,500 calories in one pound of fat, and 3,500 divided by 7 days of the week is 500, so to lose one pound a week, '
+				+ 'you should eat 500 calories less in a day than the calories you would eat to maintain your weight.');
+			});
+		});
+	});
+
+	describe('when updating trackable settings', () => {
+		// TODO: Check that food columns have been updated.
+		it('works', () => {
+			// Remove all trackables to start.
+			cy.visit('/profile');
+			cy.get('[name="trackables[]"]').each((item) => {
+				cy.wrap(item).uncheck();
+			});
+			cy.get('#save-tracking').click();
+			cy.get('.formosa-toast').should('exist');
+
+			// Add one trackable.
+			cy.visit('/profile');
+			cy.get('#trackable-calories').should('not.be.checked');
+			cy.get('#trackable-protein').should('not.be.checked');
+			cy.get('#trackable-sodium').should('not.be.checked');
+			cy.get('#trackable-fat').should('not.be.checked');
+			cy.get('#trackable-calories').check();
+			cy.get('#save-tracking').click();
+			cy.contains('Tracking settings updated successfully.').should('exist');
+
+			// Add more trackables.
+			cy.visit('/profile');
+			cy.get('#trackable-calories').should('be.checked');
+			cy.get('#trackable-protein').should('not.be.checked');
+			cy.get('#trackable-sodium').should('not.be.checked');
+			cy.get('#trackable-fat').should('not.be.checked');
+			cy.get('#trackable-protein').check();
+			cy.get('#trackable-sodium').check();
+			cy.get('#save-tracking').click();
+			cy.contains('Tracking settings updated successfully.').should('exist');
+
+			// Remove one trackable.
+			cy.visit('/profile');
+			cy.get('#trackable-calories').should('be.checked');
+			cy.get('#trackable-protein').should('be.checked');
+			cy.get('#trackable-sodium').should('be.checked');
+			cy.get('#trackable-fat').should('not.be.checked');
+			cy.get('#trackable-calories').uncheck();
+			cy.get('#save-tracking').click();
+			cy.contains('Tracking settings updated successfully.').should('exist');
+
+			// Add and remove a trackable.
+			cy.visit('/profile');
+			cy.get('#trackable-calories').should('not.be.checked');
+			cy.get('#trackable-protein').should('be.checked');
+			cy.get('#trackable-sodium').should('be.checked');
+			cy.get('#trackable-fat').should('not.be.checked');
+			cy.get('#trackable-protein').uncheck();
+			cy.get('#trackable-fat').check();
+			cy.get('#save-tracking').click();
+			cy.contains('Tracking settings updated successfully.').should('exist');
+
+			// Remove all trackables.
+			cy.visit('/profile');
+			cy.get('#trackable-calories').should('not.be.checked');
+			cy.get('#trackable-protein').should('not.be.checked');
+			cy.get('#trackable-sodium').should('be.checked');
+			cy.get('#trackable-fat').should('be.checked');
+			cy.get('#trackable-sodium').uncheck();
+			cy.get('#trackable-fat').uncheck();
+			cy.get('#save-tracking').click();
+			cy.contains('Tracking settings updated successfully.').should('exist');
+
+			// Check trackables.
+			cy.visit('/profile');
+			cy.get('#trackable-calories').should('not.be.checked');
+			cy.get('#trackable-protein').should('not.be.checked');
+			cy.get('#trackable-sodium').should('not.be.checked');
+			cy.get('#trackable-fat').should('not.be.checked');
+		});
+	});
+
 	describe('when changing username', () => {
 		describe('with taken username', () => {
 			it('shows an error', () => {

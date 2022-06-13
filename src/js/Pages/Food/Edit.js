@@ -1,5 +1,5 @@
-import { Api, CheckIcon, Form } from '@jlbelanger/formosa';
-import React, { useEffect, useState } from 'react';
+import { Api, CheckIcon, Form, FormosaContext } from '@jlbelanger/formosa';
+import React, { useContext, useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import Auth from '../../Utilities/Auth';
 import Error from '../../Error';
@@ -9,10 +9,12 @@ import MetaTitle from '../../MetaTitle';
 import MyForm from '../../MyForm';
 
 export default function Edit() {
+	const { formosaState } = useContext(FormosaContext);
 	const { id } = useParams();
 	const [row, setRow] = useState(null);
 	const [error, setError] = useState(false);
 	const history = useHistory();
+
 	useEffect(() => {
 		Api.get(`food/${id}?include=user`)
 			.then((response) => {
@@ -34,6 +36,19 @@ export default function Edit() {
 		return null;
 	}
 
+	const favourite = () => {
+		Api.post(`food/${id}/favourite`)
+			.then(() => {
+				const isFavourite = !row.is_favourite;
+				setRow({ ...row, is_favourite: isFavourite });
+				formosaState.addToast(`Food ${isFavourite ? '' : 'un'}favourited successfully.`, 'success');
+			})
+			.catch((response) => {
+				const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
+				formosaState.addToast(text, 'error', 10000);
+			});
+	};
+
 	const readOnly = Auth.isAdmin() ? false : !row.user || row.user.id.toString() !== Auth.id().toString();
 
 	return (
@@ -42,8 +57,8 @@ export default function Edit() {
 				{row.is_verified && <CheckIcon alt="Verified" className="verified" height={16} width={16} />}
 				<button
 					className={`heart ${row.is_favourite ? 'un' : ''}favourite`}
-					form="favourite-form"
-					type="submit"
+					onClick={favourite}
+					type="button"
 				>
 					<HeartIcon alt={row.is_favourite ? 'Unfavourite' : 'Favourite'} height={16} width={16} />
 				</button>
@@ -96,17 +111,6 @@ export default function Edit() {
 					successToastText="Food deleted successfully."
 				/>
 			)}
-
-			<Form
-				afterSubmit={() => {
-					setRow({ ...row, is_favourite: !row.is_favourite });
-				}}
-				htmlId="favourite-form"
-				method="POST"
-				path={`food/${id}/favourite`}
-				showMessage={false}
-				successToastText={`Food ${row.is_favourite ? 'un' : ''}favourited successfully.`}
-			/>
 		</>
 	);
 }

@@ -1,4 +1,4 @@
-import { Api, FormosaContext } from '@jlbelanger/formosa';
+import { Api, FormosaContext, Input } from '@jlbelanger/formosa';
 import { filterByKeys, sortByKey } from '../../Utilities/Table';
 import React, { useContext, useEffect, useState } from 'react';
 import { ReactComponent as ArrowIcon } from '../../../svg/arrow.svg';
@@ -6,7 +6,6 @@ import Error from '../../Error';
 import { ReactComponent as HeartIcon } from '../../../svg/heart.svg';
 import { Link } from 'react-router-dom';
 import MetaTitle from '../../MetaTitle';
-import { ReactComponent as SearchIcon } from '../../../svg/search.svg';
 
 export default function List() {
 	const { formosaState } = useContext(FormosaContext);
@@ -16,14 +15,18 @@ export default function List() {
 	const [rows, setRows] = useState(null);
 	const [filteredRows, setFilteredRows] = useState([]);
 	const [error, setError] = useState(false);
+	const [isLoading, setIsLoading] = useState(true);
+
 	useEffect(() => {
-		Api.get('meals?fields[meals]=is_favourite,name&sort=name')
+		Api.get('meals?fields[meals]=is_favourite,name&sort=name', false)
 			.then((response) => {
 				setRows(response);
 				setFilteredRows(response);
+				setIsLoading(false);
 			})
 			.catch((response) => {
 				setError(response.status);
+				setIsLoading(false);
 			});
 		return () => {};
 	}, []);
@@ -34,12 +37,8 @@ export default function List() {
 		);
 	}
 
-	if (rows === null) {
-		return null;
-	}
-
 	const totalFiltered = filteredRows.length;
-	const total = rows.length;
+	const total = rows ? rows.length : 0;
 
 	const favourite = (e) => {
 		const id = e.target.getAttribute('data-id');
@@ -71,10 +70,10 @@ export default function List() {
 			});
 	};
 
-	const search = (e) => {
-		setSearchValue(e.target.value);
+	const search = (value) => {
+		setSearchValue(value);
 
-		const newRows = filterByKeys(rows, { name: e.target.value });
+		const newRows = filterByKeys(rows, { name: value });
 		setFilteredRows(newRows);
 	};
 
@@ -98,6 +97,7 @@ export default function List() {
 		<button
 			className="table-button"
 			data-key={key}
+			disabled={isLoading}
 			onClick={sort}
 			type="button"
 		>
@@ -115,35 +115,41 @@ export default function List() {
 				<Link className="formosa-button" to="/meals/new">Add</Link>
 			</MetaTitle>
 
-			<p id="search-container">
+			<div id="search-container">
 				<label className="formosa-label" htmlFor="search">Search</label>
-				<input className="formosa-field__input" id="search" onChange={search} type="search" value={searchValue || ''} />
-				<SearchIcon />
-			</p>
+				<Input disabled={isLoading} id="search" setValue={search} type="search" value={searchValue} />
+			</div>
 
 			<table>
 				<thead>
 					<tr>
-						<th className="column--fave">{tableButton('is_favourite', '')}</th>
+						<th className="column--button">{tableButton('is_favourite', '')}</th>
 						<th>{tableButton('name', 'Name')}</th>
 					</tr>
 				</thead>
 				<tbody>
-					{filteredRows.map((row) => (
-						<tr key={row.id}>
-							<td className="column--fave">
-								<button
-									className={`heart ${row.is_favourite ? 'un' : ''}favourite`}
-									data-id={row.id}
-									onClick={favourite}
-									type="button"
-								>
-									<HeartIcon alt={row.is_favourite ? 'Unfavourite' : 'Favourite'} height={16} width={16} />
-								</button>
+					{isLoading ? (
+						<tr>
+							<td colSpan="2">
+								<div className="formosa-spinner" style={{ justifyContent: 'center', margin: '16px auto' }}>Loading...</div>
 							</td>
-							<td><Link className="table-link" to={`/meals/${row.id}`}>{row.name}</Link></td>
 						</tr>
-					))}
+					)
+						: filteredRows.map((row) => (
+							<tr key={row.id}>
+								<td className="column--button">
+									<button
+										className={`heart ${row.is_favourite ? 'un' : ''}favourite`}
+										data-id={row.id}
+										onClick={favourite}
+										type="button"
+									>
+										<HeartIcon alt={row.is_favourite ? 'Unfavourite' : 'Favourite'} height={16} width={16} />
+									</button>
+								</td>
+								<td><Link className="table-link" to={`/meals/${row.id}`}>{row.name}</Link></td>
+							</tr>
+						))}
 				</tbody>
 			</table>
 		</>

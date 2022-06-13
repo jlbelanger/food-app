@@ -136,12 +136,12 @@ export default function Edit() {
 
 				{showBmi ? (
 					/* eslint-disable react/jsx-one-expression-per-line */
-					<p>Your BMI is <b>{bmi}</b>{bmiNote}.</p>
+					<p id="bmi">Your BMI is <b>{bmi}</b>{bmiNote}.</p>
 				) : (
 					<p>Fill out the fields below to see your BMI.</p>
 				)}
 				{maintenanceCalories && (
-					<p>
+					<p id="calories">
 						You should be eating <b>{`${maintenanceCalories.toLocaleString()} calories`}</b> a day to maintain your current weight.
 						<br />
 						{`You should not consume any less than ${row.sex === 'f' ? '1,200' : '1,500'} calories per day.`}
@@ -186,7 +186,7 @@ export default function Edit() {
 						size={5}
 						suffix={row.measurement_units === 'i' ? 'lbs' : 'kgs'}
 					/>
-					<Submit label="Save" />
+					<Submit id="save-bmi" label="Save" />
 				</div>
 			</MyForm>
 
@@ -212,12 +212,13 @@ export default function Edit() {
 
 				<Field
 					name="trackables"
-					listClassName="formosa-radio--inline"
+					fieldsetClassName="formosa-radio--inline"
+					inputAttributes={(option) => ({ id: `trackable-${option.slug}` })}
 					type="checkbox-list"
 					url="trackables?fields[trackables]=name,slug&sort=slug"
 				/>
 
-				<Submit label="Save" />
+				<Submit id="save-tracking" label="Save" />
 			</MyForm>
 
 			<hr />

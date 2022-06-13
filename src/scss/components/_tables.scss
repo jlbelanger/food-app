@@ -10,9 +10,9 @@ table {
 		border-color: $lightest-gray;
 		border-style: solid;
 		border-width: 1px 0 0;
+		padding: 6px $margin;
 	}
 
-	td,
 	th {
 		padding: 0;
 	}
@@ -23,6 +23,10 @@ table {
 		}
 	}
 
+	.formosa-field {
+		margin-top: 0;
+	}
+
 	@media screen and (min-width: $max-width) {
 		margin-left: 0;
 		margin-right: 0;
@@ -30,9 +34,20 @@ table {
 	}
 }
 
-.column--fave {
-	white-space: nowrap;
-	width: $button-size;
+th {
+	border-color: $yellow;
+	border-style: solid;
+	border-width: 0 0 4px;
+
+	tfoot & {
+		border-width: 4px 0 0;
+	}
+}
+
+.table-heading {
+	display: block;
+	height: $button-size;
+	line-height: $button-size;
 }
 
 .column--size {
@@ -45,17 +60,27 @@ table {
 	width: 110px;
 }
 
+.column--serving {
+	white-space: nowrap;
+	width: 180px;
+}
+
+.column--button {
+	padding-left: 0;
+	padding-right: 0;
+	white-space: nowrap;
+	width: $button-size;
+}
+
 .table-link {
 	display: block;
-	padding: 8px 0;
+	padding: 12px 0;
 }
 
 .table-button {
 	background: transparent;
-	border-color: $yellow;
+	border: 0;
 	border-radius: 0;
-	border-style: solid;
-	border-width: 0 0 4px;
 	font-weight: bold;
 	height: $button-size;
 	padding: 0 0 0 12px;

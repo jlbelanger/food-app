@@ -9,7 +9,7 @@ export default class Auth {
 	static refresh() {
 		let user = Auth.user();
 		user = user ? JSON.parse(user) : null;
-		if (user.remember) {
+		if (user && user.remember) {
 			Auth.login(user, Auth.token(), user.remember);
 		}
 	}

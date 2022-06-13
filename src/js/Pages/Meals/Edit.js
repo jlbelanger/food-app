@@ -61,7 +61,7 @@ export default function Edit() {
 				<button
 					className={`heart ${row.is_favourite ? 'un' : ''}favourite`}
 					onClick={favourite}
-					type="submit"
+					type="button"
 				>
 					<HeartIcon alt={row.is_favourite ? 'Unfavourite' : 'Favourite'} height={16} width={16} />
 				</button>

@@ -15,6 +15,7 @@
 	}
 }
 
+.formosa-autocomplete,
 .formosa-button,
 .formosa-field__input,
 .formosa-file-input-wrapper {
@@ -39,4 +40,11 @@ a.formosa-button {
 
 .formosa-responsive {
 	margin-top: $margin;
+
+	& > :first-child {
+		.formosa-label-wrapper,
+		.formosa-input-wrapper {
+			padding-top: 0;
+		}
+	}
 }
