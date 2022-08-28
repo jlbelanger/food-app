@@ -36,12 +36,16 @@ export default function Fields({ readOnly, row }) {
 	useEffect(() => {
 		window.addEventListener('resize', onResize);
 		window.addEventListener('scroll', onScroll);
+		return () => {};
+	}, []);
+
+	useEffect(() => {
 		if (image && image.current) {
 			onResize();
 			onScroll();
 		}
 		return () => {};
-	}, []);
+	}, [row.info_image]);
 
 	const toSlug = (value) => {
 		if (!value) {
@@ -79,6 +83,17 @@ export default function Fields({ readOnly, row }) {
 	const attributesVitamin = { ...attributes, labelClassName: 'nutrition-facts__label nutrition-facts__label--vitamin' };
 	const src = row.front_image ? `${process.env.REACT_APP_API_URL}${row.front_image}` : null;
 
+	let infoImageSrc = null;
+	let infoImageLink = null;
+	if (row.info_image) {
+		if (typeof row.info_image === 'object') {
+			infoImageSrc = URL.createObjectURL(row.info_image);
+		} else if (typeof row.info_image === 'string') {
+			infoImageSrc = `${process.env.REACT_APP_API_URL}${row.info_image}`;
+			infoImageLink = infoImageSrc;
+		}
+	}
+
 	return (
 		<>
 			{readOnly && src && (
@@ -91,7 +106,7 @@ export default function Fields({ readOnly, row }) {
 
 			{!readOnly && (
 				<div className="formosa-responsive">
-					{Auth.isAdmin() && <Field label="User ID" name="user.id" size={5} />}
+					{Auth.getValue('is_admin') && <Field label="User ID" name="user.id" size={5} />}
 					<Field afterChange={autopopulate} label="Name" name="name" readOnly={readOnly} required />
 					<Field label="Slug" name="slug" readOnly required />
 					<Field
@@ -138,10 +153,10 @@ export default function Fields({ readOnly, row }) {
 				<small>{` (per ${row.serving_size || ''} ${row.serving_units || 'serving'})`}</small>
 			</h2>
 
-			<div className={row.info_image ? '' : 'nutrition-facts--no-image'} id="nutrition-facts">
-				{row.info_image && (
+			<div className={infoImageSrc ? '' : 'nutrition-facts--no-image'} id="nutrition-facts">
+				{infoImageSrc && (
 					<a
-						href={`${process.env.REACT_APP_API_URL}${row.info_image}`}
+						href={infoImageLink}
 						id="nutrition-facts__link"
 						rel="noreferrer"
 						ref={image}
@@ -150,7 +165,7 @@ export default function Fields({ readOnly, row }) {
 						<img
 							alt="Nutrition facts"
 							loading="lazy"
-							src={`${process.env.REACT_APP_API_URL}${row.info_image}`}
+							src={infoImageSrc}
 							width={300}
 						/>
 					</a>

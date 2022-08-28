@@ -49,7 +49,7 @@ export default function Edit() {
 			});
 	};
 
-	const readOnly = Auth.isAdmin() ? false : !row.user || row.user.id.toString() !== Auth.id().toString();
+	const readOnly = Auth.getValue('is_admin') ? false : !row.user || row.user.id.toString() !== Auth.id().toString();
 
 	return (
 		<>

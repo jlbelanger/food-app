@@ -53,7 +53,7 @@ export default function Edit() {
 	const afterSubmit = () => {
 		if (row.measurement_units) {
 			setIsMeasurementUnitsDisabled(true);
-			Auth.setWeightUnits(row.measurement_units);
+			Auth.setValue('measurement_units', row.measurement_units);
 		}
 	};
 

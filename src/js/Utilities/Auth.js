@@ -34,18 +34,11 @@ export default class Auth {
 	}
 
 	static id() {
-		const user = Auth.user();
-		return user ? JSON.parse(user).id : null;
-	}
-
-	static isAdmin() {
-		const user = Auth.user();
-		return user ? JSON.parse(user).is_admin : false;
+		return Auth.getValue('id');
 	}
 
 	static weightUnits() {
-		const user = Auth.user();
-		const measurementUnits = user ? JSON.parse(user).measurement_units : '';
+		const measurementUnits = Auth.getValue('measurement_units');
 		if (measurementUnits === 'i') {
 			return 'lbs';
 		}
@@ -55,27 +48,19 @@ export default class Auth {
 		return '';
 	}
 
-	static setWeightUnits(units) {
-		let user = Auth.user();
-		user = user ? JSON.parse(user) : [];
-		user.measurement_units = units;
-		Cookies.set(`${process.env.REACT_APP_COOKIE_PREFIX}_user`, JSON.stringify(user), Auth.attributes(user.remember));
-	}
-
 	static hasTrackables() {
 		return Auth.trackables().length > 0;
 	}
 
 	static setTrackables(trackables) {
 		let user = Auth.user();
-		user = user ? JSON.parse(user) : [];
+		user = user ? JSON.parse(user) : {};
 		user.trackables = trackables.map((trackable) => (trackable.slug));
 		Cookies.set(`${process.env.REACT_APP_COOKIE_PREFIX}_user`, JSON.stringify(user), Auth.attributes(user.remember));
 	}
 
 	static trackables() {
-		const user = Auth.user();
-		return user ? JSON.parse(user).trackables : [];
+		return Auth.getValue('trackables', []);
 	}
 
 	static user() {
@@ -88,5 +73,17 @@ export default class Auth {
 
 	static isLoggedIn() {
 		return !!Auth.user() && !!Auth.token();
+	}
+
+	static getValue(key, defaultValue = null) {
+		const user = Auth.user();
+		return user ? JSON.parse(user)[key] : defaultValue;
+	}
+
+	static setValue(key, value) {
+		let user = Auth.user();
+		user = user ? JSON.parse(user) : {};
+		user[key] = value;
+		Cookies.set(`${process.env.REACT_APP_COOKIE_PREFIX}_user`, JSON.stringify(user), Auth.attributes(user.remember));
 	}
 }
