@@ -123,8 +123,8 @@ export default function List() {
 			<table>
 				<thead>
 					<tr>
-						<th className="column--button">{tableButton('is_favourite', '')}</th>
-						<th>{tableButton('name', 'Name')}</th>
+						<th className="column--button" scope="col">{tableButton('is_favourite', '')}</th>
+						<th scope="col">{tableButton('name', 'Name')}</th>
 					</tr>
 				</thead>
 				<tbody>

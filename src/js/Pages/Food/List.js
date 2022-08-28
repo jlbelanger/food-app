@@ -121,12 +121,12 @@ export default function List() {
 			<table>
 				<thead>
 					<tr>
-						<th className="column--button">{tableButton('is_favourite', '')}</th>
-						<th>{tableButton('slug', 'Name')}</th>
-						<th className="column--size">{tableButton('serving_size', 'Size')}</th>
-						<th className="column--units">{tableButton('serving_units', 'Units')}</th>
+						<th className="column--button" scope="col">{tableButton('is_favourite', '')}</th>
+						<th scope="col">{tableButton('slug', 'Name')}</th>
+						<th className="column--size" scope="col">{tableButton('serving_size', 'Size')}</th>
+						<th className="column--units" scope="col">{tableButton('serving_units', 'Units')}</th>
 						{trackables.map((trackable) => (
-							<th key={trackable.id}>{tableButton(trackable.slug, trackable.name)}</th>
+							<th key={trackable.id} scope="col">{tableButton(trackable.slug, trackable.name)}</th>
 						))}
 					</tr>
 				</thead>
