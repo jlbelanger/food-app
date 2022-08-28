@@ -20,7 +20,16 @@
 .formosa-field__input,
 .formosa-file-input-wrapper {
 	border-bottom-width: 4px;
+}
+
+.formosa-button,
+.formosa-field__input,
+.formosa-file-input-wrapper {
 	padding-bottom: #{$formosa-button-padding - 4px};
+}
+
+input.formosa-autocomplete__input {
+	padding: 10px 10px #{$formosa-button-padding - 4px};
 }
 
 a.formosa-button {
@@ -47,4 +56,8 @@ a.formosa-button {
 			padding-top: 0;
 		}
 	}
+}
+
+.formosa-autocomplete__options {
+	box-shadow: 0 0 10px rgba($black, .2);
 }

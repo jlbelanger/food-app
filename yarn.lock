@@ -1558,14 +1558,9 @@
     "@types/yargs" "^16.0.0"
     chalk "^4.0.0"
 
-"@jlbelanger/formosa@jlbelanger/formosa#061c94ac1fa3fcd072001dfddbe2f134f588a2ce":
-  version "1.0.2"
-  resolved "https://codeload.github.com/jlbelanger/formosa/tar.gz/061c94ac1fa3fcd072001dfddbe2f134f588a2ce"
-  dependencies:
-    get-value "^3.0.1"
-    prop-types "^15.8.0"
-    react-promise-tracker "^2.1.0"
-    set-value "^4.1.0"
+"@jlbelanger/formosa@link:../formosa":
+  version "0.0.0"
+  uid ""
 
 "@jridgewell/gen-mapping@^0.1.0":
   version "0.1.1"
@@ -3938,6 +3933,11 @@ csstype@^3.0.2:
   version "3.0.11"
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.0.11.tgz#d66700c5eacfac1940deb4e3ee5642792d85cd33"
   integrity sha512-sa6P2wJ+CAbgyy4KFssIb/JNMLxFvKF1pCYCSXS8ZMuqZnMsrxqI2E5sPyoTpxoPU/gVZMzr2zjOfg8GIZOMsw==
+
+cypress-file-upload@^5.0.8:
+  version "5.0.8"
+  resolved "https://registry.yarnpkg.com/cypress-file-upload/-/cypress-file-upload-5.0.8.tgz#d8824cbeaab798e44be8009769f9a6c9daa1b4a1"
+  integrity sha512-+8VzNabRk3zG6x8f8BWArF/xA/W0VK4IZNx3MV0jFWrJS/qKn8eHfa5nU73P9fOQAgwHFJx7zjg4lwOnljMO8g==
 
 cypress@^9.2.0:
   version "9.6.0"

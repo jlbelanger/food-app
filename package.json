@@ -22,7 +22,7 @@
 		"eject": "react-scripts eject"
 	},
 	"dependencies": {
-		"@jlbelanger/formosa": "jlbelanger/formosa#061c94ac1fa3fcd072001dfddbe2f134f588a2ce",
+		"@jlbelanger/formosa": "link:../formosa",
 		"dotenv": "10.0.0",
 		"get-value": "^3.0.1",
 		"js-cookie": "^3.0.1",
@@ -32,7 +32,8 @@
 		"react-dom": "^17.0.2",
 		"react-promise-tracker": "^2.1.0",
 		"react-router-dom": "^5.3.0",
-		"react-scripts": "^5.0.0"
+		"react-scripts": "^5.0.0",
+		"uuid": "^8.3.2"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.16.5",
@@ -43,6 +44,7 @@
 		"@testing-library/react": "^12.1.2",
 		"@testing-library/user-event": "^13.5.0",
 		"cypress": "^9.2.0",
+		"cypress-file-upload": "^5.0.8",
 		"eslint": "^8.5.0",
 		"eslint-config-airbnb": "^19.0.2",
 		"eslint-plugin-import": "^2.25.3",

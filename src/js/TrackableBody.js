@@ -7,7 +7,7 @@ export default function TrackableBody({ food, servingSize, trackables }) {
 		let val = (food[trackable.slug] / food.serving_size) * servingSize;
 		val = parseInt(val, 10);
 		return (
-			<td className="center" key={trackable.id} style={{ backgroundColor: colorsLight[i + 1] }}>
+			<td className={`center column--${trackable.slug}`} key={trackable.id} style={{ backgroundColor: colorsLight[i + 1] }}>
 				{food[trackable.slug] !== null && !Number.isNaN(val) ? (
 					`${val.toLocaleString()} ${trackable.units || ''}`.trim()
 				) : ''}

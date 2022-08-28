@@ -1,26 +1,43 @@
-import { Api, Form, FormosaContext } from '@jlbelanger/formosa';
+import { Api, Field, Form, FormosaContext, Input } from '@jlbelanger/formosa';
+import { Link, useHistory, useParams } from 'react-router-dom';
 import React, { useContext, useEffect, useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import Auth from '../../Utilities/Auth';
 import Error from '../../Error';
 import Fields from './Partials/Fields';
 import { ReactComponent as HeartIcon } from '../../../svg/heart.svg';
 import MetaTitle from '../../MetaTitle';
 import MyForm from '../../MyForm';
+import { pluralize } from '../../Utilities/Helpers';
+import TrackableBody from '../../TrackableBody';
+import TrackableFoot from '../../TrackableFoot';
+import TrackableHead from '../../TrackableHead';
+import { v4 as uuidv4 } from 'uuid';
+import { ReactComponent as XIcon } from '../../../svg/x.svg';
 
 export default function Edit() {
 	const { formosaState } = useContext(FormosaContext);
 	const { id } = useParams();
 	const [row, setRow] = useState(null);
+	const [trackables, setTrackables] = useState([]);
 	const [error, setError] = useState(false);
+	const [newFood, setNewFood] = useState(null);
 	const history = useHistory();
+	const foodFields = ['name', 'slug', 'serving_size', 'serving_units'].concat(Auth.trackables());
+
 	useEffect(() => {
-		Api.get(`meals/${id}`)
+		Api.get(`meals/${id}?include=foods,foods.food&fields[food]=${foodFields.join(',')}&fields[food_meal]=user_serving_size`)
 			.then((response) => {
 				setRow(response);
 			})
 			.catch((response) => {
 				setError(response.status);
 			});
+		if (Auth.hasTrackables()) {
+			Api.get(`trackables?fields[trackables]=name,slug,units&filter[slug][in]=${Auth.trackables().join(',')}`)
+				.then((response) => {
+					setTrackables(response);
+				});
+		}
 		return () => {};
 	}, [id]);
 
@@ -75,12 +92,104 @@ export default function Edit() {
 				method="PUT"
 				path="meals"
 				preventEmptyRequest
-				relationshipNames={['user']}
+				relationshipNames={['foods', 'foods.food', 'user']}
 				row={row}
 				setRow={setRow}
 				successToastText="Meal saved successfully."
 			>
 				<Fields row={row} />
+
+				<h2>Foods</h2>
+
+				<Input
+					aria-label="Add food"
+					className="formosa-prefix"
+					id="new-food"
+					max={1}
+					placeholder="Search foods"
+					type="autocomplete"
+					setValue={(food) => {
+						const newValue = {
+							id: `temp-${uuidv4()}`,
+							type: 'food-meal',
+							food_id: food.id,
+							meal_id: row.id,
+							food,
+							user_serving_size: food.serving_size,
+						};
+						setRow({
+							...row,
+							foods: [...row.foods, newValue],
+						});
+						setNewFood(null);
+						setTimeout(() => {
+							document.getElementById('new-food').focus();
+						});
+					}}
+					url={`food?fields[food]=${foodFields.join(',')}`}
+					value={newFood}
+				/>
+
+				{row.foods.length > 0 ? (
+					<table>
+						<thead>
+							<tr>
+								<th scope="col">Food</th>
+								<th scope="col">Serving Size</th>
+								<TrackableHead trackables={trackables} />
+								<th />
+							</tr>
+						</thead>
+						<tbody>
+							{row.foods.map((foodMeal, i) => (
+								<tr className={`row--${foodMeal.food.slug}`} key={foodMeal.id}>
+									<td>
+										<Link className="table-link" to={`/food/${foodMeal.food.id}`}>{foodMeal.food.name}</Link>
+									</td>
+									<td>
+										<Field
+											name={`foods.${i}.user_serving_size`}
+											size={6}
+											suffix={pluralize(foodMeal.food.serving_units, foodMeal.user_serving_size || '')}
+										/>
+									</td>
+									<TrackableBody
+										food={foodMeal.food}
+										servingSize={parseFloat(foodMeal.user_serving_size)}
+										trackables={trackables}
+									/>
+									<td className="column--button">
+										<button
+											className="button--icon button--remove"
+											data-index={i}
+											onClick={(e) => {
+												const index = e.target.getAttribute('data-index');
+												const newFoods = [...row.foods];
+												newFoods.splice(index, 1);
+												setRow({
+													...row,
+													foods: newFoods,
+												});
+											}}
+											type="button"
+										>
+											Remove
+											<XIcon height={16} width={16} />
+										</button>
+									</td>
+								</tr>
+							))}
+						</tbody>
+						<tfoot>
+							<tr>
+								<th />
+								<th />
+								<TrackableFoot rows={row.foods} trackables={trackables} />
+								<th />
+							</tr>
+						</tfoot>
+					</table>
+				) : <p>This meal has no foods.</p>}
 			</MyForm>
 
 			<Form

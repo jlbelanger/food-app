@@ -43,6 +43,29 @@ export default class Auth {
 		return user ? JSON.parse(user).is_admin : false;
 	}
 
+	static weightUnits() {
+		const user = Auth.user();
+		const measurementUnits = user ? JSON.parse(user).measurement_units : '';
+		if (measurementUnits === 'i') {
+			return 'lbs';
+		}
+		if (measurementUnits === 'm') {
+			return 'kgs';
+		}
+		return '';
+	}
+
+	static setWeightUnits(units) {
+		let user = Auth.user();
+		user = user ? JSON.parse(user) : [];
+		user.measurement_units = units;
+		Cookies.set(`${process.env.REACT_APP_COOKIE_PREFIX}_user`, JSON.stringify(user), Auth.attributes(user.remember));
+	}
+
+	static hasTrackables() {
+		return Auth.trackables().length > 0;
+	}
+
 	static setTrackables(trackables) {
 		let user = Auth.user();
 		user = user ? JSON.parse(user) : [];

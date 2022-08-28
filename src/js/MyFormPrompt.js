@@ -6,7 +6,7 @@ export default function MyFormPrompt() {
 	const { formState } = useContext(FormContext);
 	return (
 		<Prompt
-			when={formState.dirty.length > 0}
+			when={formState.dirtyKeys(formState).length > 0}
 			message="You have unsaved changes. Are you sure you want to leave this page?"
 		/>
 	);

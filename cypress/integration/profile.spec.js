@@ -4,7 +4,6 @@ describe('profile', () => {
 	});
 
 	describe('when updating BMI settings', () => {
-		// TODO: Measurement units, weight.
 		describe('when clearing settings', () => {
 			it('works', () => {
 				cy.visit('/profile');
@@ -53,8 +52,9 @@ describe('profile', () => {
 	});
 
 	describe('when updating trackable settings', () => {
-		// TODO: Check that food columns have been updated.
 		it('works', () => {
+			const timestamp = (new Date()).getTime();
+
 			// Remove all trackables to start.
 			cy.visit('/profile');
 			cy.get('[name="trackables[]"]').each((item) => {
@@ -94,8 +94,38 @@ describe('profile', () => {
 			cy.get('#save-tracking').click();
 			cy.contains('Tracking settings updated successfully.').should('exist');
 
+			// Add food and meal.
+			cy.get('.nav__link').contains('Food').click();
+			cy.get('.formosa-button').contains('Add').click();
+			cy.get('[name="name"]').type(`Foo ${timestamp}`);
+			cy.get('[name="serving_size"]').type('1');
+			cy.get('.formosa-button').contains('Save').click();
+			cy.get('.nav__link').contains('Meals').click();
+			cy.get('.formosa-button').contains('Add').click();
+			cy.get('[name="name"]').type(`Foo ${timestamp}`);
+			cy.get('.formosa-button').contains('Save').click();
+
+			// Check columns on food index.
+			cy.get('.nav__link').contains('Food').click();
+			cy.get('[data-key="calories"]').should('not.exist');
+			cy.get('[data-key="protein"]').should('exist');
+			cy.get('[data-key="sodium"]').should('exist');
+			cy.get('[data-key="fat"]').should('not.exist');
+
+			// Check columns on meal form.
+			cy.get('.nav__link').contains('Meals').click();
+			cy.get('#search').type(`Foo ${timestamp}`);
+			cy.get('.table-link').contains(`Foo ${timestamp}`).click();
+			cy.get('#new-food').type(`Foo ${timestamp}`);
+			cy.get('.formosa-autocomplete__option__button').contains(`Foo ${timestamp}`).click();
+			cy.get('.table-heading').contains('Calories').should('not.exist');
+			cy.get('.table-heading').contains('Protein').should('exist');
+			cy.get('.table-heading').contains('Sodium').should('exist');
+			cy.get('.table-heading').contains('Fat').should('not.exist');
+			cy.get('.formosa-button').contains('Delete').click();
+
 			// Add and remove a trackable.
-			cy.visit('/profile');
+			cy.get('.nav__link').contains('Profile').click();
 			cy.get('#trackable-calories').should('not.be.checked');
 			cy.get('#trackable-protein').should('be.checked');
 			cy.get('#trackable-sodium').should('be.checked');
@@ -274,6 +304,47 @@ describe('profile', () => {
 				cy.wait('@changePassword').its('response.statusCode').should('equal', 204);
 				cy.contains('Password changed successfully.').should('exist');
 			});
+		});
+	});
+
+	describe('with demo user', () => {
+		it('does not allow changing login info', () => {
+			cy.intercept('PUT', '**/api/users/*').as('edit');
+			cy.intercept('PUT', '**/api/users/*/change-email').as('changeEmail');
+			cy.intercept('PUT', '**/api/users/*/change-password').as('changePassword');
+
+			cy.contains('Logout').click();
+			cy.login(Cypress.env('demo_username'), Cypress.env('demo_password'));
+			cy.contains('Profile').click();
+
+			// Change username.
+			cy.get('[name="username"]').clear().type('newdemousername');
+			cy.get('button').contains('Change username').click();
+			cy.wait('@edit').its('response.statusCode').should('equal', 422);
+			cy.get('.formosa-toast').contains('Error.').should('exist');
+			cy.contains('The username cannot be changed.').should('exist');
+			cy.reload();
+			cy.get('[name="username"]').should('have.value', Cypress.env('demo_username'));
+
+			// Change email.
+			cy.get('[name="email"]').clear().type('newdemoemail@example.com');
+			cy.get('#current-password-email').clear().type(Cypress.env('demo_password'));
+			cy.get('button').contains('Change email').click();
+			cy.wait('@changeEmail').its('response.statusCode').should('equal', 403);
+			cy.get('.formosa-toast').contains('Error.').should('exist');
+			cy.contains('You do not have permission to update this record.').should('exist');
+			cy.reload();
+			cy.get('[name="email"]').should('have.value', Cypress.env('demo_email'));
+
+			// Change password.
+			const password = 'newdemopassword';
+			cy.get('#new_password').clear().type(password);
+			cy.get('#new_password_confirmation').clear().type(password);
+			cy.get('#current-password-password').clear().type(Cypress.env('demo_password'));
+			cy.get('button').contains('Change password').click();
+			cy.wait('@changePassword').its('response.statusCode').should('equal', 403);
+			cy.get('.formosa-toast').contains('Error.').should('exist');
+			cy.contains('You do not have permission to update this record.').should('exist');
 		});
 	});
 });

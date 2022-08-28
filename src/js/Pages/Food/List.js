@@ -32,10 +32,12 @@ export default function List() {
 				setError(response.status);
 				setIsLoading(false);
 			});
-		Api.get(`trackables?fields[trackables]=name,slug,units&filter[slug][in]=${Auth.trackables().join(',')}`, false)
-			.then((response) => {
-				setTrackables(response);
-			});
+		if (Auth.hasTrackables()) {
+			Api.get(`trackables?fields[trackables]=name,slug,units&filter[slug][in]=${Auth.trackables().join(',')}`, false)
+				.then((response) => {
+					setTrackables(response);
+				});
+		}
 		return () => {};
 	}, []);
 

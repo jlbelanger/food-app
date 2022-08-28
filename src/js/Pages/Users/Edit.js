@@ -50,6 +50,13 @@ export default function Edit() {
 		m: 'metric (weight in kilograms, height in centimetres)',
 	};
 
+	const afterSubmit = () => {
+		if (row.measurement_units) {
+			setIsMeasurementUnitsDisabled(true);
+			Auth.setWeightUnits(row.measurement_units);
+		}
+	};
+
 	const calculateBmi = () => {
 		if (!row.height || !row.weight || !row.weight.weight || !row.measurement_units) {
 			return null;
@@ -121,6 +128,7 @@ export default function Edit() {
 			<MetaTitle title="Edit profile" />
 
 			<MyForm
+				afterSubmit={afterSubmit}
 				id={row.id}
 				method="PUT"
 				path="users"
