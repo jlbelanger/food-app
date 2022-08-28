@@ -53,7 +53,7 @@ export default function Login() {
 				<Submit
 					label="Log in"
 					postfix={(
-						<Link className="formosa-button button--link" to="/forgot-password">Forgot your password?</Link>
+						<Link className="formosa-button button--link" to="/forgot-password">Forgot password?</Link>
 					)}
 				/>
 			</Form>
