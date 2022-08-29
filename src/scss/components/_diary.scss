@@ -1,0 +1,121 @@
+$breakpoint: 700px;
+$fieldset-padding: 16px;
+$add-meal-button-margin: 8px;
+
+#diary {
+	fieldset {
+		background: $lightest-yellow;
+		border-color: $dark-yellow;
+		border-style: solid;
+		border-width: 1px;
+		margin-top: $margin;
+		padding: $fieldset-padding;
+
+		.formosa-field {
+			margin-top: 8px;
+		}
+
+		legend + .formosa-field {
+			margin-top: 0;
+		}
+	}
+
+	legend {
+		font-weight: bold;
+		padding: 0 4px;
+	}
+
+	#add-meal {
+		padding-bottom: #{$fieldset-padding - $add-meal-button-margin};
+	}
+
+	@media screen and (min-width: $breakpoint) {
+		margin-top: -$margin;
+	}
+	}
+
+#food-wrapper {
+	border-bottom-right-radius: 0;
+	border-right-width: 0;
+	border-top-right-radius: 0;
+	width: 100%;
+}
+
+form + form #add-extras {
+	@media screen and (min-width: $breakpoint) {
+		margin-left: $margin;
+	}
+}
+
+#diary-top {
+	form {
+		width: 100%;
+	}
+
+	@media screen and (min-width: $breakpoint) {
+		display: flex;
+	}
+}
+
+.formosa-field.formosa-field--search_favourites {
+	margin-top: 8px;
+}
+
+.formosa-field--weight {
+	.formosa-suffix {
+		font-size: $formosa-input-font-size;
+		line-height: $formosa-input-height;
+		padding-bottom: 0;
+		padding-top: 0;
+		position: absolute;
+	}
+}
+
+#weight {
+	padding-right: 40px;
+	text-align: right;
+}
+
+.add-meal__button {
+	margin-bottom: $add-meal-button-margin;
+	margin-right: $add-meal-button-margin;
+}
+
+#previous,
+#next {
+	background: transparent;
+	border-radius: 0;
+	border-width: 0;
+	height: $button-size;
+	padding: 0;
+	width: $button-size;
+
+	path {
+		fill: $white;
+	}
+}
+
+#previous + h1 {
+	text-align: center;
+}
+
+#next {
+	transform: rotate(180deg);
+
+	&:disabled {
+		visibility: hidden;
+	}
+}
+
+.button--remove {
+	background: transparent;
+	border-radius: 0;
+	border-width: 0;
+	height: $button-size;
+	padding: 0;
+	width: $button-size;
+
+	path {
+		fill: $dark-red;
+	}
+}

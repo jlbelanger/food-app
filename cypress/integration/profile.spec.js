@@ -124,6 +124,16 @@ describe('profile', () => {
 			cy.get('.table-heading').contains('Fat').should('not.exist');
 			cy.get('.formosa-button').contains('Delete').click();
 
+			// Check columns on diary.
+			cy.get('.nav__link').contains('Diary').click();
+			cy.get('#search-favourites').uncheck();
+			cy.get('#food').type(`Foo ${timestamp}`);
+			cy.get('.formosa-autocomplete__option__button').contains(`Foo ${timestamp}`).click();
+			cy.get('.table-heading').contains('Calories').should('not.exist');
+			cy.get('.table-heading').contains('Protein').should('exist');
+			cy.get('.table-heading').contains('Sodium').should('exist');
+			cy.get('.table-heading').contains('Fat').should('not.exist');
+
 			// Add and remove a trackable.
 			cy.get('.nav__link').contains('Profile').click();
 			cy.get('#trackable-calories').should('not.be.checked');
