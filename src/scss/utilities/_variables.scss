@@ -12,13 +12,15 @@ $pink: #f38;
 $light-pink: scale-color($pink, $lightness: 70%, $saturation: -25%);
 
 $yellow: #fd0;
+$muted-yellow: scale-color($yellow, $lightness: 30%, $saturation: -30%);
 $lightest-yellow: scale-color($yellow, $lightness: 95%);
-$dark-yellow: scale-color($yellow, $lightness: -10%, $saturation: -15%);
+$dark-yellow: scale-color($yellow, $lightness: -10%, $saturation: -20%);
 
 $red: #f33;
 $dark-red: #c33;
 
 $body-background-color: $off-white;
+$button-border-bottom-width: 4px;
 $button-size: 44px;
 $article-padding: 16px;
 $font-size: 16px;
@@ -41,6 +43,8 @@ $formosa-input-padding: 10px;
 $formosa-margin-large: $margin;
 
 $formosa-label-error-color: $dark-red;
+
+$formosa-radio-size: 20px;
 
 $formosa-responsive-breakpoint: 700px;
 

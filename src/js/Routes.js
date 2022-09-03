@@ -1,6 +1,7 @@
 import { Route, Switch } from 'react-router-dom';
 import Auth from './Utilities/Auth';
 import Calendar from './Pages/Calendar';
+import Charts from './Pages/Charts';
 import Diary from './Pages/Diary';
 import Error404 from './Error404';
 import FoodEdit from './Pages/Food/Edit';
@@ -33,6 +34,7 @@ export default function Routes() {
 		<Switch>
 			<Route exact path="/"><Diary /></Route>
 			<Route exact path="/calendar"><Calendar /></Route>
+			<Route exact path="/charts"><Charts /></Route>
 			<Route exact path="/profile"><Profile /></Route>
 			<Route exact path="/food"><FoodList /></Route>
 			<Route exact path="/food/new"><FoodNew /></Route>

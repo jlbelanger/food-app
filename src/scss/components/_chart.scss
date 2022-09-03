@@ -1,0 +1,101 @@
+$scale-border-top-width: 2px;
+
+.chart + .chart {
+	margin-top: 40px;
+}
+
+.chart-header {
+	align-items: center;
+	display: flex;
+}
+
+.chart-container {
+	height: 250px;
+	margin-left: #{$article-padding * -1};
+	margin-right: #{$article-padding * -1};
+}
+
+.chart-title {
+	display: block;
+	flex: 1 1 auto;
+	margin: 0 0 12px;
+}
+
+.formosa-field--radio {
+	align-items: center;
+	display: flex;
+	margin: 0;
+
+	.formosa-label-wrapper {
+		margin-bottom: 0;
+		margin-right: 12px;
+	}
+
+	.formosa-radio__item {
+		margin-bottom: 0;
+	}
+
+	.formosa-radio__label {
+		position: relative;
+	}
+
+	.formosa-button {
+		border-radius: 0;
+		border-top-width: $scale-border-top-width;
+	}
+
+	.formosa-radio__label--checked {
+		background: $muted-yellow;
+		border-color: scale-color($muted-yellow, $lightness: -40%);
+		border-bottom-color: $muted-yellow;
+		color: $formosa-button-color;
+		pointer-events: none;
+	}
+
+	.formosa-radio > div:last-of-type {
+		margin-right: 0;
+
+		.formosa-button,
+		input.formosa-radio__input.formosa-field__input {
+			border-bottom-right-radius: $formosa-input-border-radius;
+			border-top-right-radius: $formosa-input-border-radius;
+		}
+	}
+}
+
+.formosa-radio__legend + .formosa-radio__item {
+	.formosa-button,
+	input.formosa-radio__input.formosa-field__input {
+		border-bottom-left-radius: $formosa-input-border-radius;
+		border-top-left-radius: $formosa-input-border-radius;
+	}
+}
+
+#heading .formosa-button.formosa-radio__label {
+	margin: 0;
+}
+
+.formosa-radio--inline .formosa-radio__item {
+	margin: 0;
+}
+
+input.formosa-radio__input.formosa-field__input {
+	background: transparent;
+	border: 0;
+	border-radius: 0;
+	bottom: -$button-border-bottom-width;
+	box-shadow: none;
+	height: auto;
+	left: 0;
+	margin: 0;
+	position: absolute;
+	right: 0;
+	top: -$scale-border-top-width;
+	width: auto;
+
+	&:active,
+	&:focus {
+		box-shadow: 0 0 0 $formosa-focus-border-width $formosa-focus-box-shadow-color;
+		z-index: 1;
+	}
+}

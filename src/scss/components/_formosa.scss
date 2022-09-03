@@ -19,17 +19,17 @@
 .formosa-button,
 .formosa-field__input,
 .formosa-file-input-wrapper {
-	border-bottom-width: 4px;
+	border-bottom-width: $button-border-bottom-width;
 }
 
 .formosa-button,
 .formosa-field__input,
 .formosa-file-input-wrapper {
-	padding-bottom: #{$formosa-button-padding - 4px};
+	padding-bottom: #{$formosa-button-padding - $button-border-bottom-width};
 }
 
 input.formosa-autocomplete__input {
-	padding: 10px 10px #{$formosa-button-padding - 4px};
+	padding: 10px 10px #{$formosa-button-padding - $button-border-bottom-width};
 }
 
 a.formosa-button {

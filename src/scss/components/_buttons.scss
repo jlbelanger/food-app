@@ -29,6 +29,24 @@ button {
 	}
 }
 
+.button--header {
+	background-color: $dark-gray;
+	border-color: scale-color($dark-gray, $lightness: -20%);
+	border-top-color: scale-color($dark-gray, $lightness: 15%);
+	color: $white;
+
+	&:hover,
+	&:active,
+	&:focus {
+		background-color: scale-color($dark-gray, $lightness: 5%);
+	}
+
+	&:active {
+		border-bottom-color: scale-color($dark-gray, $lightness: 5%);
+		border-top-color: scale-color($dark-gray, $lightness: -20%);
+	}
+}
+
 .button--icon {
 	font-size: 0;
 }
