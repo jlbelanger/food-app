@@ -6,8 +6,8 @@ import Auth from '../../Utilities/Auth';
 import Error from '../../Error';
 import { ReactComponent as HeartIcon } from '../../../svg/heart.svg';
 import { Link } from 'react-router-dom';
-import MetaTitle from '../../MetaTitle';
-import TrackableBody from '../../TrackableBody';
+import MetaTitle from '../../Components/MetaTitle';
+import TrackableBody from '../../Components/TrackableBody';
 
 export default function List() {
 	const { formosaState } = useContext(FormosaContext);
@@ -38,7 +38,6 @@ export default function List() {
 					setTrackables(response);
 				});
 		}
-		return () => {};
 	}, []);
 
 	if (error) {

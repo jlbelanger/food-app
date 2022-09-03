@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { Api } from '@jlbelanger/formosa';
 import Auth from '../Utilities/Auth';
 import { ReactComponent as ChevronIcon } from '../../svg/chevron.svg';
-import MetaTitle from '../MetaTitle';
+import MetaTitle from '../Components/MetaTitle';
 
 export default function Calendar() {
 	const history = useHistory();

@@ -11,7 +11,6 @@ export default function MetaTitle({ before, children, small, title }) {
 			metaTitle += process.env.REACT_APP_TITLE;
 		}
 		document.querySelector('title').innerText = metaTitle;
-		return () => {};
 	}, [title]);
 
 	return (

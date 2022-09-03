@@ -1,4 +1,4 @@
-import MetaTitle from './MetaTitle';
+import MetaTitle from './Components/MetaTitle';
 import PropTypes from 'prop-types';
 import React from 'react';
 

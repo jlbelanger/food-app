@@ -10,7 +10,7 @@ table {
 		border-color: $lightest-gray;
 		border-style: solid;
 		border-width: 1px 0 0;
-		padding: 6px $margin;
+		padding: $table-cell-padding $margin;
 	}
 
 	th {

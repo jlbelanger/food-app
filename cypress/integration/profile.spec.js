@@ -1,12 +1,24 @@
 describe('profile', () => {
 	before(() => {
 		cy.login();
+
+		// Set weight for calculating BMI.
+		cy.visit('/');
+		cy.get('#weight').clear().type('130.5');
+		cy.get('#weight-form button').click();
+		cy.contains('Weight saved successfully.').should('exist');
 	});
 
 	describe('when updating BMI settings', () => {
 		describe('when clearing settings', () => {
 			it('works', () => {
 				cy.visit('/profile');
+				cy.get('[name="measurement_units"]')
+					.then(($el) => {
+						if (!$el.attr('disabled')) {
+							cy.get('[name="measurement_units"]').select('imperial (weight in pounds, height in inches)');
+						}
+					});
 				cy.get('[name="activity_level"]').select('');
 				cy.get('[name="sex"]').select('');
 				cy.get('[name="age"]').clear();
@@ -21,13 +33,19 @@ describe('profile', () => {
 		describe('when adding BMI settings', () => {
 			it('works', () => {
 				cy.visit('/profile');
+				cy.get('[name="measurement_units"]')
+					.then(($el) => {
+						if (!$el.attr('disabled')) {
+							cy.get('[name="measurement_units"]').select('imperial (weight in pounds, height in inches)');
+						}
+					});
 				cy.get('[name="activity_level"]').select('moderately active');
 				cy.get('[name="sex"]').select('');
 				cy.get('[name="age"]').clear().type('30');
 				cy.get('[name="height"]').clear().type('65');
 				cy.get('#save-bmi').click();
 				cy.contains('BMI settings updated successfully.').should('exist');
-				cy.get('#bmi').invoke('text').should('equal', 'Your BMI is 21.50 (normal - 18.5–24.9).');
+				cy.get('#bmi').invoke('text').should('equal', 'Your BMI is 21.71 (normal - 18.5–24.9).');
 				cy.get('#calories').should('not.exist');
 			});
 		});
@@ -35,16 +53,22 @@ describe('profile', () => {
 		describe('when adding BMI and calories settings', () => {
 			it('works', () => {
 				cy.visit('/profile');
+				cy.get('[name="measurement_units"]')
+					.then(($el) => {
+						if (!$el.attr('disabled')) {
+							cy.get('[name="measurement_units"]').select('imperial (weight in pounds, height in inches)');
+						}
+					});
 				cy.get('[name="activity_level"]').select('moderately active');
 				cy.get('[name="sex"]').select('male');
 				cy.get('[name="age"]').clear().type('30');
 				cy.get('[name="height"]').clear().type('65');
 				cy.get('#save-bmi').click();
 				cy.contains('BMI settings updated successfully.').should('exist');
-				cy.get('#bmi').invoke('text').should('equal', 'Your BMI is 21.50 (normal - 18.5–24.9).');
-				cy.get('#calories').invoke('text').should('equal', 'You should be eating 2,120 calories a day to maintain your current weight.'
+				cy.get('#bmi').invoke('text').should('equal', 'Your BMI is 21.71 (normal - 18.5–24.9).');
+				cy.get('#calories').invoke('text').should('equal', 'You should be eating 2,132 calories a day to maintain your current weight.'
 				+ 'You should not consume any less than 1,500 calories per day.'
-				+ 'To lose one pound a week, you should be eating 1,620 calories a day.'
+				+ 'To lose one pound a week, you should be eating 1,632 calories a day.'
 				+ 'There are 3,500 calories in one pound of fat, and 3,500 divided by 7 days of the week is 500, so to lose one pound a week, '
 				+ 'you should eat 500 calories less in a day than the calories you would eat to maintain your weight.');
 			});

@@ -1,8 +1,8 @@
 import { Field, Submit } from '@jlbelanger/formosa';
 import React, { useState } from 'react';
 import Auth from '../../Utilities/Auth';
-import MetaTitle from '../../MetaTitle';
-import MyForm from '../../MyForm';
+import MetaTitle from '../../Components/MetaTitle';
+import MyForm from '../../Components/MyForm';
 
 export default function Register() {
 	const [row, setRow] = useState({});

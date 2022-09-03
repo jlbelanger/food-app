@@ -5,12 +5,12 @@ import Auth from '../../Utilities/Auth';
 import Error from '../../Error';
 import Fields from './Partials/Fields';
 import { ReactComponent as HeartIcon } from '../../../svg/heart.svg';
-import MetaTitle from '../../MetaTitle';
-import MyForm from '../../MyForm';
+import MetaTitle from '../../Components/MetaTitle';
+import MyForm from '../../Components/MyForm';
 import { pluralize } from '../../Utilities/Helpers';
-import TrackableBody from '../../TrackableBody';
-import TrackableFoot from '../../TrackableFoot';
-import TrackableHead from '../../TrackableHead';
+import TrackableBody from '../../Components/TrackableBody';
+import TrackableFoot from '../../Components/TrackableFoot';
+import TrackableHead from '../../Components/TrackableHead';
 import { v4 as uuidv4 } from 'uuid';
 import { ReactComponent as XIcon } from '../../../svg/x.svg';
 
@@ -38,7 +38,6 @@ export default function Edit() {
 					setTrackables(response);
 				});
 		}
-		return () => {};
 	}, [id]);
 
 	if (error) {

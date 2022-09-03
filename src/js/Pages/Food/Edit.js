@@ -5,8 +5,8 @@ import Auth from '../../Utilities/Auth';
 import Error from '../../Error';
 import Fields from './Partials/Fields';
 import { ReactComponent as HeartIcon } from '../../../svg/heart.svg';
-import MetaTitle from '../../MetaTitle';
-import MyForm from '../../MyForm';
+import MetaTitle from '../../Components/MetaTitle';
+import MyForm from '../../Components/MyForm';
 
 export default function Edit() {
 	const { formosaState } = useContext(FormosaContext);
@@ -23,7 +23,6 @@ export default function Edit() {
 			.catch((response) => {
 				setError(response.status);
 			});
-		return () => {};
 	}, [id]);
 
 	if (error) {

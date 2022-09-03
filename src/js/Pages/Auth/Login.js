@@ -2,7 +2,7 @@ import { Field, Form, Submit } from '@jlbelanger/formosa';
 import React, { useState } from 'react';
 import Auth from '../../Utilities/Auth';
 import { Link } from 'react-router-dom';
-import MetaTitle from '../../MetaTitle';
+import MetaTitle from '../../Components/MetaTitle';
 
 export default function Login() {
 	const [row, setRow] = useState({});

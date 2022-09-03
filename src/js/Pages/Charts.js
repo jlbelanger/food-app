@@ -15,7 +15,7 @@ import Auth from '../Utilities/Auth';
 import { Chart } from 'react-chartjs-2';
 import ChartScale from '../Components/ChartScale';
 import { colorsDark } from '../Utilities/Colors';
-import MetaTitle from '../MetaTitle';
+import MetaTitle from '../Components/MetaTitle';
 import zoomPlugin from 'chartjs-plugin-zoom';
 
 export default function Charts() {

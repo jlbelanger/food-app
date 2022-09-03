@@ -51,7 +51,7 @@ h3 {
 	display: flex;
 	margin: 0 auto;
 	max-width: $max-width;
-	padding: 0 16px;
+	padding: 0 $heading-inner-padding;
 	width: 100%;
 }
 

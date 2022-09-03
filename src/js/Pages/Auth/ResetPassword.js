@@ -1,7 +1,7 @@
 import { Field, Form, Submit } from '@jlbelanger/formosa';
 import React, { useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import MetaTitle from '../../MetaTitle';
+import MetaTitle from '../../Components/MetaTitle';
 
 export default function ResetPassword() {
 	const [row, setRow] = useState({});

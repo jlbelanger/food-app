@@ -4,12 +4,15 @@ import React, { useContext, useEffect, useState } from 'react';
 import Auth from '../Utilities/Auth';
 import { ReactComponent as ChevronIcon } from '../../svg/chevron.svg';
 import { colorsLight } from '../Utilities/Colors';
-import MetaTitle from '../MetaTitle';
+import DiaryAddExtra from '../Components/DiaryAddExtra';
+import DiaryAddFood from '../Components/DiaryAddFood';
+import DiaryAddMeal from '../Components/DiaryAddMeal';
+import DiaryWeight from '../Components/DiaryWeight';
+import MetaTitle from '../Components/MetaTitle';
 import { pluralize } from '../Utilities/Helpers';
-import { ReactComponent as PlusIcon } from '../../svg/plus.svg';
-import TrackableBody from '../TrackableBody';
-import TrackableFoot from '../TrackableFoot';
-import TrackableHead from '../TrackableHead';
+import TrackableBody from '../Components/TrackableBody';
+import TrackableFoot from '../Components/TrackableFoot';
+import TrackableHead from '../Components/TrackableHead';
 import { ReactComponent as XIcon } from '../../svg/x.svg';
 
 export default function Diary() {
@@ -18,22 +21,13 @@ export default function Diary() {
 	const today = ymd(new Date());
 	const urlSearchParams = new URLSearchParams(history.location.search);
 	const currentDate = urlSearchParams.get('date') || today;
+	const foodFields = ['name', 'serving_size', 'serving_units'].concat(Auth.trackables());
 
 	const { formosaState } = useContext(FormosaContext);
 	const [errorExtras, setErrorExtras] = useState(null);
 	const [errorEntries, setErrorEntries] = useState(null);
-	const [errorFood, setErrorFood] = useState(null);
-	const [errorMeals, setErrorMeals] = useState(null);
 	const [diary, setDiary] = useState({ entries: [], extras: [] });
-	const [food, setFood] = useState([]);
-	const [favouriteFood, setFavouriteFood] = useState([]);
-	const [meals, setMeals] = useState([]);
-	const [newEntryRow, setNewEntryRow] = useState({ date: currentDate });
-	const [newExtraRow, setNewExtraRow] = useState({ date: currentDate });
 	const [trackables, setTrackables] = useState([]);
-	const [favouritesOnly, setFavouritesOnly] = useState(Auth.getValue('favourites_only'));
-
-	const foodFields = ['name', 'serving_size', 'serving_units'].concat(Auth.trackables());
 
 	const getEntries = (date) => {
 		if (!date) {
@@ -58,23 +52,6 @@ export default function Diary() {
 	};
 
 	useEffect(() => {
-		Api.get(`food?fields[food]=${foodFields.concat(['is_favourite']).join(',')}`)
-			.then((response) => {
-				setFood(response);
-				setFavouriteFood(response.filter((row) => (row.is_favourite)));
-			})
-			.catch(() => {
-				setErrorFood(true);
-			});
-
-		Api.get('meals?fields[meals]=name&filter[is_favourite][eq]=1&sort=name')
-			.then((response) => {
-				setMeals(response);
-			})
-			.catch(() => {
-				setErrorMeals(true);
-			});
-
 		if (Auth.hasTrackables()) {
 			Api.get(`trackables?fields[trackables]=name,slug,units&filter[slug][in]=${Auth.trackables().join(',')}`)
 				.then((response) => {
@@ -153,21 +130,6 @@ export default function Diary() {
 			});
 	};
 
-	const addMeal = (e) => {
-		Api.post(`meals/${e.target.getAttribute('data-id')}/add`, JSON.stringify({ date: currentDate, fields: foodFields }))
-			.then((response) => {
-				formosaState.addToast('Meal added successfully.', 'success');
-				setDiary({
-					...diary,
-					entries: [...diary.entries].concat(response),
-				});
-			})
-			.catch((response) => {
-				const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
-				formosaState.addToast(text, 'error', 10000);
-			});
-	};
-
 	return (
 		<>
 			<MetaTitle
@@ -187,126 +149,20 @@ export default function Diary() {
 
 			<div id="diary">
 				<div id="diary-top">
-					{!errorFood && (
-						<Form
-							afterSubmit={(response) => {
-								diary.entries.push({ ...response, food: newEntryRow.food });
-								setNewEntryRow({ ...newEntryRow, food: null });
-							}}
-							method="POST"
-							path="entries"
-							relationshipNames={['food']}
-							row={newEntryRow}
-							setRow={setNewEntryRow}
-							successToastText="Food added successfully."
-						>
-							<fieldset>
-								<legend>Add food</legend>
-								<Field
-									afterAdd={() => {
-										setTimeout(() => {
-											document.getElementById('add-food').click();
-										});
-									}}
-									className="formosa-prefix"
-									inputWrapperClassName="flex"
-									max={1}
-									name="food"
-									options={favouritesOnly ? favouriteFood : food}
-									placeholder="Search food"
-									postfix={(
-										<button className="formosa-button formosa-postfix button--icon" id="add-food" type="submit">
-											Add
-											<PlusIcon height={16} width={16} />
-										</button>
-									)}
-									type="autocomplete"
-								/>
-								<Field
-									id="search-favourites"
-									label="Search favourite foods only"
-									labelPosition="after"
-									setValue={(newValue) => {
-										Auth.setValue('favourites_only', newValue);
-										setFavouritesOnly(newValue);
-									}}
-									type="checkbox"
-									value={favouritesOnly}
-								/>
-							</fieldset>
-						</Form>
-					)}
 
-					<Form
-						afterSubmit={(response) => {
-							diary.extras.push({ ...response });
-							setNewExtraRow({ ...newExtraRow, note: '' });
-						}}
-						method="POST"
-						path="extras"
-						row={newExtraRow}
-						setRow={setNewExtraRow}
-						successToastText="Extra added successfully."
-					>
-						<fieldset id="add-extras">
-							<legend>Add extras</legend>
-							<Field
-								className="formosa-prefix"
-								inputWrapperClassName="flex"
-								name="note"
-								placeholder="Enter description"
-								postfix={(
-									<button className="formosa-button formosa-postfix button--icon" type="submit">
-										Add
-										<PlusIcon height={16} width={16} />
-									</button>
-								)}
-								type="text"
-							/>
-							<Field name="date" type="hidden" />
-						</fieldset>
-					</Form>
+					<DiaryAddFood date={currentDate} diary={diary} foodFields={foodFields} setDiary={setDiary} />
+					<DiaryAddExtra date={currentDate} diary={diary} setDiary={setDiary} />
+					<DiaryWeight date={currentDate} />
 				</div>
 
-				<Form>
-					<fieldset>
-						<legend>Add weight</legend>
-						<Field
-							className="formosa-prefix"
-							inputWrapperClassName="flex"
-							maxLength={6}
-							name="weight"
-							postfix={(
-								<button className="formosa-button formosa-postfix button--icon" type="submit">
-									Add
-									<PlusIcon height={16} width={16} />
-								</button>
-							)}
-							size={5}
-							suffix={Auth.weightUnits()}
-						/>
-					</fieldset>
-				</Form>
-
-				{meals.length > 0 && (
-					<fieldset id="add-meal">
-						<legend>Add meal</legend>
-						{meals.map((meal) => (
-							<button className="formosa-button add-meal__button" data-id={meal.id} key={meal.id} onClick={addMeal} type="button">
-								{meal.name}
-							</button>
-						))}
-					</fieldset>
-				)}
+				<DiaryAddMeal date={currentDate} diary={diary} foodFields={foodFields} setDiary={setDiary} />
 			</div>
 
-			{errorFood && (<p className="formosa-message formosa-message--error">Error getting food.</p>)}
-			{errorMeals && (<p className="formosa-message formosa-message--error">Error getting meals.</p>)}
 			{errorEntries && (<p className="formosa-message formosa-message--error">Error getting entries.</p>)}
 			{errorExtras && (<p className="formosa-message formosa-message--error">Error getting extras.</p>)}
 
 			{(diary.entries.length > 0 || diary.extras.length > 0) && (
-				<table>
+				<table id="diary-table">
 					<thead>
 						<tr>
 							<th scope="col"><span className="table-heading">Name</span></th>
@@ -382,8 +238,12 @@ export default function Diary() {
 								<td />
 								{trackables.map((trackable, j) => (
 									<td className="center" key={trackable.id} style={{ backgroundColor: colorsLight[j + 1] }}>
-										{/* TODO */}
-										{/* <Field name={`extras.${i}.${trackable.slug}`} size={6} /> */}
+										<Field
+											form={`extra-${extra.id}`}
+											id={`${trackable.slug}-${extra.id}`}
+											name={`extras.${i}.${trackable.slug}`}
+											size={6}
+										/>
 									</td>
 								))}
 								<td className="column--button">

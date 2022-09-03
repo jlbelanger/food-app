@@ -36,7 +36,10 @@ export default function Fields({ readOnly, row }) {
 	useEffect(() => {
 		window.addEventListener('resize', onResize);
 		window.addEventListener('scroll', onScroll);
-		return () => {};
+		return () => {
+			window.removeEventListener('resize', onResize);
+			window.removeEventListener('scroll', onScroll);
+		};
 	}, []);
 
 	useEffect(() => {
@@ -44,7 +47,6 @@ export default function Fields({ readOnly, row }) {
 			onResize();
 			onScroll();
 		}
-		return () => {};
 	}, [row.info_image]);
 
 	const toSlug = (value) => {

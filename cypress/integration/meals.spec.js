@@ -72,14 +72,22 @@ describe('meals', () => {
 			});
 
 		// Favourite from index.
-		let heart = cy.get('.table-link').contains(`Barfoo ${timestamp}`).parents('tr').children('td').children('.heart');
+		let heart = cy.get('.table-link')
+			.contains(`Barfoo ${timestamp}`)
+			.parents('tr')
+			.children('td')
+			.children('.heart');
 		heart.should('have.class', 'favourite');
 		heart.should('not.have.class', 'unfavourite');
 		heart.click();
 		cy.wait('@putRecord').its('response.statusCode').should('equal', 200);
 		cy.contains('Meal favourited successfully.').should('exist');
 		cy.reload();
-		heart = cy.get('.table-link').contains(`Barfoo ${timestamp}`).parents('tr').children('td').children('.heart');
+		heart = cy.get('.table-link')
+			.contains(`Barfoo ${timestamp}`)
+			.parents('tr')
+			.children('td')
+			.children('.heart');
 		heart.should('not.have.class', 'favourite');
 		heart.should('have.class', 'unfavourite');
 
@@ -88,7 +96,11 @@ describe('meals', () => {
 		cy.wait('@putRecord').its('response.statusCode').should('equal', 200);
 		cy.contains('Meal unfavourited successfully.').should('exist');
 		cy.reload();
-		heart = cy.get('.table-link').contains(`Barfoo ${timestamp}`).parents('tr').children('td').children('.heart');
+		heart = cy.get('.table-link')
+			.contains(`Barfoo ${timestamp}`)
+			.parents('tr')
+			.children('td')
+			.children('.heart');
 		heart.should('have.class', 'favourite');
 		heart.should('not.have.class', 'unfavourite');
 
@@ -186,7 +198,7 @@ describe('meals', () => {
 		cy.wait('@deleteRecord').its('response.statusCode').should('equal', 204);
 		cy.contains('Meal deleted successfully.').should('exist');
 		cy.wait('@getRecords').its('response.statusCode').should('equal', 200);
-		cy.get('.table-link').contains(`Barfoo ${timestamp}`).should('not.exist');
-		cy.get('.table-link').contains(`Foobar ${timestamp}`).should('not.exist');
+		cy.contains(`Barfoo ${timestamp}`).should('not.exist');
+		cy.contains(`Foobar ${timestamp}`).should('not.exist');
 	});
 });

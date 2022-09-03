@@ -1,4 +1,4 @@
-import MetaTitle from './MetaTitle';
+import MetaTitle from './Components/MetaTitle';
 import React from 'react';
 
 export default function Error() {

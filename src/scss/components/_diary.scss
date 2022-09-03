@@ -1,4 +1,4 @@
-$breakpoint: 700px;
+$breakpoint: 800px;
 $fieldset-padding: 16px;
 $add-meal-button-margin: 8px;
 
@@ -32,7 +32,33 @@ $add-meal-button-margin: 8px;
 	@media screen and (min-width: $breakpoint) {
 		margin-top: -$margin;
 	}
+}
+
+#diary-table {
+	.formosa-input-wrapper {
+		margin-left: #{-1 * ($margin - $table-cell-padding)};
+		margin-right: #{-1 * ($margin - $table-cell-padding)};
 	}
+}
+
+#food-form {
+	@media screen and (min-width: $breakpoint) {
+		width: 100%;
+	}
+}
+
+#extra-form {
+	@media screen and (min-width: $breakpoint) {
+		margin-left: $margin;
+		min-width: 30%;
+	}
+}
+
+#weight-form {
+	@media screen and (min-width: $breakpoint) {
+		margin-left: $margin;
+	}
+}
 
 #food-wrapper {
 	border-bottom-right-radius: 0;
@@ -41,17 +67,7 @@ $add-meal-button-margin: 8px;
 	width: 100%;
 }
 
-form + form #add-extras {
-	@media screen and (min-width: $breakpoint) {
-		margin-left: $margin;
-	}
-}
-
 #diary-top {
-	form {
-		width: 100%;
-	}
-
 	@media screen and (min-width: $breakpoint) {
 		display: flex;
 	}
@@ -95,11 +111,16 @@ form + form #add-extras {
 	}
 }
 
+#previous {
+	margin-left: -$heading-inner-padding;
+}
+
 #previous + h1 {
 	text-align: center;
 }
 
 #next {
+	margin-right: -$heading-inner-padding;
 	transform: rotate(180deg);
 
 	&:disabled {

@@ -5,7 +5,7 @@ import { ReactComponent as ArrowIcon } from '../../../svg/arrow.svg';
 import Error from '../../Error';
 import { ReactComponent as HeartIcon } from '../../../svg/heart.svg';
 import { Link } from 'react-router-dom';
-import MetaTitle from '../../MetaTitle';
+import MetaTitle from '../../Components/MetaTitle';
 
 export default function List() {
 	const { formosaState } = useContext(FormosaContext);
@@ -15,20 +15,16 @@ export default function List() {
 	const [rows, setRows] = useState(null);
 	const [filteredRows, setFilteredRows] = useState([]);
 	const [error, setError] = useState(false);
-	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
-		Api.get('meals?fields[meals]=is_favourite,name&sort=name', false)
+		Api.get('meals?fields[meals]=is_favourite,name&sort=name')
 			.then((response) => {
 				setRows(response);
 				setFilteredRows(response);
-				setIsLoading(false);
 			})
 			.catch((response) => {
 				setError(response.status);
-				setIsLoading(false);
 			});
-		return () => {};
 	}, []);
 
 	if (error) {
@@ -97,7 +93,6 @@ export default function List() {
 		<button
 			className="table-button"
 			data-key={key}
-			disabled={isLoading}
 			onClick={sort}
 			type="button"
 		>
@@ -106,52 +101,63 @@ export default function List() {
 		</button>
 	);
 
+	let numResults = `${total.toLocaleString()} result${total !== 1 ? 's' : ''}`;
+	if (total !== totalFiltered) {
+		numResults = `${totalFiltered.toLocaleString()} of ${numResults}`;
+	}
+
+	let message;
+	if (!rows) {
+		message = null;
+	} else if (rows.length <= 0) {
+		message = (
+			<p>No meals found.</p>
+		);
+	}
+
 	return (
 		<>
 			<MetaTitle
 				title="Meals"
-				small={`(${total !== totalFiltered ? `${totalFiltered.toLocaleString()} of ` : ''}${total.toLocaleString()} results)`}
+				small={`(${numResults})`}
 			>
 				<Link className="formosa-button" to="/meals/new">Add</Link>
 			</MetaTitle>
 
-			<div id="search-container">
-				<label className="formosa-label" htmlFor="search">Search</label>
-				<Input disabled={isLoading} id="search" setValue={search} type="search" value={searchValue} />
-			</div>
+			{message !== undefined ? message : (
+				<>
+					<div id="search-container">
+						<label className="formosa-label" htmlFor="search">Search</label>
+						<Input id="search" setValue={search} type="search" value={searchValue} />
+					</div>
 
-			<table>
-				<thead>
-					<tr>
-						<th className="column--button" scope="col">{tableButton('is_favourite', '')}</th>
-						<th scope="col">{tableButton('name', 'Name')}</th>
-					</tr>
-				</thead>
-				<tbody>
-					{isLoading ? (
-						<tr>
-							<td colSpan="2">
-								<div className="formosa-spinner" style={{ justifyContent: 'center', margin: '16px auto' }}>Loading...</div>
-							</td>
-						</tr>
-					)
-						: filteredRows.map((row) => (
-							<tr key={row.id}>
-								<td className="column--button">
-									<button
-										className={`heart ${row.is_favourite ? 'un' : ''}favourite`}
-										data-id={row.id}
-										onClick={favourite}
-										type="button"
-									>
-										<HeartIcon alt={row.is_favourite ? 'Unfavourite' : 'Favourite'} height={16} width={16} />
-									</button>
-								</td>
-								<td><Link className="table-link" to={`/meals/${row.id}`}>{row.name}</Link></td>
+					<table>
+						<thead>
+							<tr>
+								<th className="column--button" scope="col">{tableButton('is_favourite', '')}</th>
+								<th scope="col">{tableButton('name', 'Name')}</th>
 							</tr>
-						))}
-				</tbody>
-			</table>
+						</thead>
+						<tbody>
+							{filteredRows.map((row) => (
+								<tr key={row.id}>
+									<td className="column--button">
+										<button
+											className={`heart ${row.is_favourite ? 'un' : ''}favourite`}
+											data-id={row.id}
+											onClick={favourite}
+											type="button"
+										>
+											<HeartIcon alt={row.is_favourite ? 'Unfavourite' : 'Favourite'} height={16} width={16} />
+										</button>
+									</td>
+									<td><Link className="table-link" to={`/meals/${row.id}`}>{row.name}</Link></td>
+								</tr>
+							))}
+						</tbody>
+					</table>
+				</>
+			)}
 		</>
 	);
 }

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Field } from '@jlbelanger/formosa';
 import Fields from './Partials/Fields';
-import MetaTitle from '../../MetaTitle';
-import MyForm from '../../MyForm';
+import MetaTitle from '../../Components/MetaTitle';
+import MyForm from '../../Components/MyForm';
 import { useHistory } from 'react-router-dom';
 
 export default function New() {
