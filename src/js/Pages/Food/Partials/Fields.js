@@ -111,6 +111,22 @@ export default function Fields({ readOnly, row }) {
 					{Auth.getValue('is_admin') && <Field label="User ID" name="user.id" size={5} />}
 					<Field afterChange={autopopulate} label="Name" name="name" readOnly={readOnly} required />
 					<Field label="Slug" name="slug" readOnly required />
+					<div className="formosa-field formosa-field--serving_size">
+						<Label htmlFor="serving_size" label="Serving size" required />
+						<div className="formosa-input-wrapper">
+							<div className="flex">
+								<Input disabled={servingSizeDisabled} name="serving_size" placeholder="eg. 1" required size={5} />
+								<Input name="serving_units" placeholder="eg. cup" />
+							</div>
+							<div className="formosa-field__note">
+								{row.id
+									? 'Serving size cannot be changed because that would affect previous entries.'
+									: 'Enter the serving size exactly as it appears on the package (eg. 1 package, 3/4 cups, 50 g).'}
+							</div>
+							<Error name="serving_size" />
+							<Error name="serving_units" />
+						</div>
+					</div>
 					<Field
 						accept="image/*"
 						label="Front image"
@@ -131,22 +147,6 @@ export default function Fields({ readOnly, row }) {
 						note="Upload a photo of the nutritional information."
 						type="file"
 					/>
-					<div className="formosa-field formosa-field--serving_size">
-						<Label htmlFor="serving_size" label="Serving size" required />
-						<div className="formosa-input-wrapper">
-							<div className="flex">
-								<Input disabled={servingSizeDisabled} name="serving_size" placeholder="eg. 1" required size={5} />
-								<Input name="serving_units" placeholder="eg. cup" />
-							</div>
-							<div className="formosa-field__note">
-								{row.id
-									? 'Serving size cannot be changed because that would affect previous entries.'
-									: 'Enter the serving size exactly as it appears on the package (eg. 1 package, 3/4 cups, 50 g).'}
-							</div>
-							<Error name="serving_size" />
-							<Error name="serving_units" />
-						</div>
-					</div>
 				</div>
 			)}
 
