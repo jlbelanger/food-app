@@ -50,6 +50,22 @@ export default function Edit() {
 			});
 	};
 
+	const deleteRow = () => {
+		if (!confirm('Are you sure you want to delete this food?')) { // eslint-disable-line no-restricted-globals
+			return;
+		}
+
+		Api.delete(`food/${id}`)
+			.then(() => {
+				addToast('Food deleted successfully.', 'success');
+				history.push('/food');
+			})
+			.catch((response) => {
+				const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
+				addToast(text, 'error', 10000);
+			});
+	};
+
 	const readOnly = Auth.getValue('is_admin') ? false : !row.user || row.user.id.toString() !== Auth.id().toString();
 
 	return (
@@ -64,7 +80,9 @@ export default function Edit() {
 					<HeartIcon alt={row.is_favourite ? 'Unfavourite' : 'Favourite'} height={16} width={16} />
 				</button>
 				{!readOnly && <button className="formosa-button" form="edit-form" type="submit">Save</button>}
-				{!readOnly && <button className="formosa-button formosa-button--danger" form="delete-form" type="submit">Delete</button>}
+				{!readOnly && row.deleteable && (
+					<button className="formosa-button formosa-button--danger" onClick={deleteRow} type="submit">Delete</button>
+				)}
 			</MetaTitle>
 
 			<MyForm
@@ -95,23 +113,6 @@ export default function Edit() {
 			>
 				<Fields readOnly={readOnly} row={row} />
 			</MyForm>
-
-			{!readOnly && (
-				<Form
-					afterSubmit={() => {
-						history.push('/food');
-					}}
-					beforeSubmit={() => (
-						confirm('Are you sure you want to delete this food?') // eslint-disable-line no-restricted-globals
-					)}
-					htmlId="delete-form"
-					id={id}
-					method="DELETE"
-					path="food"
-					showMessage={false}
-					successToastText="Food deleted successfully."
-				/>
-			)}
 		</>
 	);
 }
