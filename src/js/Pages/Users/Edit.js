@@ -10,6 +10,7 @@ export default function Edit() {
 	const [row, setRow] = useState(null);
 	const [error, setError] = useState(false);
 	const [isMeasurementUnitsDisabled, setIsMeasurementUnitsDisabled] = useState(true);
+
 	useEffect(() => {
 		Api.get(`users/${id}?fields[trackables]=name,slug&include=trackables`)
 			.then((response) => {
@@ -30,7 +31,9 @@ export default function Edit() {
 	}
 
 	if (row === null) {
-		return null;
+		return (
+			<MetaTitle title="Edit profile" />
+		);
 	}
 
 	const sexes = {
