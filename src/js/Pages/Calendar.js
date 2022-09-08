@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { Api } from '@jlbelanger/formosa';
 import Auth from '../Utilities/Auth';
 import { ReactComponent as ChevronIcon } from '../../svg/chevron.svg';
+import Error from '../Error';
 import MetaTitle from '../Components/MetaTitle';
 
 export default function Calendar() {
@@ -13,7 +14,7 @@ export default function Calendar() {
 	const currentYear = parseInt(urlSearchParams.get('year') || thisYear, 10);
 
 	const [months, setMonths] = useState([]);
-	const [errorMonths, setErrorMonths] = useState(null);
+	const [error, setError] = useState(false);
 	const [trackables, setTrackables] = useState([]);
 
 	const getEntries = (date) => {
@@ -25,8 +26,8 @@ export default function Calendar() {
 			.then((response) => {
 				setMonths(response);
 			})
-			.catch(() => {
-				setErrorMonths(true);
+			.catch((response) => {
+				setError(response.status);
 			});
 	};
 
@@ -40,6 +41,12 @@ export default function Calendar() {
 
 		getEntries(currentYear);
 	}, []);
+
+	if (error) {
+		return (
+			<Error status={error} />
+		);
+	}
 
 	const prettyMonth = (ym) => (
 		new Date(`${ym}-01T12:00:00Z`).toLocaleString('en-CA', {
@@ -120,8 +127,6 @@ export default function Calendar() {
 			</ul>
 
 			<div className="calendar__legend-spacer" />
-
-			{errorMonths && (<p className="formosa-message formosa-message--error">Error getting calendar data.</p>)}
 
 			{months.map((month) => (
 				<table className={`calendar${!month.data ? ' calendar--hide' : ''}`} key={month.month}>

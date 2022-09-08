@@ -23,9 +23,9 @@ export default function Diary() {
 	const currentDate = urlSearchParams.get('date') || today;
 	const foodFields = ['name', 'serving_size', 'serving_units'].concat(Auth.trackables());
 
-	const [errorExtras, setErrorExtras] = useState(null);
-	const [errorEntries, setErrorEntries] = useState(null);
 	const { addToast } = useContext(FormosaContext);
+	const [errorExtras, setErrorExtras] = useState(false);
+	const [errorEntries, setErrorEntries] = useState(false);
 	const [diary, setDiary] = useState({ entries: [], extras: [] });
 	const [trackables, setTrackables] = useState([]);
 
@@ -149,7 +149,6 @@ export default function Diary() {
 
 			<div id="diary">
 				<div id="diary-top">
-
 					<DiaryAddFood date={currentDate} diary={diary} foodFields={foodFields} setDiary={setDiary} />
 					<DiaryAddExtra date={currentDate} diary={diary} setDiary={setDiary} />
 					<DiaryWeight date={currentDate} />

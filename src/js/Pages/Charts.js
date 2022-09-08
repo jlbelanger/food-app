@@ -15,6 +15,7 @@ import Auth from '../Utilities/Auth';
 import { Chart } from 'react-chartjs-2';
 import ChartScale from '../Components/ChartScale';
 import { colorsDark } from '../Utilities/Colors';
+import Error from '../Error';
 import MetaTitle from '../Components/MetaTitle';
 import zoomPlugin from 'chartjs-plugin-zoom';
 
@@ -24,7 +25,7 @@ export default function Charts() {
 		chartSlugs.map(() => createRef())
 	), chartSlugs);
 	const [datasets, setDatasets] = useState([]);
-	const [error, setError] = useState(null);
+	const [error, setError] = useState(false);
 	const [max] = useState((new Date()).getTime());
 	const [min, setMin] = useState('original');
 
@@ -78,8 +79,8 @@ export default function Charts() {
 				setMin(newMin);
 				setDatasets(output);
 			})
-			.catch(() => {
-				setError(true);
+			.catch((response) => {
+				setError(response.status);
 			});
 	};
 
@@ -101,6 +102,12 @@ export default function Charts() {
 		};
 		ChartJS.register(LineController, LineElement, LinearScale, PointElement, TimeScale, Tooltip, zoomPlugin, defaultZoomPlugin);
 	}, []);
+
+	if (error) {
+		return (
+			<Error status={error} />
+		);
+	}
 
 	const graphOptions = (minY, maxY) => ({
 		maintainAspectRatio: false,
@@ -157,23 +164,21 @@ export default function Charts() {
 				<ChartScale chartRefs={chartRefs} />
 			</MetaTitle>
 
-			{error ? (<p className="formosa-message formosa-message--error">Error getting data.</p>) : (
-				datasets.map((dataset, i) => (
-					<section className="chart" key={dataset.name}>
-						<header className="chart-header">
-							<h2 className="chart-title">{dataset.name}</h2>
-						</header>
-						<div className="chart-container">
-							<Chart
-								ref={chartRefs[i]}
-								data={dataset.data}
-								options={graphOptions(dataset.minY, dataset.maxY)}
-								type="line"
-							/>
-						</div>
-					</section>
-				))
-			)}
+			{datasets.map((dataset, i) => (
+				<section className="chart" key={dataset.name}>
+					<header className="chart-header">
+						<h2 className="chart-title">{dataset.name}</h2>
+					</header>
+					<div className="chart-container">
+						<Chart
+							ref={chartRefs[i]}
+							data={dataset.data}
+							options={graphOptions(dataset.minY, dataset.maxY)}
+							type="line"
+						/>
+					</div>
+				</section>
+			))}
 		</>
 	);
 }
