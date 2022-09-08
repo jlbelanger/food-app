@@ -4,7 +4,7 @@ import Auth from '../Utilities/Auth';
 import PropTypes from 'prop-types';
 
 export default function DiaryWeight({ date }) {
-	const { formosaState } = useContext(FormosaContext);
+	const { addToast } = useContext(FormosaContext);
 	const [row, setRow] = useState(null);
 	const [error, setError] = useState(null);
 
@@ -34,12 +34,12 @@ export default function DiaryWeight({ date }) {
 				if (row.id && row.weight === '') {
 					Api.delete(`weights/${row.id}`)
 						.then(() => {
-							formosaState.addToast('Weight saved successfully.', 'success');
 							setRow({});
+							addToast('Weight removed successfully.', 'success');
 						})
 						.catch((response) => {
 							const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
-							formosaState.addToast(text, 'error', 10000);
+							addToast(text, 'error', 10000);
 						});
 					return false;
 				}

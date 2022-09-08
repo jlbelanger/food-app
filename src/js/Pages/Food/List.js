@@ -10,7 +10,7 @@ import MetaTitle from '../../Components/MetaTitle';
 import TrackableBody from '../../Components/TrackableBody';
 
 export default function List() {
-	const { formosaState } = useContext(FormosaContext);
+	const { addToast } = useContext(FormosaContext);
 	const [sortKey, setSortKey] = useState('slug');
 	const [sortDir, setSortDir] = useState('asc');
 	const [searchValue, setSearchValue] = useState('');
@@ -58,14 +58,14 @@ export default function List() {
 				if (i > -1) {
 					newRows[i].is_favourite = !newRows[i].is_favourite;
 					setRows(newRows);
-					formosaState.addToast(`Food ${newRows[i].is_favourite ? '' : 'un'}favourited successfully.`, 'success');
+					addToast(`Food ${newRows[i].is_favourite ? '' : 'un'}favourited successfully.`, 'success');
 				} else {
-					formosaState.addToast('Error.', 'error');
+					addToast('Error.', 'error');
 				}
 			})
 			.catch((response) => {
 				const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
-				formosaState.addToast(text, 'error', 10000);
+				addToast(text, 'error', 10000);
 			});
 	};
 

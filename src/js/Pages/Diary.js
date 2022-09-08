@@ -23,9 +23,9 @@ export default function Diary() {
 	const currentDate = urlSearchParams.get('date') || today;
 	const foodFields = ['name', 'serving_size', 'serving_units'].concat(Auth.trackables());
 
-	const { formosaState } = useContext(FormosaContext);
 	const [errorExtras, setErrorExtras] = useState(null);
 	const [errorEntries, setErrorEntries] = useState(null);
+	const { addToast } = useContext(FormosaContext);
 	const [diary, setDiary] = useState({ entries: [], extras: [] });
 	const [trackables, setTrackables] = useState([]);
 
@@ -89,12 +89,12 @@ export default function Diary() {
 	const deleteEntry = (e) => {
 		Api.delete(`entries/${e.target.getAttribute('data-id')}`)
 			.then(() => {
-				formosaState.addToast('Food removed successfully.', 'success');
 				e.target.closest('tr').remove();
+				addToast('Food removed successfully.', 'success');
 			})
 			.catch((response) => {
 				const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
-				formosaState.addToast(text, 'error', 10000);
+				addToast(text, 'error', 10000);
 			});
 	};
 
@@ -110,23 +110,23 @@ export default function Diary() {
 		};
 		Api.put(`entries/${entry.id}`, JSON.stringify(body))
 			.then(() => {
-				formosaState.addToast('Entry saved successfully.', 'success');
+				addToast('Entry saved successfully.', 'success');
 			})
 			.catch((reponse) => {
 				const text = reponse.message ? reponse.message : reponse.errors.map((err) => (err.title)).join(' ');
-				formosaState.addToast(text, 'error', 10000);
+				addToast(text, 'error', 10000);
 			});
 	};
 
 	const deleteExtra = (e) => {
 		Api.delete(`extras/${e.target.getAttribute('data-id')}`)
 			.then(() => {
-				formosaState.addToast('Extra removed successfully.', 'success');
 				e.target.closest('tr').remove();
+				addToast('Extra removed successfully.', 'success');
 			})
 			.catch((response) => {
 				const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
-				formosaState.addToast(text, 'error', 10000);
+				addToast(text, 'error', 10000);
 			});
 	};
 

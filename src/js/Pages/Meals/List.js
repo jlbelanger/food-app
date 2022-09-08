@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 import MetaTitle from '../../Components/MetaTitle';
 
 export default function List() {
-	const { formosaState } = useContext(FormosaContext);
+	const { addToast } = useContext(FormosaContext);
 	const [sortKey, setSortKey] = useState('name');
 	const [sortDir, setSortDir] = useState('asc');
 	const [searchValue, setSearchValue] = useState('');
@@ -41,7 +41,7 @@ export default function List() {
 		const newRows = [...rows];
 		const i = newRows.findIndex((row) => (row.id === id));
 		if (i < 0) {
-			formosaState.addToast('Error.', 'error');
+			addToast('Error.', 'error');
 			return;
 		}
 
@@ -58,11 +58,11 @@ export default function List() {
 			.then(() => {
 				newRows[i].is_favourite = isFavourite;
 				setRows(newRows);
-				formosaState.addToast(`Meal ${isFavourite ? '' : 'un'}favourited successfully.`, 'success');
+				addToast(`Meal ${isFavourite ? '' : 'un'}favourited successfully.`, 'success');
 			})
 			.catch((response) => {
 				const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
-				formosaState.addToast(text, 'error', 10000);
+				addToast(text, 'error', 10000);
 			});
 	};
 

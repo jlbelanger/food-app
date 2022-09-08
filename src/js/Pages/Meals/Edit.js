@@ -15,7 +15,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { ReactComponent as XIcon } from '../../../svg/x.svg';
 
 export default function Edit() {
-	const { formosaState } = useContext(FormosaContext);
+	const { addToast } = useContext(FormosaContext);
 	const { id } = useParams();
 	const [row, setRow] = useState(null);
 	const [trackables, setTrackables] = useState([]);
@@ -63,11 +63,11 @@ export default function Edit() {
 		Api.put(`meals/${id}`, JSON.stringify(body))
 			.then(() => {
 				setRow({ ...row, is_favourite: isFavourite });
-				formosaState.addToast(`Meal ${isFavourite ? '' : 'un'}favourited successfully.`, 'success');
+				addToast(`Meal ${isFavourite ? '' : 'un'}favourited successfully.`, 'success');
 			})
 			.catch((response) => {
 				const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
-				formosaState.addToast(text, 'error', 10000);
+				addToast(text, 'error', 10000);
 			});
 	};
 

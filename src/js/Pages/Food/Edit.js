@@ -9,7 +9,7 @@ import MetaTitle from '../../Components/MetaTitle';
 import MyForm from '../../Components/MyForm';
 
 export default function Edit() {
-	const { formosaState } = useContext(FormosaContext);
+	const { addToast } = useContext(FormosaContext);
 	const { id } = useParams();
 	const [row, setRow] = useState(null);
 	const [error, setError] = useState(false);
@@ -40,11 +40,11 @@ export default function Edit() {
 			.then(() => {
 				const isFavourite = !row.is_favourite;
 				setRow({ ...row, is_favourite: isFavourite });
-				formosaState.addToast(`Food ${isFavourite ? '' : 'un'}favourited successfully.`, 'success');
+				addToast(`Food ${isFavourite ? '' : 'un'}favourited successfully.`, 'success');
 			})
 			.catch((response) => {
 				const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
-				formosaState.addToast(text, 'error', 10000);
+				addToast(text, 'error', 10000);
 			});
 	};
 

@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 export default function DiaryMeals({ date, diary, foodFields, setDiary }) {
-	const { formosaState } = useContext(FormosaContext);
+	const { addToast } = useContext(FormosaContext);
 	const [meals, setMeals] = useState([]);
 	const [error, setError] = useState(null);
 
@@ -20,7 +20,7 @@ export default function DiaryMeals({ date, diary, foodFields, setDiary }) {
 	const addMeal = (e) => {
 		Api.post(`meals/${e.target.getAttribute('data-id')}/add`, JSON.stringify({ date, fields: foodFields }))
 			.then((response) => {
-				formosaState.addToast('Meal added successfully.', 'success');
+				addToast('Meal added successfully.', 'success');
 				setDiary({
 					...diary,
 					entries: [...diary.entries].concat(response),
@@ -28,7 +28,7 @@ export default function DiaryMeals({ date, diary, foodFields, setDiary }) {
 			})
 			.catch((response) => {
 				const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
-				formosaState.addToast(text, 'error', 10000);
+				addToast(text, 'error', 10000);
 			});
 	};
 
