@@ -89,8 +89,11 @@ export default function Diary() {
 	const deleteEntry = (e) => {
 		Api.delete(`entries/${e.target.getAttribute('data-id')}`)
 			.then(() => {
-				e.target.closest('tr').remove();
 				addToast('Food removed successfully.', 'success');
+
+				const newEntries = [...diary.entries];
+				newEntries.splice(e.target.getAttribute('data-index'), 1);
+				setDiary({ ...diary, entries: newEntries });
 			})
 			.catch((response) => {
 				const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
@@ -121,8 +124,11 @@ export default function Diary() {
 	const deleteExtra = (e) => {
 		Api.delete(`extras/${e.target.getAttribute('data-id')}`)
 			.then(() => {
-				e.target.closest('tr').remove();
 				addToast('Extra removed successfully.', 'success');
+
+				const newExtras = [...diary.extras];
+				newExtras.splice(e.target.getAttribute('data-index'), 1);
+				setDiary({ ...diary, extras: newExtras });
 			})
 			.catch((response) => {
 				const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
@@ -205,6 +211,7 @@ export default function Diary() {
 									<button
 										className="button--icon button--remove"
 										data-id={entry.id}
+										data-index={i}
 										onClick={deleteEntry}
 										type="button"
 									>
@@ -219,6 +226,7 @@ export default function Diary() {
 							<tr key={extra.id}>
 								<td>
 									<Form
+										htmlId={`extra-${extra.id}`}
 										id={extra.id}
 										method="PUT"
 										path="extras"
@@ -249,6 +257,7 @@ export default function Diary() {
 									<button
 										className="button--icon button--remove"
 										data-id={extra.id}
+										data-index={i}
 										onClick={deleteExtra}
 										type="button"
 									>
