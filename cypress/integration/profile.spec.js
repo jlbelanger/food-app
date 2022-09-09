@@ -3,33 +3,20 @@ describe('profile', () => {
 		cy.login();
 
 		// Set weight for calculating BMI.
+		cy.intercept('GET', '**/api/weights?**').as('getWeight');
 		cy.visit('/');
-		cy.get('#weight').clear().type('130.5');
-		cy.get('#weight-form button').click();
-		cy.contains('Weight saved successfully.').should('exist');
+		cy.wait('@getWeight');
+		cy.get('#weight')
+			.then(($el) => {
+				if ($el.val() !== '130.5') {
+					cy.get('#weight').clear().type('130.5');
+					cy.get('#weight-form button').click();
+					cy.contains('Weight saved successfully.').should('exist');
+				}
+			});
 	});
 
 	describe('when updating BMI settings', () => {
-		describe('when clearing settings', () => {
-			it('works', () => {
-				cy.visit('/profile');
-				cy.get('[name="measurement_units"]')
-					.then(($el) => {
-						if (!$el.attr('disabled')) {
-							cy.get('[name="measurement_units"]').select('imperial (weight in pounds, height in inches)');
-						}
-					});
-				cy.get('[name="activity_level"]').select('');
-				cy.get('[name="sex"]').select('');
-				cy.get('[name="age"]').clear();
-				cy.get('[name="height"]').clear();
-				cy.get('#save-bmi').click();
-				cy.contains('BMI settings updated successfully.').should('exist');
-				cy.get('#bmi').should('not.exist');
-				cy.get('#calories').should('not.exist');
-			});
-		});
-
 		describe('when adding BMI settings', () => {
 			it('works', () => {
 				cy.visit('/profile');
@@ -73,10 +60,34 @@ describe('profile', () => {
 				+ 'you should eat 500 calories less in a day than the calories you would eat to maintain your weight.');
 			});
 		});
+
+		describe('when clearing settings', () => {
+			it('works', () => {
+				cy.visit('/profile');
+				cy.get('[name="measurement_units"]')
+					.then(($el) => {
+						if (!$el.attr('disabled')) {
+							cy.get('[name="measurement_units"]').select('imperial (weight in pounds, height in inches)');
+						}
+					});
+				cy.get('[name="activity_level"]').select('');
+				cy.get('[name="sex"]').select('');
+				cy.get('[name="age"]').clear();
+				cy.get('[name="height"]').clear();
+				cy.get('#save-bmi').click();
+				cy.contains('BMI settings updated successfully.').should('exist');
+				cy.get('#bmi').should('not.exist');
+				cy.get('#calories').should('not.exist');
+			});
+		});
 	});
 
 	describe('when updating trackable settings', () => {
 		it('works', () => {
+			cy.intercept('GET', '**/api/meals?**').as('getMeals');
+			cy.intercept('GET', '**/api/food?**').as('getFoods');
+			cy.intercept('GET', '**/api/meals**').as('getMeal');
+
 			const timestamp = (new Date()).getTime();
 
 			// Remove all trackables to start.
@@ -131,6 +142,7 @@ describe('profile', () => {
 
 			// Check columns on food index.
 			cy.get('.nav__link').contains('Food').click();
+			cy.wait('@getFoods');
 			cy.get('[data-key="calories"]').should('not.exist');
 			cy.get('[data-key="protein"]').should('exist');
 			cy.get('[data-key="sodium"]').should('exist');
@@ -138,8 +150,10 @@ describe('profile', () => {
 
 			// Check columns on meal form.
 			cy.get('.nav__link').contains('Meals').click();
+			cy.wait('@getMeals');
 			cy.get('#search').type(`Foo ${timestamp}`);
 			cy.get('.table-link').contains(`Foo ${timestamp}`).click();
+			cy.wait('@getMeal');
 			cy.get('#new-food').type(`Foo ${timestamp}`);
 			cy.get('.formosa-autocomplete__option__button').contains(`Foo ${timestamp}`).click();
 			cy.get('.table-heading').contains('Calories').should('not.exist');
