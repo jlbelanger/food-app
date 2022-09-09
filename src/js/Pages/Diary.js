@@ -245,12 +245,12 @@ export default function Diary() {
 								<td />
 								{trackables.map((trackable, j) => (
 									<td className="center" key={trackable.id} style={{ backgroundColor: colorsLight[j + 1] }}>
-										<Field
+										{/* <Field
 											form={`extra-${extra.id}`}
 											id={`${trackable.slug}-${extra.id}`}
 											name={`extras.${i}.${trackable.slug}`}
 											size={6}
-										/>
+										/> */}
 									</td>
 								))}
 								<td className="column--button">

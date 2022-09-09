@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 export default function DiaryMeals({ date, diary, foodFields, setDiary }) {
 	const { addToast } = useContext(FormosaContext);
 	const [meals, setMeals] = useState([]);
-	const [error, setError] = useState(null);
+	const [error, setError] = useState(false);
 
 	useEffect(() => {
 		Api.get('meals?fields[meals]=name&filter[is_favourite][eq]=1&sort=name')
@@ -34,7 +34,7 @@ export default function DiaryMeals({ date, diary, foodFields, setDiary }) {
 
 	if (error) {
 		return (
-			<p className="formosa-message formosa-message--error">Error getting weight.</p>
+			<p className="formosa-message formosa-message--error">Error getting meals.</p>
 		);
 	}
 

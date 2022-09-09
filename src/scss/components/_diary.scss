@@ -41,22 +41,9 @@ $add-meal-button-margin: 8px;
 	}
 }
 
-#food-form {
-	@media screen and (min-width: $breakpoint) {
-		width: 100%;
-	}
-}
-
 #extra-form {
 	@media screen and (min-width: $breakpoint) {
-		margin-left: $margin;
 		min-width: 30%;
-	}
-}
-
-#weight-form {
-	@media screen and (min-width: $breakpoint) {
-		margin-left: $margin;
 	}
 }
 
@@ -70,6 +57,20 @@ $add-meal-button-margin: 8px;
 #diary-top {
 	@media screen and (min-width: $breakpoint) {
 		display: flex;
+
+		.form {
+			margin-left: #{$margin / 2};
+			margin-right: #{$margin / 2};
+		}
+
+		& > :first-child {
+			margin-left: 0;
+			width: 100%;
+		}
+
+		& > :last-child {
+			margin-right: 0;
+		}
 	}
 }
 

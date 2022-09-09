@@ -14,9 +14,11 @@ export default function DiaryAddExtra({ date, diary, setDiary }) {
 				setDiary({ ...diary, extras: newExtras });
 				setRow({ ...row, note: '' });
 			}}
+			className="form"
 			htmlId="extra-form"
 			method="POST"
 			path="extras"
+			preventEmptyRequest
 			row={row}
 			setRow={setRow}
 			successToastText="Extra added successfully."
@@ -25,7 +27,7 @@ export default function DiaryAddExtra({ date, diary, setDiary }) {
 				<legend>Add extras</legend>
 				<Field
 					className="formosa-prefix"
-					inputWrapperClassName="flex"
+					inputInnerWrapperClassName="flex"
 					name="note"
 					placeholder="Enter description"
 					postfix={(

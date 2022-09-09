@@ -1,12 +1,12 @@
-import { Api, CheckIcon, Field, Form, FormosaContext } from '@jlbelanger/formosa';
+import { Api, Form, FormosaContext } from '@jlbelanger/formosa';
 import React, { useContext, useEffect, useState } from 'react';
-import Auth from '../Utilities/Auth';
+import DiaryWeightFieldset from './DiaryWeightFieldset';
 import PropTypes from 'prop-types';
 
 export default function DiaryWeight({ date }) {
 	const { addToast } = useContext(FormosaContext);
 	const [row, setRow] = useState(null);
-	const [error, setError] = useState(null);
+	const [error, setError] = useState(false);
 
 	useEffect(() => {
 		Api.get(`weights?filter[date][eq]=${date}`)
@@ -24,18 +24,31 @@ export default function DiaryWeight({ date }) {
 
 	if (error) {
 		return (
-			<p className="formosa-message formosa-message--error">Error getting weight.</p>
+			<p className="formosa-message formosa-message--error form">Error getting weight.</p>
+		);
+	}
+
+	if (row === null) {
+		return (
+			<Form className="form" key="fake-form">
+				<DiaryWeightFieldset disabled />
+			</Form>
 		);
 	}
 
 	return (
 		<Form
+			afterSubmit={(response) => {
+				if (response.id) {
+					setRow({ ...row, id: response.id, type: response.type });
+				}
+			}}
 			beforeSubmit={() => {
 				if (row.id && row.weight === '') {
 					Api.delete(`weights/${row.id}`)
 						.then(() => {
-							setRow({});
 							addToast('Weight removed successfully.', 'success');
+							setRow({ date });
 						})
 						.catch((response) => {
 							const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
@@ -45,32 +58,18 @@ export default function DiaryWeight({ date }) {
 				}
 				return true;
 			}}
+			className="form"
 			htmlId="weight-form"
-			id={row && row.id ? row.id : null}
-			method={row && row.id ? 'PUT' : 'POST'}
+			id={row.id ? row.id : null}
+			key="real-form"
+			method={row.id ? 'PUT' : 'POST'}
 			path="weights"
 			preventEmptyRequest
 			row={row}
 			setRow={setRow}
 			successToastText="Weight saved successfully."
 		>
-			<fieldset>
-				<legend>Weight</legend>
-				<Field
-					className="formosa-prefix"
-					inputWrapperClassName="flex"
-					maxLength={6}
-					name="weight"
-					postfix={(
-						<button className="formosa-button formosa-postfix button--icon" type="submit">
-							Save
-							<CheckIcon height={16} width={16} />
-						</button>
-					)}
-					size={5}
-					suffix={Auth.weightUnits()}
-				/>
-			</fieldset>
+			<DiaryWeightFieldset />
 		</Form>
 	);
 }

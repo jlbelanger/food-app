@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 
 export default function DiaryAddFood({ date, diary, foodFields, setDiary }) {
 	const [row, setRow] = useState({ date });
-	const [error, setError] = useState(null);
+	const [error, setError] = useState(false);
 	const [favouritesOnly, setFavouritesOnly] = useState(Auth.getValue('favourites_only'));
 	const [favouriteFood, setFavouriteFood] = useState([]);
 	const [food, setFood] = useState([]);
@@ -24,7 +24,7 @@ export default function DiaryAddFood({ date, diary, foodFields, setDiary }) {
 
 	if (error) {
 		return (
-			<p className="formosa-message formosa-message--error">Error getting food.</p>
+			<p className="formosa-message formosa-message--error form">Error getting food.</p>
 		);
 	}
 
@@ -36,9 +36,11 @@ export default function DiaryAddFood({ date, diary, foodFields, setDiary }) {
 				setDiary({ ...diary, entries: newEntries });
 				setRow({ ...row, food: null });
 			}}
+			className="form"
 			htmlId="food-form"
 			method="POST"
 			path="entries"
+			preventEmptyRequest
 			relationshipNames={['food']}
 			row={row}
 			setRow={setRow}
@@ -53,7 +55,7 @@ export default function DiaryAddFood({ date, diary, foodFields, setDiary }) {
 						});
 					}}
 					className="formosa-prefix"
-					inputWrapperClassName="flex"
+					inputInnerWrapperClassName="flex"
 					max={1}
 					name="food"
 					options={favouritesOnly ? favouriteFood : food}
