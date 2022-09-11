@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 export default function DiaryAddFood({ date, diary, foodFields, setDiary }) {
 	const [row, setRow] = useState({ date });
 	const [error, setError] = useState(false);
-	const [favouritesOnly, setFavouritesOnly] = useState(Auth.getValue('favourites_only'));
+	const [favouritesOnly, setFavouritesOnly] = useState(Auth.getValue('favourites_only', false));
 	const [favouriteFood, setFavouriteFood] = useState([]);
 	const [food, setFood] = useState([]);
 
