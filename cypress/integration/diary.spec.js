@@ -39,48 +39,99 @@ describe('diary', () => {
 		});
 
 		it('works', () => {
+			cy.intercept('GET', '**/api/extras?**').as('getExtras');
+			cy.intercept('POST', '**/api/extras').as('postExtra');
+			cy.intercept('PUT', '**/api/extras/**').as('putExtra');
+			cy.intercept('DELETE', '**/api/extras/**').as('deleteExtra');
+
 			// Add.
 			cy.visit('/');
+			cy.wait('@getExtras').its('response.statusCode').should('equal', 200);
 			cy.get('#diary-table').should('not.exist');
 			cy.get('#note').type('Example extra');
 			cy.get('#note + button').click();
+			cy.wait('@postExtra').its('response.statusCode').should('equal', 201);
 			cy.contains('Extra added successfully.').should('exist');
 			cy.get('.formosa-toast__close').click();
 			cy.get('#diary-table').should('be.visible');
-			cy.get('input[id^="note-"]').should('have.value', 'Example extra');
+			cy.get('#note-0').should('have.value', 'Example extra');
+			cy.get('.column-total--calories').should('have.text', '0');
 
-			// TODO: Edit notes, trackables.
+			// Edit note and press enter.
+			cy.get('#note-0').clear().type('New note{enter}');
+			cy.wait('@putExtra').its('response.statusCode').should('equal', 200);
+			cy.contains('Extra saved successfully.').should('exist');
+			cy.get('.formosa-toast__close').click();
+			cy.get('#note-0').should('have.value', 'New note');
+			cy.get('.column-total--calories').should('have.text', '0');
+
+			// Edit note and blur.
+			cy.get('#note-0').clear().type('Another note').blur();
+			cy.wait('@putExtra').its('response.statusCode').should('equal', 200);
+			cy.contains('Extra saved successfully.').should('exist');
+			cy.get('.formosa-toast__close').click();
+			cy.get('#note-0').should('have.value', 'Another note');
+			cy.get('.column-total--calories').should('have.text', '0');
+
+			// TODO: Edit trackables and press enter.
+			// TODO: Edit trackables and blur.
 
 			// Delete.
 			cy.get('.button--remove').click();
+			cy.wait('@deleteExtra').its('response.statusCode').should('equal', 204);
 			cy.contains('Extra removed successfully.').should('exist');
 			cy.get('.formosa-toast__close').click();
 			cy.get('#diary-table').should('not.exist');
-			cy.get('input[id^="note-"]').should('not.exist');
+			cy.get('#note-0').should('not.exist');
 
 			// Add then refresh.
 			cy.visit('/');
+			cy.wait('@getExtras').its('response.statusCode').should('equal', 200);
 			cy.get('#note').type('Example extra 2');
 			cy.get('#note + button').click();
+			cy.wait('@postExtra').its('response.statusCode').should('equal', 201);
 			cy.contains('Extra added successfully.').should('exist');
 			cy.get('.formosa-toast__close').click();
 			cy.get('#diary-table').should('be.visible');
-			cy.get('input[id^="note-"]').should('have.value', 'Example extra 2');
+			cy.get('#note-0').should('have.value', 'Example extra 2');
 			cy.reload();
 			cy.get('#diary-table').should('be.visible');
-			cy.get('input[id^="note-"]').should('have.value', 'Example extra 2');
+			cy.get('#note-0').should('have.value', 'Example extra 2');
 
-			// TODO: Edit then refresh.
+			// Edit note and press enter then refresh.
+			cy.get('#note-0').clear().type('New note{enter}');
+			cy.wait('@putExtra').its('response.statusCode').should('equal', 200);
+			cy.contains('Extra saved successfully.').should('exist');
+			cy.get('.formosa-toast__close').click();
+			cy.reload();
+			cy.wait('@getExtras').its('response.statusCode').should('equal', 200);
+			cy.get('#note-0').should('have.value', 'New note');
+			cy.get('.column-total--calories').should('have.text', '0');
+
+			// Edit note and blur then refresh.
+			cy.get('#note-0').clear().type('Another note').blur();
+			cy.wait('@putExtra').its('response.statusCode').should('equal', 200);
+			cy.contains('Extra saved successfully.').should('exist');
+			cy.get('.formosa-toast__close').click();
+			cy.reload();
+			cy.wait('@getExtras').its('response.statusCode').should('equal', 200);
+			cy.get('#note-0').should('have.value', 'Another note');
+			cy.get('.column-total--calories').should('have.text', '0');
+
+			// TODO: Edit trackables and press enter then refresh.
+			// TODO: Edit trackables and blur then refresh.
 
 			// Delete then refresh.
 			cy.get('.button--remove').click();
+			cy.wait('@deleteExtra').its('response.statusCode').should('equal', 204);
 			cy.contains('Extra removed successfully.').should('exist');
 			cy.get('.formosa-toast__close').click();
 			cy.get('#diary-table').should('not.exist');
-			cy.get('input[id^="note-"]').should('not.exist');
+			cy.get('#note-0').should('not.exist');
 			cy.reload();
+			cy.wait('@getExtras').its('response.statusCode').should('equal', 200);
 			cy.get('#diary-table').should('not.exist');
-			cy.get('input[id^="note-"]').should('not.exist');
+			cy.get('#note-0').should('not.exist');
 		});
 	});
 
@@ -235,59 +286,133 @@ describe('diary', () => {
 
 		describe('when filtering by favourites', () => {
 			it('works', () => {
-				// TODO.
+				// Uncheck by default.
+				cy.visit('/');
+				cy.get('#search-favourites').uncheck();
+
+				// Create food.
+				const timestamp = (new Date()).getTime();
+				cy.createFood(`Foo ${timestamp}`, 1, {}, true);
+				cy.createFood(`Bar ${timestamp}`, 1, {}, false);
+
+				// With option checked.
+				cy.visit('/');
+				cy.get('#search-favourites').should('not.be.checked');
+				cy.get('#search-favourites').check();
+				cy.get('#food').type(`Foo ${timestamp}`);
+				cy.get('.formosa-autocomplete__option__button').contains(`Foo ${timestamp}`).should('be.visible');
+				cy.get('#food').clear().type(`Bar ${timestamp}`);
+				cy.get('.formosa-autocomplete__option__button').should('not.exist');
+
+				// With option unchecked.
+				cy.visit('/');
+				cy.get('#search-favourites').should('be.checked');
+				cy.get('#search-favourites').uncheck();
+				cy.get('#food').type(`Foo ${timestamp}`);
+				cy.get('.formosa-autocomplete__option__button').contains(`Foo ${timestamp}`).should('be.visible');
+				cy.get('#food').clear().type(`Bar ${timestamp}`);
+				cy.get('.formosa-autocomplete__option__button').contains(`Bar ${timestamp}`).should('be.visible');
 			});
 		});
 
 		describe('when adding/editing/deleting food', () => {
 			it('works', () => {
+				cy.intercept('GET', '**/api/entries?**').as('getEntries');
+				cy.intercept('POST', '**/api/entries').as('postEntry');
+				cy.intercept('PUT', '**/api/entries/**').as('putEntry');
+				cy.intercept('DELETE', '**/api/entries/**').as('deleteEntry');
+
+				// Create food.
 				const timestamp = (new Date()).getTime();
-				cy.createFood(`Foo ${timestamp}`, 2);
+				cy.createFood(`Foo ${timestamp}`, 2, { calories: 100 });
 
 				// Add.
 				cy.visit('/');
+				cy.wait('@getEntries').its('response.statusCode').should('equal', 200);
 				cy.get('#diary-table').should('not.exist');
 				cy.get('#food').type(`Foo ${timestamp}`);
 				cy.contains(`Foo ${timestamp}`).click();
+				cy.wait('@postEntry').its('response.statusCode').should('equal', 201);
 				cy.contains('Food added successfully.').should('exist');
 				cy.get('.formosa-toast__close').click();
 				cy.get('#diary-table').should('be.visible');
-				cy.get('[id="entries.0.user_serving_size"]').should('have.value', '2');
+				cy.get('#user_serving_size-0').should('have.value', '2');
+				cy.get('.entry .column--calories').should('have.text', '100');
+				cy.get('.column-total--calories').should('have.text', '100');
 
-				// TODO: Edit serving size and press enter.
-				// TODO: Edit serving size and blur.
+				// Edit serving size and press enter.
+				cy.get('#user_serving_size-0').clear().type('1{enter}');
+				cy.wait('@putEntry').its('response.statusCode').should('equal', 200);
+				cy.contains('Entry saved successfully.').should('exist');
+				cy.get('.formosa-toast__close').click();
+				cy.get('#user_serving_size-0').should('have.value', '1');
+				cy.get('.entry .column--calories').should('have.text', '50');
+				cy.get('.column-total--calories').should('have.text', '50');
+
+				// Edit serving size and blur.
+				cy.get('#user_serving_size-0').clear().type('.5').blur();
+				cy.wait('@putEntry').its('response.statusCode').should('equal', 200);
+				cy.contains('Entry saved successfully.').should('exist');
+				cy.get('.formosa-toast__close').click();
+				cy.get('#user_serving_size-0').should('have.value', '.5');
+				cy.get('.entry .column--calories').should('have.text', '25');
+				cy.get('.column-total--calories').should('have.text', '25');
 
 				// Delete.
 				cy.get('.button--remove').click();
+				cy.wait('@deleteEntry').its('response.statusCode').should('equal', 204);
 				cy.contains('Food removed successfully.').should('exist');
 				cy.get('.formosa-toast__close').click();
 				cy.get('#diary-table').should('not.exist');
-				cy.get('[id="entries.0.user_serving_size"]').should('not.exist');
+				cy.get('#user_serving_size-0').should('not.exist');
 
 				// Add then refresh.
 				cy.visit('/');
+				cy.wait('@getEntries').its('response.statusCode').should('equal', 200);
 				cy.get('#diary-table').should('not.exist');
 				cy.get('#food').type(`Foo ${timestamp}`);
 				cy.contains(`Foo ${timestamp}`).click();
+				cy.wait('@postEntry').its('response.statusCode').should('equal', 201);
 				cy.contains('Food added successfully.').should('exist');
 				cy.get('.formosa-toast__close').click();
-				cy.get('#diary-table').should('be.visible');
-				cy.get('[id="entries.0.user_serving_size"]').should('have.value', '2');
 				cy.reload();
+				cy.wait('@getEntries').its('response.statusCode').should('equal', 200);
 				cy.get('#diary-table').should('be.visible');
-				cy.get('[id="entries.0.user_serving_size"]').should('have.value', '2');
+				cy.get('#user_serving_size-0').should('have.value', '2');
+				cy.get('.entry .column--calories').should('have.text', '100');
+				cy.get('.column-total--calories').should('have.text', '100');
 
-				// TODO: Edit then refresh.
+				// Edit serving size and press enter then refresh.
+				cy.get('#user_serving_size-0').clear().type('1{enter}');
+				cy.wait('@putEntry').its('response.statusCode').should('equal', 200);
+				cy.contains('Entry saved successfully.').should('exist');
+				cy.get('.formosa-toast__close').click();
+				cy.reload();
+				cy.wait('@getEntries').its('response.statusCode').should('equal', 200);
+				cy.get('#user_serving_size-0').should('have.value', '1');
+				cy.get('.entry .column--calories').should('have.text', '50');
+				cy.get('.column-total--calories').should('have.text', '50');
+
+				// Edit serving size and blur then refresh.
+				cy.get('#user_serving_size-0').clear().type('.5').blur();
+				cy.wait('@putEntry').its('response.statusCode').should('equal', 200);
+				cy.contains('Entry saved successfully.').should('exist');
+				cy.get('.formosa-toast__close').click();
+				cy.reload();
+				cy.wait('@getEntries').its('response.statusCode').should('equal', 200);
+				cy.get('#user_serving_size-0').should('have.value', '0.5');
+				cy.get('.entry .column--calories').should('have.text', '25');
+				cy.get('.column-total--calories').should('have.text', '25');
 
 				// Delete then refresh.
 				cy.get('.button--remove').click();
+				cy.wait('@deleteEntry').its('response.statusCode').should('equal', 204);
 				cy.contains('Food removed successfully.').should('exist');
 				cy.get('.formosa-toast__close').click();
-				cy.get('#diary-table').should('not.exist');
-				cy.get('[id="entries.0.user_serving_size"]').should('not.exist');
 				cy.reload();
+				cy.wait('@getEntries').its('response.statusCode').should('equal', 200);
 				cy.get('#diary-table').should('not.exist');
-				cy.get('[id="entries.0.user_serving_size"]').should('not.exist');
+				cy.get('#user_serving_size-0').should('not.exist');
 			});
 		});
 	});
@@ -310,8 +435,8 @@ describe('diary', () => {
 			cy.get('#diary-table').should('not.exist');
 			cy.contains('Example meal').click();
 			cy.get('#diary-table').should('be.visible');
-			cy.get('[id="entries.0.user_serving_size"]').should('have.value', '1');
-			cy.get('[id="entries.1.user_serving_size"]').should('have.value', '2');
+			cy.get('#user_serving_size-0').should('have.value', '1');
+			cy.get('[id="user_serving_size-1"]').should('have.value', '2');
 		});
 	});
 });

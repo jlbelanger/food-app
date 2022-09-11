@@ -183,28 +183,41 @@ export default function Diary() {
 									<Link className="table-link" to={`/food/${entry.food.id}`}>{entry.food.name}</Link>
 								</td>
 								<td className="column--serving">
-									<Field
-										onKeyUp={(e) => {
-											if (e.key === 'Enter') {
-												updateEntry(entry);
-											}
-										}}
-										onBlur={() => {
-											updateEntry(entry); // TODO: Only submit if dirty.
-										}}
-										name={`entries.${i}.user_serving_size`}
-										size={6}
-										suffix={pluralize(entry.food.serving_units, entry.user_serving_size)}
-										setValue={(newValue) => {
+									<Form
+										htmlId={`entry-${entry.id}`}
+										id={entry.id}
+										method="PUT"
+										path="entries"
+										preventEmptyRequest
+										preventEmptyRequestText={false}
+										row={entry}
+										setRow={(newUserServingSize) => {
 											const e = [...diary.entries];
-											e[i].user_serving_size = newValue;
-											setDiary({
-												...diary,
-												entries: e,
-											});
+											e[i].user_serving_size = newUserServingSize;
+											setDiary({ ...diary, entries: e });
 										}}
-										value={diary.entries[i].user_serving_size}
-									/>
+										successToastText="Entry saved successfully."
+									>
+										<Field
+											onBlur={() => {
+												document.getElementById(`entry-${entry.id}-submit`).click();
+											}}
+											id={`user_serving_size-${i}`}
+											name="user_serving_size"
+											size={6}
+											suffix={pluralize(entry.food.serving_units, entry.user_serving_size)}
+											setValue={(newValue) => {
+												const e = [...diary.entries];
+												e[i].user_serving_size = newValue;
+												setDiary({
+													...diary,
+													entries: e,
+												});
+											}}
+											value={diary.entries[i].user_serving_size}
+										/>
+										<button id={`entry-${entry.id}-submit`} style={{ display: 'none' }} type="submit" />
+									</Form>
 								</td>
 								<TrackableBody food={entry.food} servingSize={parseFloat(entry.user_serving_size)} trackables={trackables} />
 								<td className="column--button">
@@ -231,6 +244,7 @@ export default function Diary() {
 										method="PUT"
 										path="extras"
 										preventEmptyRequest
+										preventEmptyRequestText={false}
 										row={extra}
 										setRow={(newNote) => {
 											const e = [...diary.extras];
@@ -239,7 +253,23 @@ export default function Diary() {
 										}}
 										successToastText="Extra saved successfully."
 									>
-										<Field id={`note-${extra.id}`} name="note" />
+										<Field
+											onBlur={() => {
+												document.getElementById(`extra-${extra.id}-submit`).click();
+											}}
+											id={`note-${i}`}
+											name="note"
+											setValue={(newValue) => {
+												const e = [...diary.extras];
+												e[i].note = newValue;
+												setDiary({
+													...diary,
+													extras: e,
+												});
+											}}
+											value={diary.extras[i].note}
+										/>
+										<button id={`extra-${extra.id}-submit`} style={{ display: 'none' }} type="submit" />
 									</Form>
 								</td>
 								<td />

@@ -1,7 +1,9 @@
 import 'cypress-file-upload'; // eslint-disable-line import/no-extraneous-dependencies
 
-Cypress.Commands.add('createFood', (name, servingSize, attributes = {}) => {
+Cypress.Commands.add('createFood', (name, servingSize, attributes = {}, addToFavourites = false) => {
 	cy.intercept('POST', '**/api/food').as('postFoodRecord');
+	cy.intercept('POST', '**/api/food/**/favourite').as('favouriteFoodRecord');
+
 	cy.visit('/food/new');
 	cy.get('[name="name"]').type(name);
 	cy.get('[name="serving_size"]').type(servingSize);
@@ -12,6 +14,13 @@ Cypress.Commands.add('createFood', (name, servingSize, attributes = {}) => {
 	cy.wait('@postFoodRecord').its('response.statusCode').should('equal', 201);
 	cy.contains('Food added successfully.').should('exist');
 	cy.get('.formosa-toast__close').click();
+
+	if (addToFavourites) {
+		cy.get('.heart').click();
+		cy.wait('@favouriteFoodRecord').its('response.statusCode').should('equal', 204);
+		cy.contains('Food favourited successfully.').should('exist');
+		cy.get('.formosa-toast__close').click();
+	}
 });
 
 Cypress.Commands.add('createMeal', (name, foods = [], addToFavourites = false) => {
