@@ -18,7 +18,9 @@ export default function Edit() {
 	const { addToast } = useContext(FormosaContext);
 	const { id } = useParams();
 	const [row, setRow] = useState(null);
+	const [allFood, setAllFood] = useState([]);
 	const [trackables, setTrackables] = useState([]);
+	const [errorFood, setErrorFood] = useState(false);
 	const [error, setError] = useState(false);
 	const [newFood, setNewFood] = useState(null);
 	const history = useHistory();
@@ -32,6 +34,15 @@ export default function Edit() {
 			.catch((response) => {
 				setError(response.status);
 			});
+
+		Api.get(`food?fields[food]=${foodFields.join(',')}`)
+			.then((response) => {
+				setAllFood(response);
+			})
+			.catch((response) => {
+				setErrorFood(response.status);
+			});
+
 		if (Auth.hasTrackables()) {
 			Api.get(`trackables?fields[trackables]=name,slug,units&filter[slug][in]=${Auth.trackables().join(',')}`)
 				.then((response) => {
@@ -73,6 +84,9 @@ export default function Edit() {
 			});
 	};
 
+	const mealFoodIds = row.foods.map((f) => (f.food.id));
+	const filteredFood = allFood.filter((f) => (!mealFoodIds.includes(f.id)));
+
 	return (
 		<>
 			<MetaTitle title={`Edit ${row.name}`}>
@@ -107,6 +121,7 @@ export default function Edit() {
 					className="formosa-prefix"
 					id="new-food"
 					max={1}
+					options={filteredFood}
 					placeholder="Search foods"
 					type="autocomplete"
 					setValue={(food) => {
@@ -127,7 +142,6 @@ export default function Edit() {
 							document.getElementById('new-food').focus();
 						});
 					}}
-					url={`food?fields[food]=${foodFields.join(',')}`}
 					value={newFood}
 				/>
 
