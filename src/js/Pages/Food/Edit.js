@@ -1,7 +1,8 @@
-import { Api, CheckIcon, FormosaContext } from '@jlbelanger/formosa';
+import { Api, FormosaContext } from '@jlbelanger/formosa';
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import Auth from '../../Utilities/Auth';
+import { ReactComponent as CheckIcon } from '../../../svg/check.svg';
 import Error from '../../Error';
 import Fields from './Partials/Fields';
 import { ReactComponent as HeartIcon } from '../../../svg/heart.svg';

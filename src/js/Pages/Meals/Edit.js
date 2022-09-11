@@ -2,6 +2,7 @@ import { Api, Field, Form, FormosaContext, Input } from '@jlbelanger/formosa';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import React, { useContext, useEffect, useState } from 'react';
 import Auth from '../../Utilities/Auth';
+import { ReactComponent as CheckIcon } from '../../../svg/check.svg';
 import Error from '../../Error';
 import Fields from './Partials/Fields';
 import { ReactComponent as HeartIcon } from '../../../svg/heart.svg';
@@ -24,7 +25,7 @@ export default function Edit() {
 	const [error, setError] = useState(false);
 	const [newFood, setNewFood] = useState(null);
 	const history = useHistory();
-	const foodFields = ['name', 'slug', 'serving_size', 'serving_units'].concat(Auth.trackables());
+	const foodFields = ['name', 'slug', 'serving_size', 'serving_units', 'is_verified'].concat(Auth.trackables());
 
 	useEffect(() => {
 		Api.get(`meals/${id}?include=foods,foods.food&fields[food]=${foodFields.join(',')}&fields[food_meal]=user_serving_size`)
@@ -120,6 +121,12 @@ export default function Edit() {
 					aria-label="Add food"
 					className="formosa-prefix"
 					id="new-food"
+					labelFn={(f) => (
+						<>
+							{f.name}
+							{f.is_verified && <CheckIcon alt="Verified" className="verified" height={16} width={16} />}
+						</>
+					)}
 					max={1}
 					options={filteredFood}
 					placeholder="Search foods"
@@ -159,7 +166,10 @@ export default function Edit() {
 							{row.foods.map((foodMeal, i) => (
 								<tr className={`row--${foodMeal.food.slug}`} key={foodMeal.id}>
 									<td className="column--name">
-										<Link className="table-link" to={`/food/${foodMeal.food.id}`}>{foodMeal.food.name}</Link>
+										<Link className="table-link" to={`/food/${foodMeal.food.id}`}>
+											{foodMeal.food.name}
+											{foodMeal.food.is_verified && <CheckIcon alt="Verified" className="verified" height={16} width={16} />}
+										</Link>
 									</td>
 									<td className="column--serving">
 										<Field

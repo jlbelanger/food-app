@@ -3,6 +3,7 @@ import { filterByKeys, sortByKey } from '../../Utilities/Table';
 import React, { useContext, useEffect, useState } from 'react';
 import { ReactComponent as ArrowIcon } from '../../../svg/arrow.svg';
 import Auth from '../../Utilities/Auth';
+import { ReactComponent as CheckIcon } from '../../../svg/check.svg';
 import Error from '../../Error';
 import { ReactComponent as HeartIcon } from '../../../svg/heart.svg';
 import { Link } from 'react-router-dom';
@@ -154,7 +155,12 @@ export default function List() {
 											<HeartIcon alt={row.is_favourite ? 'Unfavourite' : 'Favourite'} height={16} width={16} />
 										</button>
 									</td>
-									<td className="column--name"><Link className="table-link" to={`/food/${row.id}`}>{row.name}</Link></td>
+									<td className="column--name">
+										<Link className="table-link" to={`/food/${row.id}`}>
+											{row.name}
+											{row.is_verified && <CheckIcon alt="Verified" className="verified" height={16} width={16} />}
+										</Link>
+									</td>
 									<td className="column--size">{row.serving_size}</td>
 									<td className="column--units">{row.serving_units}</td>
 									<TrackableBody food={row} servingSize={row.serving_size} trackables={trackables} />

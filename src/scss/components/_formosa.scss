@@ -36,6 +36,12 @@ input.formosa-autocomplete__input {
 	padding: 10px 10px #{$formosa-button-padding - $button-border-bottom-width};
 }
 
+.formosa-autocomplete__option__button {
+	.verified {
+		margin-left: 8px;
+	}
+}
+
 a.formosa-button {
 	text-decoration: none;
 }

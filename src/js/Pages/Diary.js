@@ -2,6 +2,7 @@ import { Api, Field, Form, FormosaContext } from '@jlbelanger/formosa';
 import { Link, useHistory } from 'react-router-dom';
 import React, { useContext, useEffect, useState } from 'react';
 import Auth from '../Utilities/Auth';
+import { ReactComponent as CheckIcon } from '../../svg/check.svg';
 import { ReactComponent as ChevronIcon } from '../../svg/chevron.svg';
 import { colorsLight } from '../Utilities/Colors';
 import DiaryAddExtra from '../Components/DiaryAddExtra';
@@ -21,7 +22,7 @@ export default function Diary() {
 	const today = ymd(new Date());
 	const urlSearchParams = new URLSearchParams(history.location.search);
 	const currentDate = urlSearchParams.get('date') || today;
-	const foodFields = ['name', 'serving_size', 'serving_units'].concat(Auth.trackables());
+	const foodFields = ['name', 'serving_size', 'serving_units', 'is_verified'].concat(Auth.trackables());
 
 	const { addToast } = useContext(FormosaContext);
 	const [errorExtras, setErrorExtras] = useState(false);
@@ -160,7 +161,10 @@ export default function Diary() {
 						{diary.entries.map((entry, i) => (
 							<tr className="entry" id={`entry-row-${i}`} key={entry.id}>
 								<td className="column--name">
-									<Link className="table-link" to={`/food/${entry.food.id}`}>{entry.food.name}</Link>
+									<Link className="table-link" to={`/food/${entry.food.id}`}>
+										{entry.food.name}
+										{entry.food.is_verified && <CheckIcon alt="Verified" className="verified" height={16} width={16} />}
+									</Link>
 								</td>
 								<td className="column--serving">
 									<Form
