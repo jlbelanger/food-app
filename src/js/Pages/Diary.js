@@ -101,26 +101,6 @@ export default function Diary() {
 			});
 	};
 
-	const updateEntry = (entry) => {
-		const body = {
-			data: {
-				id: entry.id,
-				type: entry.type,
-				attributes: {
-					user_serving_size: entry.user_serving_size,
-				},
-			},
-		};
-		Api.put(`entries/${entry.id}`, JSON.stringify(body))
-			.then(() => {
-				addToast('Entry saved successfully.', 'success');
-			})
-			.catch((reponse) => {
-				const text = reponse.message ? reponse.message : reponse.errors.map((err) => (err.title)).join(' ');
-				addToast(text, 'error', 10000);
-			});
-	};
-
 	const deleteExtra = (e) => {
 		Api.delete(`extras/${e.target.getAttribute('data-id')}`)
 			.then(() => {
