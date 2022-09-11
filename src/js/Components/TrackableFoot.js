@@ -15,7 +15,7 @@ export default function TrackableFoot({ extras, rows, trackables }) {
 			}
 		});
 		return (
-			<th className={`center column-total--${trackable.slug}`} key={trackable.id} scope="col">
+			<th className={`center column--trackable column-total--${trackable.slug}`} key={trackable.id} scope="col">
 				<span className="table-heading">{`${val.toLocaleString()} ${trackable.units || ''}`.trim()}</span>
 			</th>
 		);

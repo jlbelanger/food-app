@@ -133,7 +133,7 @@ export default function List() {
 					<thead>
 						<tr>
 							<th className="column--button" scope="col">{tableButton('is_favourite', '')}</th>
-							<th scope="col">{tableButton('name', 'Name')}</th>
+							<th className="column--name" scope="col">{tableButton('name', 'Name')}</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -156,7 +156,7 @@ export default function List() {
 											<HeartIcon alt={row.is_favourite ? 'Unfavourite' : 'Favourite'} height={16} width={16} />
 										</button>
 									</td>
-									<td><Link className="table-link" to={`/meals/${row.id}`}>{row.name}</Link></td>
+									<td className="column--name"><Link className="table-link" to={`/meals/${row.id}`}>{row.name}</Link></td>
 								</tr>
 							))}
 					</tbody>

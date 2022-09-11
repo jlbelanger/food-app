@@ -50,26 +50,39 @@ th {
 	line-height: $button-size;
 }
 
-.column--size {
-	white-space: nowrap;
-	width: 62px;
-}
-
-.column--units {
-	white-space: nowrap;
-	width: 110px;
-}
-
-.column--serving {
-	white-space: nowrap;
-	width: 180px;
-}
-
 .column--button {
 	padding-left: 0;
 	padding-right: 0;
 	white-space: nowrap;
 	width: $button-size;
+}
+
+.column--name {
+	width: 100%;
+}
+
+.column--size {
+	min-width: 72px;
+	white-space: nowrap;
+	width: 72px;
+}
+
+.column--units {
+	min-width: 147px;
+	white-space: nowrap;
+	width: 147px;
+}
+
+.column--trackable {
+	min-width: 93px;
+	white-space: nowrap;
+	width: 93px;
+}
+
+.column--serving {
+	min-width: 209px;
+	white-space: nowrap;
+	width: 209px;
 }
 
 .table-link {

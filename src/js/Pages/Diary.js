@@ -170,7 +170,7 @@ export default function Diary() {
 				<table id="diary-table">
 					<thead>
 						<tr>
-							<th scope="col"><span className="table-heading">Name</span></th>
+							<th className="column--name" scope="col"><span className="table-heading">Name</span></th>
 							<th className="column--serving" scope="col"><span className="table-heading">Serving Size</span></th>
 							<TrackableHead trackables={trackables} />
 							<th className="column--button" scope="col"><span className="table-heading" /></th>
@@ -179,7 +179,7 @@ export default function Diary() {
 					<tbody>
 						{diary.entries.map((entry, i) => (
 							<tr className="entry" key={entry.id}>
-								<td>
+								<td className="column--name">
 									<Link className="table-link" to={`/food/${entry.food.id}`}>{entry.food.name}</Link>
 								</td>
 								<td className="column--serving">
@@ -237,7 +237,7 @@ export default function Diary() {
 
 						{diary.extras.map((extra, i) => (
 							<tr className="extra" key={extra.id}>
-								<td>
+								<td className="column--name">
 									<Form
 										htmlId={`extra-${extra.id}`}
 										id={extra.id}
@@ -272,9 +272,9 @@ export default function Diary() {
 										<button id={`extra-${extra.id}-submit`} style={{ display: 'none' }} type="submit" />
 									</Form>
 								</td>
-								<td />
+								<td className="column--serving" />
 								{trackables.map((trackable, j) => (
-									<td className="center" key={trackable.id} style={{ backgroundColor: colorsLight[j + 1] }}>
+									<td className="center column--trackable" key={trackable.id} style={{ backgroundColor: colorsLight[j + 1] }}>
 										{/* <Field
 											form={`extra-${extra.id}`}
 											id={`${trackable.slug}-${extra.id}`}

@@ -126,11 +126,11 @@ export default function List() {
 					<thead>
 						<tr>
 							<th className="column--button" scope="col">{tableButton('is_favourite', '')}</th>
-							<th scope="col">{tableButton('slug', 'Name')}</th>
+							<th className="column--name" scope="col">{tableButton('slug', 'Name')}</th>
 							<th className="column--size" scope="col">{tableButton('serving_size', 'Size')}</th>
 							<th className="column--units" scope="col">{tableButton('serving_units', 'Units')}</th>
 							{trackables.map((trackable) => (
-								<th key={trackable.id} scope="col">{tableButton(trackable.slug, trackable.name)}</th>
+								<th className="column--trackable" key={trackable.id} scope="col">{tableButton(trackable.slug, trackable.name)}</th>
 							))}
 						</tr>
 					</thead>
@@ -154,7 +154,7 @@ export default function List() {
 											<HeartIcon alt={row.is_favourite ? 'Unfavourite' : 'Favourite'} height={16} width={16} />
 										</button>
 									</td>
-									<td><Link className="table-link" to={`/food/${row.id}`}>{row.name}</Link></td>
+									<td className="column--name"><Link className="table-link" to={`/food/${row.id}`}>{row.name}</Link></td>
 									<td className="column--size">{row.serving_size}</td>
 									<td className="column--units">{row.serving_units}</td>
 									<TrackableBody food={row} servingSize={row.serving_size} trackables={trackables} />

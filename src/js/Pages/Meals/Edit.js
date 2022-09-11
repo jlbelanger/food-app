@@ -135,19 +135,19 @@ export default function Edit() {
 					<table>
 						<thead>
 							<tr>
-								<th scope="col">Food</th>
-								<th scope="col">Serving Size</th>
+								<th className="column--name" scope="col">Food</th>
+								<th className="column--serving" scope="col">Serving Size</th>
 								<TrackableHead trackables={trackables} />
-								<th />
+								<th className="column--button" />
 							</tr>
 						</thead>
 						<tbody>
 							{row.foods.map((foodMeal, i) => (
 								<tr className={`row--${foodMeal.food.slug}`} key={foodMeal.id}>
-									<td>
+									<td className="column--name">
 										<Link className="table-link" to={`/food/${foodMeal.food.id}`}>{foodMeal.food.name}</Link>
 									</td>
-									<td>
+									<td className="column--serving">
 										<Field
 											name={`foods.${i}.user_serving_size`}
 											size={6}
