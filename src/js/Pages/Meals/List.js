@@ -15,15 +15,18 @@ export default function List() {
 	const [rows, setRows] = useState(null);
 	const [filteredRows, setFilteredRows] = useState([]);
 	const [error, setError] = useState(false);
+	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
-		Api.get('meals?fields[meals]=is_favourite,name&sort=name')
+		Api.get('meals?fields[meals]=is_favourite,name&sort=name', false)
 			.then((response) => {
 				setRows(response);
 				setFilteredRows(response);
+				setIsLoading(false);
 			})
 			.catch((response) => {
 				setError(response.status);
+				setIsLoading(false);
 			});
 	}, []);
 
@@ -93,6 +96,7 @@ export default function List() {
 		<button
 			className="table-button"
 			data-key={key}
+			disabled={isLoading}
 			onClick={sort}
 			type="button"
 		>
@@ -106,15 +110,6 @@ export default function List() {
 		numResults = `${totalFiltered.toLocaleString()} of ${numResults}`;
 	}
 
-	let message;
-	if (!rows) {
-		message = null;
-	} else if (rows.length <= 0) {
-		message = (
-			<p>No meals found.</p>
-		);
-	}
-
 	return (
 		<>
 			<MetaTitle
@@ -124,22 +119,32 @@ export default function List() {
 				<Link className="formosa-button" to="/meals/new">Add</Link>
 			</MetaTitle>
 
-			{message !== undefined ? message : (
-				<>
-					<div id="search-container">
-						<label className="formosa-label" htmlFor="search">Search</label>
-						<Input id="search" setValue={search} type="search" value={searchValue} />
-					</div>
+			{(isLoading || total > 0) && (
+				<div id="search-container">
+					<label className="formosa-label" htmlFor="search">Search</label>
+					<Input disabled={isLoading} id="search" setValue={search} type="search" value={searchValue} />
+				</div>
+			)}
 
-					<table>
-						<thead>
+			{(!isLoading && totalFiltered <= 0) ? (
+				<p>No results found.</p>
+			) : (
+				<table>
+					<thead>
+						<tr>
+							<th className="column--button" scope="col">{tableButton('is_favourite', '')}</th>
+							<th scope="col">{tableButton('name', 'Name')}</th>
+						</tr>
+					</thead>
+					<tbody>
+						{isLoading ? (
 							<tr>
-								<th className="column--button" scope="col">{tableButton('is_favourite', '')}</th>
-								<th scope="col">{tableButton('name', 'Name')}</th>
+								<td colSpan={2}>
+									<div className="formosa-spinner" style={{ justifyContent: 'center', margin: '16px auto' }}>Loading...</div>
+								</td>
 							</tr>
-						</thead>
-						<tbody>
-							{filteredRows.map((row) => (
+						)
+							: filteredRows.map((row) => (
 								<tr key={row.id}>
 									<td className="column--button">
 										<button
@@ -154,9 +159,8 @@ export default function List() {
 									<td><Link className="table-link" to={`/meals/${row.id}`}>{row.name}</Link></td>
 								</tr>
 							))}
-						</tbody>
-					</table>
-				</>
+					</tbody>
+				</table>
 			)}
 		</>
 	);

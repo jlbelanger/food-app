@@ -119,46 +119,50 @@ export default function List() {
 				<Input disabled={isLoading} id="search" setValue={search} type="search" value={searchValue} />
 			</div>
 
-			<table>
-				<thead>
-					<tr>
-						<th className="column--button" scope="col">{tableButton('is_favourite', '')}</th>
-						<th scope="col">{tableButton('slug', 'Name')}</th>
-						<th className="column--size" scope="col">{tableButton('serving_size', 'Size')}</th>
-						<th className="column--units" scope="col">{tableButton('serving_units', 'Units')}</th>
-						{trackables.map((trackable) => (
-							<th key={trackable.id} scope="col">{tableButton(trackable.slug, trackable.name)}</th>
-						))}
-					</tr>
-				</thead>
-				<tbody>
-					{isLoading ? (
+			{(!isLoading && totalFiltered <= 0) ? (
+				<p>No results found.</p>
+			) : (
+				<table>
+					<thead>
 						<tr>
-							<td colSpan={4 + trackables.length}>
-								<div className="formosa-spinner" style={{ justifyContent: 'center', margin: '16px auto' }}>Loading...</div>
-							</td>
+							<th className="column--button" scope="col">{tableButton('is_favourite', '')}</th>
+							<th scope="col">{tableButton('slug', 'Name')}</th>
+							<th className="column--size" scope="col">{tableButton('serving_size', 'Size')}</th>
+							<th className="column--units" scope="col">{tableButton('serving_units', 'Units')}</th>
+							{trackables.map((trackable) => (
+								<th key={trackable.id} scope="col">{tableButton(trackable.slug, trackable.name)}</th>
+							))}
 						</tr>
-					)
-						: filteredRows.map((row) => (
-							<tr key={row.id}>
-								<td className="column--button">
-									<button
-										className={`heart ${row.is_favourite ? 'un' : ''}favourite`}
-										data-id={row.id}
-										onClick={favourite}
-										type="button"
-									>
-										<HeartIcon alt={row.is_favourite ? 'Unfavourite' : 'Favourite'} height={16} width={16} />
-									</button>
+					</thead>
+					<tbody>
+						{isLoading ? (
+							<tr>
+								<td colSpan={4 + trackables.length}>
+									<div className="formosa-spinner" style={{ justifyContent: 'center', margin: '16px auto' }}>Loading...</div>
 								</td>
-								<td><Link className="table-link" to={`/food/${row.id}`}>{row.name}</Link></td>
-								<td className="column--size">{row.serving_size}</td>
-								<td className="column--units">{row.serving_units}</td>
-								<TrackableBody food={row} servingSize={row.serving_size} trackables={trackables} />
 							</tr>
-						))}
-				</tbody>
-			</table>
+						)
+							: filteredRows.map((row) => (
+								<tr key={row.id}>
+									<td className="column--button">
+										<button
+											className={`heart ${row.is_favourite ? 'un' : ''}favourite`}
+											data-id={row.id}
+											onClick={favourite}
+											type="button"
+										>
+											<HeartIcon alt={row.is_favourite ? 'Unfavourite' : 'Favourite'} height={16} width={16} />
+										</button>
+									</td>
+									<td><Link className="table-link" to={`/food/${row.id}`}>{row.name}</Link></td>
+									<td className="column--size">{row.serving_size}</td>
+									<td className="column--units">{row.serving_units}</td>
+									<TrackableBody food={row} servingSize={row.serving_size} trackables={trackables} />
+								</tr>
+							))}
+					</tbody>
+				</table>
+			)}
 		</>
 	);
 }
