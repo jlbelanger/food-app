@@ -1,6 +1,7 @@
 describe('diary', () => {
 	before(() => {
 		cy.login();
+		cy.deleteAllData();
 	});
 
 	describe('navigation', () => {

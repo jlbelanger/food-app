@@ -1,6 +1,7 @@
 describe('meals', () => {
 	before(() => {
 		cy.login();
+		cy.deleteAllData();
 	});
 
 	it('works', () => {

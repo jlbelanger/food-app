@@ -1,6 +1,7 @@
 describe('profile', () => {
 	before(() => {
 		cy.login();
+		cy.deleteAllData();
 	});
 
 	describe('when updating BMI settings', () => {
@@ -93,7 +94,7 @@ describe('profile', () => {
 	});
 
 	describe('when updating trackable settings', () => {
-		it.only('works', () => {
+		it('works', () => {
 			cy.intercept('GET', '**/api/trackables?').as('getTrackables');
 			cy.intercept('GET', '**/api/users/**').as('getUser');
 			cy.intercept('GET', '**/api/meals?**').as('getMeals');
@@ -422,9 +423,14 @@ describe('profile', () => {
 			cy.intercept('PUT', '**/api/users/*/change-password').as('changePassword');
 			cy.intercept('DELETE', '**/api/auth/logout').as('logout');
 
+			// Logout.
 			cy.get('.nav__button').contains('Logout').click();
 			cy.wait('@logout').its('response.statusCode').should('equal', 204);
+
+			// Login.
 			cy.login(Cypress.env('demo_username'), Cypress.env('demo_password'));
+
+			// Go to profile.
 			cy.visit('/profile');
 			cy.wait('@getUser').its('response.statusCode').should('equal', 200);
 

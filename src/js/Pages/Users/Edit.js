@@ -1,14 +1,16 @@
-import { Api, Field, Form, Message, Submit } from '@jlbelanger/formosa';
-import React, { useEffect, useState } from 'react';
+import { Api, Field, Form, FormosaContext, Message, Submit } from '@jlbelanger/formosa';
+import React, { useContext, useEffect, useState } from 'react';
 import Auth from '../../Utilities/Auth';
 import Error from '../../Error';
 import MetaTitle from '../../Components/MetaTitle';
 import MyForm from '../../Components/MyForm';
 
 export default function Edit() {
+	const { addToast } = useContext(FormosaContext);
 	const id = Auth.id();
 	const [row, setRow] = useState(null);
 	const [error, setError] = useState(false);
+	const [types, setTypes] = useState([]);
 	const [isMeasurementUnitsDisabled, setIsMeasurementUnitsDisabled] = useState(true);
 
 	useEffect(() => {
@@ -340,6 +342,38 @@ export default function Edit() {
 
 			<hr />
 
+			<h3>Delete data</h3>
+
+			<Form
+				onSubmit={(e) => {
+					e.preventDefault();
+
+					if (!confirm('Are you sure you want to delete this data?')) { // eslint-disable-line no-restricted-globals
+						return;
+					}
+
+					Api.post('users/delete-data', JSON.stringify({ types }))
+						.then(() => {
+							addToast('Data deleted successfully.', 'success');
+						})
+						.catch((response) => {
+							const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
+							addToast(text, 'error', 10000);
+						});
+				}}
+			>
+				<Field
+					fieldsetClassName="formosa-radio--inline"
+					options={['entries', 'meals', 'weights']}
+					name="types"
+					value={types}
+					setValue={setTypes}
+					type="checkbox-list"
+				/>
+
+				<Submit className="formosa-button--danger" label="Delete data" />
+			</Form>
+
 			<Form
 				afterSubmit={() => {
 					Auth.logout();
@@ -352,11 +386,9 @@ export default function Edit() {
 				path="users"
 				showMessage={false}
 			>
-				<h3>Delete account</h3>
-
 				<Message />
 
-				<Submit className="formosa-button--danger" label="Delete" />
+				<Submit className="formosa-button--danger" label="Delete account" />
 			</Form>
 		</>
 	);
