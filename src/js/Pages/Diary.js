@@ -168,7 +168,6 @@ export default function Diary() {
 								</td>
 								<td className="column--serving">
 									<Form
-										htmlId={`entry-${entry.id}`}
 										id={entry.id}
 										method="PUT"
 										path="entries"
@@ -223,7 +222,6 @@ export default function Diary() {
 							<tr className="extra" id={`extra-row-${i}`} key={extra.id}>
 								<td className="column--name">
 									<Form
-										htmlId={`extra-${extra.id}`}
 										id={extra.id}
 										method="PUT"
 										path="extras"
@@ -259,12 +257,39 @@ export default function Diary() {
 								<td className="column--serving" />
 								{trackables.map((trackable, j) => (
 									<td className="center column--trackable" key={trackable.id} style={{ backgroundColor: colorsLight[j + 1] }}>
-										{/* <Field
-											form={`extra-${extra.id}`}
-											id={`${trackable.slug}-${extra.id}`}
-											name={`extras.${i}.${trackable.slug}`}
-											size={6}
-										/> */}
+										<Form
+											id={extra.id}
+											method="PUT"
+											path="extras"
+											preventEmptyRequest
+											preventEmptyRequestText={false}
+											row={extra}
+											setRow={(newNote) => {
+												const e = [...diary.extras];
+												e[i].note = newNote;
+												setDiary({ ...diary, extras: e });
+											}}
+											successToastText="Extra saved successfully."
+										>
+											<Field
+												onBlur={() => {
+													document.getElementById(`extra-${trackable.slug}-${extra.id}-submit`).click();
+												}}
+												id={`${trackable.slug}-${i}`}
+												name={trackable.slug}
+												setValue={(newValue) => {
+													const e = [...diary.extras];
+													e[i][trackable.slug] = newValue;
+													setDiary({
+														...diary,
+														extras: e,
+													});
+												}}
+												size={6}
+												value={diary.extras[i][trackable.slug] === null ? '' : diary.extras[i][trackable.slug]}
+											/>
+											<button id={`extra-${trackable.slug}-${extra.id}-submit`} style={{ display: 'none' }} type="submit" />
+										</Form>
 									</td>
 								))}
 								<td className="column--button">
