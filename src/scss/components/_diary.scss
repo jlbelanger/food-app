@@ -78,7 +78,8 @@ $add-meal-button-margin: 8px;
 	margin-top: 8px;
 }
 
-.formosa-field--weight {
+.formosa-field--weight,
+.formosa-field--fake-weight {
 	.formosa-suffix {
 		font-size: $formosa-input-font-size;
 		line-height: $formosa-input-height;
@@ -88,7 +89,8 @@ $add-meal-button-margin: 8px;
 	}
 }
 
-#weight {
+#weight,
+#fake-weight {
 	padding-right: 40px;
 	text-align: right;
 }

@@ -13,6 +13,10 @@
 		background: scale-color($light-pink, $lightness: -10%);
 		border-color: scale-color($light-pink, $lightness: -15%);
 	}
+
+	&[disabled] {
+		border-color: $formosa-input-border-color;
+	}
 }
 
 .formosa-autocomplete,
@@ -60,4 +64,8 @@ a.formosa-button {
 
 .formosa-autocomplete__options {
 	box-shadow: 0 0 10px rgba($black, .2);
+}
+
+.formosa-input-inner-wrapper {
+	white-space: nowrap;
 }
