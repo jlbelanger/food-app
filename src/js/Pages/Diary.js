@@ -158,7 +158,7 @@ export default function Diary() {
 					</thead>
 					<tbody>
 						{diary.entries.map((entry, i) => (
-							<tr className="entry" key={entry.id}>
+							<tr className="entry" id={`entry-row-${i}`} key={entry.id}>
 								<td className="column--name">
 									<Link className="table-link" to={`/food/${entry.food.id}`}>{entry.food.name}</Link>
 								</td>
@@ -216,7 +216,7 @@ export default function Diary() {
 						))}
 
 						{diary.extras.map((extra, i) => (
-							<tr className="extra" key={extra.id}>
+							<tr className="extra" id={`extra-row-${i}`} key={extra.id}>
 								<td className="column--name">
 									<Form
 										htmlId={`extra-${extra.id}`}

@@ -27,6 +27,8 @@ describe('login', () => {
 
 	describe('with a valid username and password', () => {
 		it('works', () => {
+			cy.intercept('DELETE', '**/api/auth/logout').as('logout');
+
 			// Login.
 			cy.clearCookies();
 			cy.visit('/');
@@ -38,7 +40,8 @@ describe('login', () => {
 			cy.location('pathname').should('eq', '/');
 
 			// Logout.
-			cy.contains('Logout').click();
+			cy.get('.nav__button').contains('Logout').click();
+			cy.wait('@logout').its('response.statusCode').should('equal', 204);
 			cy.location('pathname').should('eq', '/');
 		});
 	});

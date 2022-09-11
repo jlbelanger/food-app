@@ -11,37 +11,36 @@ describe('meals', () => {
 		cy.intercept('PUT', '**/api/meals/*').as('putRecord');
 		cy.intercept('DELETE', '**/api/meals/*').as('deleteRecord');
 
-		// Add foods.
+		// Create food.
 		cy.createFood(`Foo ${timestamp}`, 1, { calories: 100 });
 		cy.createFood(`Bar ${timestamp}`, 2, { calories: 20 });
 
 		// Ensure calories is in trackables.
-		cy.visit('/profile');
-		cy.get('#trackable-calories').check();
-		cy.get('#save-tracking').click();
-		cy.get('.formosa-toast').should('exist');
-
-		cy.visit('/meals');
-		cy.wait('@getRecords').its('response.statusCode').should('equal', 200);
+		cy.setTrackables(['calories']);
 
 		// Add.
+		cy.visit('/meals');
+		cy.wait('@getRecords').its('response.statusCode').should('equal', 200);
 		cy.get('.formosa-button').contains('Add').click();
 		cy.get('[name="name"]').type(`Foobar ${timestamp}`);
 		cy.get('#add-another').check();
 		cy.get('.formosa-button').contains('Save').click();
 		cy.wait('@postRecord').its('response.statusCode').should('equal', 201);
 		cy.contains('Meal added successfully.').should('exist');
+		cy.get('.formosa-toast__close').click();
 		cy.get('[name="name"]').type(`Barfoo ${timestamp}`);
 		cy.get('#add-another').uncheck();
 		cy.get('.formosa-button').contains('Save').click();
 		cy.wait('@postRecord').its('response.statusCode').should('equal', 201);
 		cy.contains('Meal added successfully.').should('exist');
+		cy.get('.formosa-toast__close').click();
 
 		// Verify all fields.
 		cy.get('[name="name"]').should('have.value', `Barfoo ${timestamp}`);
 
 		// Search.
 		cy.visit('/meals');
+		cy.wait('@getRecords').its('response.statusCode').should('equal', 200);
 		cy.get('#search').type('thereshouldbenoresults');
 		cy.get('table').should('not.exist');
 		cy.contains('No results found.').should('exist');
@@ -72,6 +71,7 @@ describe('meals', () => {
 		heart.click();
 		cy.wait('@putRecord').its('response.statusCode').should('equal', 200);
 		cy.contains('Meal favourited successfully.').should('exist');
+		cy.get('.formosa-toast__close').click();
 		cy.reload();
 		heart = cy.get('.table-link')
 			.contains(`Barfoo ${timestamp}`)
@@ -85,6 +85,7 @@ describe('meals', () => {
 		heart.click();
 		cy.wait('@putRecord').its('response.statusCode').should('equal', 200);
 		cy.contains('Meal unfavourited successfully.').should('exist');
+		cy.get('.formosa-toast__close').click();
 		cy.reload();
 		heart = cy.get('.table-link')
 			.contains(`Barfoo ${timestamp}`)
@@ -101,6 +102,7 @@ describe('meals', () => {
 		cy.get('.formosa-button').contains('Save').click();
 		cy.wait('@putRecord').its('response.statusCode').should('equal', 200);
 		cy.contains('Meal saved successfully.').should('exist');
+		cy.get('.formosa-toast__close').click();
 		cy.reload();
 		cy.get('[name="name"]').invoke('val').should('equal', `Bar ${timestamp}`);
 
@@ -110,6 +112,7 @@ describe('meals', () => {
 		cy.get('.heart').click();
 		cy.wait('@putRecord').its('response.statusCode').should('equal', 200);
 		cy.contains('Meal favourited successfully.').should('exist');
+		cy.get('.formosa-toast__close').click();
 		cy.reload();
 		cy.get('.heart').should('not.have.class', 'favourite');
 		cy.get('.heart').should('have.class', 'unfavourite');
@@ -118,6 +121,7 @@ describe('meals', () => {
 		cy.get('.heart').click();
 		cy.wait('@putRecord').its('response.statusCode').should('equal', 200);
 		cy.contains('Meal unfavourited successfully.').should('exist');
+		cy.get('.formosa-toast__close').click();
 		cy.reload();
 		cy.get('.heart').should('have.class', 'favourite');
 		cy.get('.heart').should('not.have.class', 'unfavourite');
@@ -128,9 +132,12 @@ describe('meals', () => {
 		cy.get(`.row--foo-${timestamp}`).should('exist');
 		cy.get('[id="foods.0.user_serving_size"]').should('have.value', '1');
 		cy.get(`.row--foo-${timestamp} .column--calories`).should('contain', '100');
+		cy.get('#new-food').type(`Foo ${timestamp}`);
+		cy.get('.formosa-autocomplete__option__button').should('not.exist');
 		cy.get('.formosa-button').contains('Save').click();
 		cy.wait('@putRecord').its('response.statusCode').should('equal', 200);
 		cy.contains('Meal saved successfully.').should('exist');
+		cy.get('.formosa-toast__close').click();
 		cy.reload();
 		cy.get(`.row--foo-${timestamp}`).should('exist');
 		cy.get('[id="foods.0.user_serving_size"]').should('have.value', '1');
@@ -145,6 +152,7 @@ describe('meals', () => {
 		cy.get('.formosa-button').contains('Save').click();
 		cy.wait('@putRecord').its('response.statusCode').should('equal', 200);
 		cy.contains('Meal saved successfully.').should('exist');
+		cy.get('.formosa-toast__close').click();
 		cy.reload();
 		cy.get(`.row--foo-${timestamp}`).should('exist');
 		cy.get('[id="foods.0.user_serving_size"]').should('have.value', '1');
@@ -160,6 +168,7 @@ describe('meals', () => {
 		cy.get('.formosa-button').contains('Save').click();
 		cy.wait('@putRecord').its('response.statusCode').should('equal', 200);
 		cy.contains('Meal saved successfully.').should('exist');
+		cy.get('.formosa-toast__close').click();
 		cy.reload();
 		cy.get('[id="foods.0.user_serving_size"]').should('have.value', '0.5');
 		cy.get(`.row--foo-${timestamp} .column--calories`).should('contain', '50');
@@ -173,6 +182,7 @@ describe('meals', () => {
 		cy.get('.formosa-button').contains('Save').click();
 		cy.wait('@putRecord').its('response.statusCode').should('equal', 200);
 		cy.contains('Meal saved successfully.').should('exist');
+		cy.get('.formosa-toast__close').click();
 		cy.reload();
 		cy.get(`.row--foo-${timestamp}`).should('not.exist');
 		cy.get(`.row--bar-${timestamp}`).should('exist');
@@ -181,12 +191,14 @@ describe('meals', () => {
 		cy.get('.formosa-button').contains('Delete').click();
 		cy.wait('@deleteRecord').its('response.statusCode').should('equal', 204);
 		cy.contains('Meal deleted successfully.').should('exist');
+		cy.get('.formosa-toast__close').click();
 		cy.wait('@getRecords').its('response.statusCode').should('equal', 200);
 		cy.get('.table-link').contains(`Foobar ${timestamp}`).click();
 		cy.wait('@getRecord').its('response.statusCode').should('equal', 200);
 		cy.get('.formosa-button').contains('Delete').click();
 		cy.wait('@deleteRecord').its('response.statusCode').should('equal', 204);
 		cy.contains('Meal deleted successfully.').should('exist');
+		cy.get('.formosa-toast__close').click();
 		cy.wait('@getRecords').its('response.statusCode').should('equal', 200);
 		cy.contains(`Barfoo ${timestamp}`).should('not.exist');
 		cy.contains(`Foobar ${timestamp}`).should('not.exist');

@@ -11,5 +11,5 @@ Cypress.Commands.add('login', (username, password) => {
 	cy.get('[name="password"]').type(password || Cypress.env('default_password'));
 	cy.intercept('POST', '**/api/auth/login').as('login');
 	cy.get('[type="submit"]').click();
-	cy.wait('@login').its('response.statusCode').should('be.oneOf', [200]);
+	cy.wait('@login').its('response.statusCode').should('equal', 200);
 });

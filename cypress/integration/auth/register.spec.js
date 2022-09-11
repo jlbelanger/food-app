@@ -47,6 +47,8 @@ describe('register', () => {
 
 	describe('with valid input', () => {
 		it('works', () => {
+			cy.intercept('GET', '**/api/calendar/**').as('getCalendar');
+
 			const username = `foo+${Date.now()}`;
 
 			// Register.
@@ -78,6 +80,7 @@ describe('register', () => {
 			// Shows correct weight units on calendar.
 			cy.setWeight('130.5');
 			cy.visit('/calendar');
+			cy.wait('@getCalendar').its('response.statusCode').should('equal', 200);
 			cy.get('.calendar__item').contains('130.5 lbs').should('be.visible');
 
 			// Delete.
