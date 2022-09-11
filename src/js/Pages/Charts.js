@@ -52,7 +52,7 @@ export default function Charts() {
 					let minY = null;
 					let maxY = null;
 					dataset.forEach((point, j) => {
-						const date = new Date(`${point.x}T00:00:00.000Z`);
+						const date = new Date(`${point.x}T12:00:00.000Z`);
 						data.labels.push(date);
 						data.datasets[0].data.push(point.y);
 
