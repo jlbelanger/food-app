@@ -85,6 +85,22 @@ export default function Edit() {
 			});
 	};
 
+	const deleteRow = () => {
+		if (!confirm('Are you sure you want to delete this meal?')) { // eslint-disable-line no-restricted-globals
+			return;
+		}
+
+		Api.delete(`meals/${id}`)
+			.then(() => {
+				addToast('Meal deleted successfully.', 'success');
+				history.push('/meals');
+			})
+			.catch((response) => {
+				const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
+				addToast(text, 'error', 10000);
+			});
+	};
+
 	const mealFoodIds = row.foods.map((f) => (f.food.id));
 	const filteredFood = allFood.filter((f) => (!mealFoodIds.includes(f.id)));
 
@@ -99,7 +115,7 @@ export default function Edit() {
 					<HeartIcon alt={row.is_favourite ? 'Unfavourite' : 'Favourite'} height={16} width={16} />
 				</button>
 				<button className="formosa-button" form="edit-form" type="submit">Save</button>
-				<button className="formosa-button formosa-button--danger" form="delete-form" type="submit">Delete</button>
+				<button className="formosa-button formosa-button--danger" onClick={deleteRow} type="submit">Delete</button>
 			</MetaTitle>
 
 			<MyForm
@@ -216,21 +232,6 @@ export default function Edit() {
 					</table>
 				) : <p>This meal has no foods.</p>}
 			</MyForm>
-
-			<Form
-				afterSubmit={() => {
-					history.push('/meals');
-				}}
-				beforeSubmit={() => (
-					confirm('Are you sure you want to delete this meal?') // eslint-disable-line no-restricted-globals
-				)}
-				htmlId="delete-form"
-				id={id}
-				method="DELETE"
-				path="meals"
-				showMessage={false}
-				successToastText="Meal deleted successfully."
-			/>
 		</>
 	);
 }
