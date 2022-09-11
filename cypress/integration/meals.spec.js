@@ -10,23 +10,10 @@ describe('meals', () => {
 		cy.intercept('POST', '**/api/meals').as('postRecord');
 		cy.intercept('PUT', '**/api/meals/*').as('putRecord');
 		cy.intercept('DELETE', '**/api/meals/*').as('deleteRecord');
-		cy.intercept('POST', '**/api/food').as('postFoodRecord');
 
 		// Add foods.
-		cy.visit('/food/new');
-		cy.get('[name="name"]').type(`Foo ${timestamp}`);
-		cy.get('[name="serving_size"]').type('1');
-		cy.get('[name="calories"]').type('100');
-		cy.get('.formosa-button').contains('Save').click();
-		cy.wait('@postFoodRecord').its('response.statusCode').should('equal', 201);
-		cy.contains('Food added successfully.').should('exist');
-		cy.visit('/food/new');
-		cy.get('[name="name"]').type(`Bar ${timestamp}`);
-		cy.get('[name="serving_size"]').type('2');
-		cy.get('[name="calories"]').type('20');
-		cy.get('.formosa-button').contains('Save').click();
-		cy.wait('@postFoodRecord').its('response.statusCode').should('equal', 201);
-		cy.contains('Food added successfully.').should('exist');
+		cy.createFood(`Foo ${timestamp}`, 1, { calories: 100 });
+		cy.createFood(`Bar ${timestamp}`, 2, { calories: 20 });
 
 		// Ensure calories is in trackables.
 		cy.visit('/profile');
@@ -55,7 +42,10 @@ describe('meals', () => {
 
 		// Search.
 		cy.visit('/meals');
-		cy.get('#search').type(timestamp);
+		cy.get('#search').type('thereshouldbenoresults');
+		cy.get('table').should('not.exist');
+		cy.contains('No results found.').should('exist');
+		cy.get('#search').clear().type(timestamp);
 		cy.get('.table-link').should('have.length', 2);
 
 		// Sort.

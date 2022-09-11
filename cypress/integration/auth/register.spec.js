@@ -75,6 +75,11 @@ describe('register', () => {
 			cy.get('.nav__link').contains('Diary').click();
 			cy.get('#weight + .formosa-suffix').should('contain', 'lbs');
 
+			// Shows correct weight units on calendar.
+			cy.setWeight('130.5');
+			cy.visit('/calendar');
+			cy.get('.calendar__item').contains('130.5 lbs').should('be.visible');
+
 			// Delete.
 			cy.get('.nav__link').contains('Profile').click();
 			cy.get('.formosa-button--danger').click();

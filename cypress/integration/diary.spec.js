@@ -34,11 +34,14 @@ describe('diary', () => {
 	});
 
 	describe('extras', () => {
+		before(() => {
+			cy.removeEntriesExtras();
+		});
+
 		it('works', () => {
+			// Add.
 			cy.visit('/');
 			cy.get('#diary-table').should('not.exist');
-
-			// Add.
 			cy.get('#note').type('Example extra');
 			cy.get('#note + button').click();
 			cy.contains('Extra added successfully.').should('exist');
@@ -52,13 +55,32 @@ describe('diary', () => {
 			cy.get('.button--remove').click();
 			cy.contains('Extra removed successfully.').should('exist');
 			cy.get('.formosa-toast__close').click();
+			cy.get('#diary-table').should('not.exist');
 			cy.get('input[id^="note-"]').should('not.exist');
-			cy.get('#diary-table').should('not.exist');
-			cy.visit('/');
-			cy.get('#diary-table').should('not.exist');
 
-			// TODO: Add then refresh.
+			// Add then refresh.
+			cy.visit('/');
+			cy.get('#note').type('Example extra 2');
+			cy.get('#note + button').click();
+			cy.contains('Extra added successfully.').should('exist');
+			cy.get('.formosa-toast__close').click();
+			cy.get('#diary-table').should('be.visible');
+			cy.get('input[id^="note-"]').should('have.value', 'Example extra 2');
+			cy.reload();
+			cy.get('#diary-table').should('be.visible');
+			cy.get('input[id^="note-"]').should('have.value', 'Example extra 2');
+
 			// TODO: Edit then refresh.
+
+			// Delete then refresh.
+			cy.get('.button--remove').click();
+			cy.contains('Extra removed successfully.').should('exist');
+			cy.get('.formosa-toast__close').click();
+			cy.get('#diary-table').should('not.exist');
+			cy.get('input[id^="note-"]').should('not.exist');
+			cy.reload();
+			cy.get('#diary-table').should('not.exist');
+			cy.get('input[id^="note-"]').should('not.exist');
 		});
 	});
 
@@ -207,36 +229,89 @@ describe('diary', () => {
 	});
 
 	describe('food', () => {
+		before(() => {
+			cy.removeEntriesExtras();
+		});
+
 		describe('when filtering by favourites', () => {
 			it('works', () => {
 				// TODO.
 			});
 		});
 
-		describe('when adding food', () => {
+		describe('when adding/editing/deleting food', () => {
 			it('works', () => {
-				// TODO.
-			});
-		});
+				const timestamp = (new Date()).getTime();
+				cy.createFood(`Foo ${timestamp}`, 2);
 
-		describe('when editing food', () => {
-			it('works', () => {
-				// TODO.
-			});
-		});
+				// Add.
+				cy.visit('/');
+				cy.get('#diary-table').should('not.exist');
+				cy.get('#food').type(`Foo ${timestamp}`);
+				cy.contains(`Foo ${timestamp}`).click();
+				cy.contains('Food added successfully.').should('exist');
+				cy.get('.formosa-toast__close').click();
+				cy.get('#diary-table').should('be.visible');
+				cy.get('[id="entries.0.user_serving_size"]').should('have.value', '2');
 
-		describe('when removing food', () => {
-			it('works', () => {
-				// TODO.
+				// TODO: Edit serving size and press enter.
+				// TODO: Edit serving size and blur.
+
+				// Delete.
+				cy.get('.button--remove').click();
+				cy.contains('Food removed successfully.').should('exist');
+				cy.get('.formosa-toast__close').click();
+				cy.get('#diary-table').should('not.exist');
+				cy.get('[id="entries.0.user_serving_size"]').should('not.exist');
+
+				// Add then refresh.
+				cy.visit('/');
+				cy.get('#diary-table').should('not.exist');
+				cy.get('#food').type(`Foo ${timestamp}`);
+				cy.contains(`Foo ${timestamp}`).click();
+				cy.contains('Food added successfully.').should('exist');
+				cy.get('.formosa-toast__close').click();
+				cy.get('#diary-table').should('be.visible');
+				cy.get('[id="entries.0.user_serving_size"]').should('have.value', '2');
+				cy.reload();
+				cy.get('#diary-table').should('be.visible');
+				cy.get('[id="entries.0.user_serving_size"]').should('have.value', '2');
+
+				// TODO: Edit then refresh.
+
+				// Delete then refresh.
+				cy.get('.button--remove').click();
+				cy.contains('Food removed successfully.').should('exist');
+				cy.get('.formosa-toast__close').click();
+				cy.get('#diary-table').should('not.exist');
+				cy.get('[id="entries.0.user_serving_size"]').should('not.exist');
+				cy.reload();
+				cy.get('#diary-table').should('not.exist');
+				cy.get('[id="entries.0.user_serving_size"]').should('not.exist');
 			});
 		});
 	});
 
 	describe('meals', () => {
-		describe('when adding meal', () => {
-			it('works', () => {
-				// TODO.
-			});
+		before(() => {
+			cy.removeEntriesExtras();
+		});
+
+		it('works', () => {
+			cy.intercept('GET', '**/api/meals?**').as('getMeals');
+
+			const timestamp = (new Date()).getTime();
+			cy.createFood(`Foo ${timestamp}`, 1);
+			cy.createFood(`Bar ${timestamp}`, 2);
+			cy.createMeal('Example meal', [`Foo ${timestamp}`, `Bar ${timestamp}`], true);
+
+			cy.visit('/');
+			cy.wait('@getMeals').its('response.statusCode').should('equal', 200);
+			cy.get('#diary-table').should('not.exist');
+			cy.contains('Example meal').click();
+			cy.get('#diary-table').should('be.visible');
+			cy.get('[id="entries.0.user_serving_size"]').should('have.value', '1');
+			cy.get('[id="entries.1.user_serving_size"]').should('have.value', '2');
 		});
 	});
 });

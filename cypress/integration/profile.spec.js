@@ -1,22 +1,13 @@
 describe('profile', () => {
 	before(() => {
 		cy.login();
-
-		// Set weight for calculating BMI.
-		cy.intercept('GET', '**/api/weights?**').as('getWeight');
-		cy.visit('/');
-		cy.wait('@getWeight');
-		cy.get('#weight')
-			.then(($el) => {
-				if ($el.val() !== '130.5') {
-					cy.get('#weight').clear().type('130.5');
-					cy.get('#weight-form button').click();
-					cy.contains('Weight saved successfully.').should('exist');
-				}
-			});
 	});
 
 	describe('when updating BMI settings', () => {
+		before(() => {
+			cy.setWeight('130.5');
+		});
+
 		describe('when adding BMI settings', () => {
 			it('works', () => {
 				cy.visit('/profile');
