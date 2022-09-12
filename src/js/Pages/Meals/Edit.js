@@ -133,40 +133,44 @@ export default function Edit() {
 
 				<h2>Foods</h2>
 
-				<Input
-					aria-label="Add food"
-					className="formosa-prefix"
-					id="new-food"
-					labelFn={(f) => (
-						<>
-							{f.name}
-							{f.is_verified && <CheckIcon alt="Verified" className="verified" height={16} width={16} />}
-						</>
-					)}
-					max={1}
-					options={filteredFood}
-					placeholder="Search foods"
-					type="autocomplete"
-					setValue={(food) => {
-						const newValue = {
-							id: `temp-${uuidv4()}`,
-							type: 'food-meal',
-							food_id: food.id,
-							meal_id: row.id,
-							food,
-							user_serving_size: food.serving_size,
-						};
-						setRow({
-							...row,
-							foods: [...row.foods, newValue],
-						});
-						setNewFood(null);
-						setTimeout(() => {
-							document.getElementById('new-food').focus();
-						});
-					}}
-					value={newFood}
-				/>
+				{errorFood ? (
+					<p className="formosa-message formosa-message--error">Error getting food.</p>
+				) : (
+					<Input
+						aria-label="Add food"
+						className="formosa-prefix"
+						id="new-food"
+						labelFn={(f) => (
+							<>
+								{f.name}
+								{f.is_verified && <CheckIcon alt="Verified" className="verified" height={16} width={16} />}
+							</>
+						)}
+						max={1}
+						options={filteredFood}
+						placeholder="Search foods"
+						type="autocomplete"
+						setValue={(food) => {
+							const newValue = {
+								id: `temp-${uuidv4()}`,
+								type: 'food-meal',
+								food_id: food.id,
+								meal_id: row.id,
+								food,
+								user_serving_size: food.serving_size,
+							};
+							setRow({
+								...row,
+								foods: [...row.foods, newValue],
+							});
+							setNewFood(null);
+							setTimeout(() => {
+								document.getElementById('new-food').focus();
+							});
+						}}
+						value={newFood}
+					/>
+				)}
 
 				{row.foods.length > 0 ? (
 					<table>
