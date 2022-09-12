@@ -7,6 +7,7 @@ import { ReactComponent as CheckIcon } from '../../../svg/check.svg';
 import Error from '../../Error';
 import { ReactComponent as HeartIcon } from '../../../svg/heart.svg';
 import { Link } from 'react-router-dom';
+import { mapTrackables } from '../../Utilities/Helpers';
 import MetaTitle from '../../Components/MetaTitle';
 import TrackableBody from '../../Components/TrackableBody';
 
@@ -36,7 +37,7 @@ export default function List() {
 		if (Auth.hasTrackables()) {
 			Api.get(`trackables?fields[trackables]=name,slug,units&filter[slug][in]=${Auth.trackables().join(',')}`, false)
 				.then((response) => {
-					setTrackables(response);
+					setTrackables(mapTrackables(response));
 				});
 		}
 	}, []);

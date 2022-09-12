@@ -1,3 +1,5 @@
+import Auth from './Auth';
+
 export const pluralize = (servingUnits, servingSize) => { // eslint-disable-line import/prefer-default-export
 	if (!servingUnits) {
 		return '';
@@ -44,3 +46,7 @@ export const pluralize = (servingUnits, servingSize) => { // eslint-disable-line
 
 	return `${servingUnits}s`;
 };
+
+export const mapTrackables = (response) => (
+	Auth.trackables().map((slug) => (response.find((t) => (slug === t.slug))))
+);

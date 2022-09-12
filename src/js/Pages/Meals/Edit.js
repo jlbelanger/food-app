@@ -1,5 +1,6 @@
-import { Api, Field, Form, FormosaContext, Input } from '@jlbelanger/formosa';
+import { Api, Field, FormosaContext, Input } from '@jlbelanger/formosa';
 import { Link, useHistory, useParams } from 'react-router-dom';
+import { mapTrackables, pluralize } from '../../Utilities/Helpers';
 import React, { useContext, useEffect, useState } from 'react';
 import Auth from '../../Utilities/Auth';
 import { ReactComponent as CheckIcon } from '../../../svg/check.svg';
@@ -8,7 +9,6 @@ import Fields from './Partials/Fields';
 import { ReactComponent as HeartIcon } from '../../../svg/heart.svg';
 import MetaTitle from '../../Components/MetaTitle';
 import MyForm from '../../Components/MyForm';
-import { pluralize } from '../../Utilities/Helpers';
 import TrackableBody from '../../Components/TrackableBody';
 import TrackableFoot from '../../Components/TrackableFoot';
 import TrackableHead from '../../Components/TrackableHead';
@@ -47,7 +47,7 @@ export default function Edit() {
 		if (Auth.hasTrackables()) {
 			Api.get(`trackables?fields[trackables]=name,slug,units&filter[slug][in]=${Auth.trackables().join(',')}`)
 				.then((response) => {
-					setTrackables(response);
+					setTrackables(mapTrackables(response));
 				});
 		}
 	}, [id]);

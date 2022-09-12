@@ -1,5 +1,6 @@
 import { Api, Field, Form, FormosaContext } from '@jlbelanger/formosa';
 import { Link, useHistory } from 'react-router-dom';
+import { mapTrackables, pluralize } from '../Utilities/Helpers';
 import React, { useContext, useEffect, useState } from 'react';
 import Auth from '../Utilities/Auth';
 import { ReactComponent as CheckIcon } from '../../svg/check.svg';
@@ -10,7 +11,6 @@ import DiaryAddFood from '../Components/DiaryAddFood';
 import DiaryAddMeal from '../Components/DiaryAddMeal';
 import DiaryWeight from '../Components/DiaryWeight';
 import MetaTitle from '../Components/MetaTitle';
-import { pluralize } from '../Utilities/Helpers';
 import TrackableBody from '../Components/TrackableBody';
 import TrackableFoot from '../Components/TrackableFoot';
 import TrackableHead from '../Components/TrackableHead';
@@ -56,7 +56,7 @@ export default function Diary() {
 		if (Auth.hasTrackables()) {
 			Api.get(`trackables?fields[trackables]=name,slug,units&filter[slug][in]=${Auth.trackables().join(',')}`)
 				.then((response) => {
-					setTrackables(response);
+					setTrackables(mapTrackables(response));
 				});
 		}
 

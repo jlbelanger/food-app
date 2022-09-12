@@ -5,6 +5,7 @@ import { Api } from '@jlbelanger/formosa';
 import Auth from '../Utilities/Auth';
 import { ReactComponent as ChevronIcon } from '../../svg/chevron.svg';
 import Error from '../Error';
+import { mapTrackables } from '../Utilities/Helpers';
 import MetaTitle from '../Components/MetaTitle';
 
 export default function Calendar() {
@@ -35,7 +36,7 @@ export default function Calendar() {
 		if (Auth.hasTrackables()) {
 			Api.get(`trackables?fields[trackables]=name,slug,units&filter[slug][in]=${Auth.trackables().join(',')}`)
 				.then((response) => {
-					setTrackables(response);
+					setTrackables(mapTrackables(response));
 				});
 		}
 
