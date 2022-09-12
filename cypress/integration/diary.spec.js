@@ -77,8 +77,21 @@ describe('diary', () => {
 			cy.get('#note-0').should('have.value', 'Another note');
 			cy.get('.column-total--calories').should('have.text', '0');
 
-			// TODO: Edit trackables and press enter.
-			// TODO: Edit trackables and blur.
+			// Edit trackable and press enter.
+			cy.get('#calories-0').type('100{enter}');
+			cy.wait('@putExtra').its('response.statusCode').should('equal', 200);
+			cy.contains('Extra saved successfully.').should('exist');
+			cy.get('.formosa-toast__close').click();
+			cy.get('#calories-0').should('have.value', '100');
+			cy.get('.column-total--calories').should('have.text', '100');
+
+			// Edit trackable and blur.
+			cy.get('#calories-0').clear().type('50').blur();
+			cy.wait('@putExtra').its('response.statusCode').should('equal', 200);
+			cy.contains('Extra saved successfully.').should('exist');
+			cy.get('.formosa-toast__close').click();
+			cy.get('#calories-0').should('have.value', '50');
+			cy.get('.column-total--calories').should('have.text', '50');
 
 			// Delete.
 			cy.get('.button--remove').click();
@@ -122,8 +135,25 @@ describe('diary', () => {
 			cy.get('#note-0').should('have.value', 'Another note');
 			cy.get('.column-total--calories').should('have.text', '0');
 
-			// TODO: Edit trackables and press enter then refresh.
-			// TODO: Edit trackables and blur then refresh.
+			// Edit trackable and press enter then refresh.
+			cy.get('#calories-0').type('100{enter}');
+			cy.wait('@putExtra').its('response.statusCode').should('equal', 200);
+			cy.contains('Extra saved successfully.').should('exist');
+			cy.get('.formosa-toast__close').click();
+			cy.reload();
+			cy.wait('@getExtras').its('response.statusCode').should('equal', 200);
+			cy.get('#calories-0').should('have.value', '100');
+			cy.get('.column-total--calories').should('have.text', '100');
+
+			// Edit trackable and blur then refresh.
+			cy.get('#calories-0').clear().type('50').blur();
+			cy.wait('@putExtra').its('response.statusCode').should('equal', 200);
+			cy.contains('Extra saved successfully.').should('exist');
+			cy.get('.formosa-toast__close').click();
+			cy.reload();
+			cy.wait('@getExtras').its('response.statusCode').should('equal', 200);
+			cy.get('#calories-0').should('have.value', '50');
+			cy.get('.column-total--calories').should('have.text', '50');
 
 			// Delete then refresh.
 			cy.get('.button--remove').click();
