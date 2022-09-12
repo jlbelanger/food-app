@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 export default function DiaryWeight({ date }) {
 	const { addToast } = useContext(FormosaContext);
 	const [row, setRow] = useState(null);
+	const [rowId, setRowId] = useState(null);
 	const [error, setError] = useState(false);
 
 	useEffect(() => {
@@ -13,6 +14,7 @@ export default function DiaryWeight({ date }) {
 			.then((response) => {
 				if (response.length > 0) {
 					setRow(response[0]);
+					setRowId(response[0].id);
 				} else {
 					setRow({ date });
 				}
@@ -40,15 +42,16 @@ export default function DiaryWeight({ date }) {
 		<Form
 			afterSubmit={(response) => {
 				if (response.id) {
-					setRow({ ...row, id: response.id, type: response.type });
+					setRowId(response.id);
 				}
 			}}
 			beforeSubmit={() => {
-				if (row.id && row.weight === '') {
-					Api.delete(`weights/${row.id}`)
+				if (rowId && row.weight === '') {
+					Api.delete(`weights/${rowId}`)
 						.then(() => {
 							addToast('Weight removed successfully.', 'success');
 							setRow({ date });
+							setRowId(null);
 						})
 						.catch((response) => {
 							const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
@@ -60,9 +63,9 @@ export default function DiaryWeight({ date }) {
 			}}
 			className="form"
 			htmlId="weight-form"
-			id={row.id ? row.id : null}
+			id={rowId}
 			key="real-form"
-			method={row.id ? 'PUT' : 'POST'}
+			method={rowId ? 'PUT' : 'POST'}
 			path="weights"
 			preventEmptyRequest
 			row={row}
