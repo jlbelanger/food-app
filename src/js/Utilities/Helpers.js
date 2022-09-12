@@ -1,4 +1,6 @@
 import Auth from './Auth';
+import { ReactComponent as CheckIcon } from '../../svg/check.svg';
+import React from 'react';
 
 export const pluralize = (servingUnits, servingSize) => { // eslint-disable-line import/prefer-default-export
 	if (!servingUnits) {
@@ -49,4 +51,11 @@ export const pluralize = (servingUnits, servingSize) => { // eslint-disable-line
 
 export const mapTrackables = (response) => (
 	Auth.trackables().map((slug) => (response.find((t) => (slug === t.slug))))
+);
+
+export const foodLabelFn = (food) => (
+	<>
+		{food.name}
+		{food.is_verified && <CheckIcon alt="Verified" className="verified" height={16} width={16} />}
+	</>
 );

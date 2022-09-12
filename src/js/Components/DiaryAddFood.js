@@ -1,7 +1,7 @@
 import { Api, Field, Form } from '@jlbelanger/formosa';
 import React, { useEffect, useState } from 'react';
 import Auth from '../Utilities/Auth';
-import { ReactComponent as CheckIcon } from '../../svg/check.svg';
+import { foodLabelFn } from '../Utilities/Helpers';
 import { ReactComponent as PlusIcon } from '../../svg/plus.svg';
 import PropTypes from 'prop-types';
 
@@ -57,15 +57,11 @@ export default function DiaryAddFood({ date, diary, foodFields, setDiary }) {
 					}}
 					className="formosa-prefix"
 					inputInnerWrapperClassName="flex"
-					labelFn={(f) => (
-						<>
-							{f.name}
-							{f.is_verified && <CheckIcon alt="Verified" className="verified" height={16} width={16} />}
-						</>
-					)}
+					labelFn={foodLabelFn}
 					max={1}
 					name="food"
 					options={favouritesOnly ? favouriteFood : food}
+					optionLabelFn={foodLabelFn}
 					placeholder="Search food"
 					postfix={(
 						<button className="formosa-button formosa-postfix button--icon" id="add-food" type="submit">

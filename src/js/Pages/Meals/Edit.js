@@ -1,6 +1,6 @@
 import { Api, Field, FormosaContext, Input } from '@jlbelanger/formosa';
+import { foodLabelFn, mapTrackables, pluralize } from '../../Utilities/Helpers';
 import { Link, useHistory, useParams } from 'react-router-dom';
-import { mapTrackables, pluralize } from '../../Utilities/Helpers';
 import React, { useContext, useEffect, useState } from 'react';
 import Auth from '../../Utilities/Auth';
 import { ReactComponent as CheckIcon } from '../../../svg/check.svg';
@@ -140,14 +140,10 @@ export default function Edit() {
 						aria-label="Add food"
 						className="formosa-prefix"
 						id="new-food"
-						labelFn={(f) => (
-							<>
-								{f.name}
-								{f.is_verified && <CheckIcon alt="Verified" className="verified" height={16} width={16} />}
-							</>
-						)}
+						labelFn={foodLabelFn}
 						max={1}
 						options={filteredFood}
+						optionLabelFn={foodLabelFn}
 						placeholder="Search foods"
 						type="autocomplete"
 						setValue={(food) => {
