@@ -1558,9 +1558,14 @@
     "@types/yargs" "^16.0.0"
     chalk "^4.0.0"
 
-"@jlbelanger/formosa@link:../formosa":
-  version "0.0.0"
-  uid ""
+"@jlbelanger/formosa@jlbelanger/formosa#80272b13decddf9546dcab83f6b0437748c67096":
+  version "1.0.2"
+  resolved "https://codeload.github.com/jlbelanger/formosa/tar.gz/80272b13decddf9546dcab83f6b0437748c67096"
+  dependencies:
+    get-value "^3.0.1"
+    prop-types "^15.8.0"
+    react-promise-tracker "^2.1.0"
+    set-value "^4.1.0"
 
 "@jridgewell/gen-mapping@^0.1.0":
   version "0.1.1"
