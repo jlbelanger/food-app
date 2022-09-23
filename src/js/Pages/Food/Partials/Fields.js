@@ -29,7 +29,6 @@ export default function Fields({ readOnly, row }) {
 
 		image.current.classList.remove('sticky');
 		image.current.setAttribute('data-sticky-offset-top', image.current.offsetTop);
-		image.current.style.right = `${window.innerWidth - image.current.offsetLeft - image.current.scrollWidth}px`;
 		onScroll();
 	};
 

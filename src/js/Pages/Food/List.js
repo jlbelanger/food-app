@@ -113,7 +113,7 @@ export default function List() {
 				title="Food"
 				small={`(${total !== totalFiltered ? `${totalFiltered.toLocaleString()} of ` : ''}${total.toLocaleString()} results)`}
 			>
-				<Link className="formosa-button" to="/food/new">Add</Link>
+				<Link className="formosa-button button--small" to="/food/new">Add</Link>
 			</MetaTitle>
 
 			<div id="search-container">

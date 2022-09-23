@@ -114,8 +114,8 @@ export default function Edit() {
 				>
 					<HeartIcon alt={row.is_favourite ? 'Unfavourite' : 'Favourite'} height={16} width={16} />
 				</button>
-				<button className="formosa-button" form="edit-form" type="submit">Save</button>
-				<button className="formosa-button formosa-button--danger" onClick={deleteRow} type="submit">Delete</button>
+				<button className="formosa-button button--small" form="edit-form" type="submit">Save</button>
+				<button className="formosa-button formosa-button--danger button--small" onClick={deleteRow} type="submit">Delete</button>
 			</MetaTitle>
 
 			<MyForm

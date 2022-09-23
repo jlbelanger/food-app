@@ -24,6 +24,7 @@ $breakpoint2: $image-width + ($list-width + $margin + $article-padding) * 2;
 
 	@media screen and (min-width: $breakpoint1) {
 		flex-direction: row;
+		position: relative;
 	}
 }
 
@@ -74,9 +75,8 @@ $breakpoint2: $image-width + ($list-width + $margin + $article-padding) * 2;
 		order: 3;
 
 		&.sticky {
-			position: fixed;
+			position: sticky;
 			top: #{$nav-height * 2 + 8px};
-			z-index: 1;
 		}
 	}
 }

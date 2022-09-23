@@ -116,7 +116,7 @@ export default function List() {
 				title="Meals"
 				small={`(${numResults})`}
 			>
-				<Link className="formosa-button" to="/meals/new">Add</Link>
+				<Link className="formosa-button button--small" to="/meals/new">Add</Link>
 			</MetaTitle>
 
 			{(isLoading || total > 0) && (

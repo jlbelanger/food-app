@@ -49,6 +49,18 @@ export const pluralize = (servingUnits, servingSize) => { // eslint-disable-line
 	return `${servingUnits}s`;
 };
 
+export const prettyDate = (date, weekday = 'short') => {
+	const options = {
+		year: 'numeric',
+		month: 'short',
+		day: 'numeric',
+	};
+	if (weekday) {
+		options.weekday = weekday;
+	}
+	return new Date(`${date}T12:00:00Z`).toLocaleString('en-CA', options);
+};
+
 export const mapTrackables = (response) => (
 	Auth.trackables().map((slug) => (response.find((t) => (slug === t.slug))))
 );

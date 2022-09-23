@@ -21,7 +21,7 @@ export default function New() {
 	return (
 		<>
 			<MetaTitle title="Add food">
-				<button className="formosa-button" form="add-form" type="submit">Save</button>
+				<button className="formosa-button button--small" form="add-form" type="submit">Save</button>
 				<Field
 					label="Add another"
 					labelPosition="after"

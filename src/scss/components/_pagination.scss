@@ -1,0 +1,28 @@
+table.paginated-table {
+	margin-left: 0;
+	margin-right: 0;
+	margin-top: 4px;
+	width: 100%;
+
+	th {
+		padding-bottom: 8px;
+		padding-top: 8px;
+	}
+}
+
+.pagination {
+	align-items: center;
+	display: flex;
+	margin-top: 8px;
+
+	[disabled] {
+		visibility: hidden;
+	}
+}
+
+.pagination__num {
+	color: $dark-gray;
+	flex: 1 1 auto;
+	font-size: 14px;
+	text-align: center;
+}

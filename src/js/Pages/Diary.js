@@ -1,6 +1,6 @@
 import { Api, Field, Form, FormosaContext } from '@jlbelanger/formosa';
 import { Link, useHistory } from 'react-router-dom';
-import { mapTrackables, pluralize } from '../Utilities/Helpers';
+import { mapTrackables, pluralize, prettyDate } from '../Utilities/Helpers';
 import React, { useContext, useEffect, useState } from 'react';
 import Auth from '../Utilities/Auth';
 import { ReactComponent as CheckIcon } from '../../svg/check.svg';
@@ -63,13 +63,6 @@ export default function Diary() {
 		getEntries(currentDate);
 	}, []);
 
-	const prettyDate = new Date(`${currentDate}T12:00:00Z`).toLocaleString('en-CA', {
-		weekday: 'short',
-		year: 'numeric',
-		month: 'short',
-		day: 'numeric',
-	});
-
 	const changeDay = (modifier = 1) => {
 		let newDate = new Date(`${currentDate}T12:00:00Z`);
 		newDate.setDate(newDate.getDate() + (1 * modifier));
@@ -126,7 +119,7 @@ export default function Diary() {
 						<ChevronIcon height={16} width={16} />
 					</button>
 				)}
-				title={currentDate ? prettyDate : 'Diary'}
+				title={currentDate ? prettyDate(currentDate) : 'Diary'}
 			>
 				<button className="button--icon" disabled={currentDate === today} id="next" onClick={nextDay} type="button">
 					Next Day

@@ -28,7 +28,7 @@ export default function ChartScale({ chartRefs }) {
 	return (
 		<Field
 			fieldsetClassName="formosa-radio--inline"
-			itemLabelClassName="formosa-button button--header"
+			itemLabelClassName="formosa-button button--small button--header"
 			label="Scale:"
 			name="radio"
 			type="radio"
