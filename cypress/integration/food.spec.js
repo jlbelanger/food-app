@@ -147,28 +147,14 @@ describe('food', () => {
 				});
 			});
 
-		// Favourite from index.
+		// Unfavourite from index.
 		let heart = cy.get('.table-link')
-			.contains(`Barfoo ${timestamp}`)
-			.parents('tr')
-			.children('td')
-			.children('.heart');
-		heart.should('have.class', 'favourite');
-		heart.should('not.have.class', 'unfavourite');
-		heart.click();
-		cy.wait('@favouriteRecord').its('response.statusCode').should('equal', 204);
-		cy.contains('Food favourited successfully.').should('exist');
-		cy.get('.formosa-toast__close').click();
-		cy.reload();
-		heart = cy.get('.table-link')
 			.contains(`Barfoo ${timestamp}`)
 			.parents('tr')
 			.children('td')
 			.children('.heart');
 		heart.should('not.have.class', 'favourite');
 		heart.should('have.class', 'unfavourite');
-
-		// Unfavourite from index.
 		heart.click();
 		cy.wait('@favouriteRecord').its('response.statusCode').should('equal', 204);
 		cy.contains('Food unfavourited successfully.').should('exist');
@@ -181,6 +167,20 @@ describe('food', () => {
 			.children('.heart');
 		heart.should('have.class', 'favourite');
 		heart.should('not.have.class', 'unfavourite');
+
+		// Favourite from index.
+		heart.click();
+		cy.wait('@favouriteRecord').its('response.statusCode').should('equal', 204);
+		cy.contains('Food favourited successfully.').should('exist');
+		cy.get('.formosa-toast__close').click();
+		cy.reload();
+		heart = cy.get('.table-link')
+			.contains(`Barfoo ${timestamp}`)
+			.parents('tr')
+			.children('td')
+			.children('.heart');
+		heart.should('not.have.class', 'favourite');
+		heart.should('have.class', 'unfavourite');
 
 		// Edit minimal fields.
 		cy.get('.table-link').contains(`Barfoo ${timestamp}`).click();
@@ -388,18 +388,9 @@ describe('food', () => {
 		cy.get('[name="molybdenum"]').should('have.value', '');
 		cy.get('[name="chloride"]').should('have.value', '');
 
-		// Favourite.
-		cy.get('.heart').should('have.class', 'favourite');
-		cy.get('.heart').should('not.have.class', 'unfavourite');
-		cy.get('.heart').click();
-		cy.wait('@favouriteRecord').its('response.statusCode').should('equal', 204);
-		cy.contains('Food favourited successfully.').should('exist');
-		cy.get('.formosa-toast__close').click();
-		cy.reload();
+		// Unfavourite.
 		cy.get('.heart').should('not.have.class', 'favourite');
 		cy.get('.heart').should('have.class', 'unfavourite');
-
-		// Unfavourite.
 		cy.get('.heart').click();
 		cy.wait('@favouriteRecord').its('response.statusCode').should('equal', 204);
 		cy.contains('Food unfavourited successfully.').should('exist');
@@ -407,6 +398,15 @@ describe('food', () => {
 		cy.reload();
 		cy.get('.heart').should('have.class', 'favourite');
 		cy.get('.heart').should('not.have.class', 'unfavourite');
+
+		// Favourite.
+		cy.get('.heart').click();
+		cy.wait('@favouriteRecord').its('response.statusCode').should('equal', 204);
+		cy.contains('Food favourited successfully.').should('exist');
+		cy.get('.formosa-toast__close').click();
+		cy.reload();
+		cy.get('.heart').should('not.have.class', 'favourite');
+		cy.get('.heart').should('have.class', 'unfavourite');
 
 		// Delete.
 		cy.get('.formosa-button').contains('Delete').click();
@@ -423,5 +423,56 @@ describe('food', () => {
 		cy.wait('@getRecords').its('response.statusCode').should('equal', 200);
 		cy.get('.table-link').contains(`Barfoo ${timestamp}`).should('not.exist');
 		cy.get('.table-link').contains(`Foobar ${timestamp}`).should('not.exist');
+	});
+
+	describe('adding as favourite', () => {
+		it('works', () => {
+			const timestamp = (new Date()).getTime();
+			cy.intercept('GET', '**/api/food?*').as('getRecords');
+			cy.intercept('GET', '**/api/food/*').as('getRecord');
+			cy.intercept('POST', '**/api/food').as('postRecord');
+			cy.intercept('DELETE', '**/api/food/*').as('deleteRecord');
+
+			cy.visit('/food/new');
+			cy.get('[name="name"]').type(`Foobar ${timestamp}`);
+			cy.get('[name="serving_size"]').type('1');
+			cy.get('.formosa-button').contains('Save').click();
+			cy.wait('@postRecord').its('response.statusCode').should('equal', 201);
+			cy.contains('Food added successfully.').should('exist');
+			cy.get('.formosa-toast__close').click();
+			cy.get('.heart').should('not.have.class', 'favourite');
+			cy.get('.heart').should('have.class', 'unfavourite');
+
+			cy.get('.formosa-button').contains('Delete').click();
+			cy.wait('@deleteRecord').its('response.statusCode').should('equal', 204);
+			cy.contains('Food deleted successfully.').should('exist');
+			cy.get('.formosa-toast__close').click();
+		});
+	});
+
+	describe('adding not as favourite', () => {
+		it('works', () => {
+			const timestamp = (new Date()).getTime();
+			cy.intercept('GET', '**/api/food?*').as('getRecords');
+			cy.intercept('GET', '**/api/food/*').as('getRecord');
+			cy.intercept('POST', '**/api/food').as('postRecord');
+			cy.intercept('DELETE', '**/api/food/*').as('deleteRecord');
+
+			cy.visit('/food/new');
+			cy.get('[name="name"]').type(`Foobar ${timestamp}`);
+			cy.get('[name="serving_size"]').type('1');
+			cy.get('[name="meta.is_favourite"]').uncheck();
+			cy.get('.formosa-button').contains('Save').click();
+			cy.wait('@postRecord').its('response.statusCode').should('equal', 201);
+			cy.contains('Food added successfully.').should('exist');
+			cy.get('.formosa-toast__close').click();
+			cy.get('.heart').should('have.class', 'favourite');
+			cy.get('.heart').should('not.have.class', 'unfavourite');
+
+			cy.get('.formosa-button').contains('Delete').click();
+			cy.wait('@deleteRecord').its('response.statusCode').should('equal', 204);
+			cy.contains('Food deleted successfully.').should('exist');
+			cy.get('.formosa-toast__close').click();
+		});
 	});
 });

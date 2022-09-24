@@ -25,17 +25,13 @@ Cypress.Commands.add('createFood', (name, servingSize, attributes = {}, addToFav
 	Object.keys(attributes).forEach((key) => {
 		cy.get(`[name="${key}"]`).type(attributes[key]);
 	});
+	if (!addToFavourites) {
+		cy.get('[name="meta.is_favourite"]').uncheck();
+	}
 	cy.get('.formosa-button').contains('Save').click();
 	cy.wait('@postFoodRecord').its('response.statusCode').should('equal', 201);
 	cy.contains('Food added successfully.').should('exist');
 	cy.get('.formosa-toast__close').click();
-
-	if (addToFavourites) {
-		cy.get('.heart').click();
-		cy.wait('@favouriteFoodRecord').its('response.statusCode').should('equal', 204);
-		cy.contains('Food favourited successfully.').should('exist');
-		cy.get('.formosa-toast__close').click();
-	}
 });
 
 Cypress.Commands.add('createMeal', (name, foods = [], addToFavourites = false) => {

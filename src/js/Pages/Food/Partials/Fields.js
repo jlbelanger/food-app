@@ -146,6 +146,13 @@ export default function Fields({ readOnly, row }) {
 						note="Upload a photo of the nutritional information."
 						type="file"
 					/>
+					{!row.id && (
+						<Field
+							label="Add to favourites"
+							name="meta.is_favourite"
+							type="checkbox"
+						/>
+					)}
 				</div>
 			)}
 

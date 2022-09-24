@@ -75,3 +75,11 @@ a.formosa-button {
 .formosa-input-inner-wrapper {
 	white-space: nowrap;
 }
+
+.formosa-responsive > .formosa-field {
+	.formosa-label-wrapper--checkbox {
+		.formosa-label {
+			padding-top: 5px;
+		}
+	}
+}
