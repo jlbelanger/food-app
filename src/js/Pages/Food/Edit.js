@@ -15,6 +15,7 @@ export default function Edit() {
 	const { addToast } = useContext(FormosaContext);
 	const { id } = useParams();
 	const [row, setRow] = useState(null);
+	const [isFavourite, setIsFavourite] = useState(false);
 	const [error, setError] = useState(false);
 	const history = useHistory();
 
@@ -33,6 +34,7 @@ export default function Edit() {
 		Api.get(url)
 			.then((response) => {
 				setRow(response);
+				setIsFavourite(response.is_favourite);
 			})
 			.catch((response) => {
 				setError(response.status);
@@ -54,9 +56,9 @@ export default function Edit() {
 	const favourite = () => {
 		Api.post(`food/${id}/favourite`)
 			.then(() => {
-				const isFavourite = !row.is_favourite;
-				setRow({ ...row, is_favourite: isFavourite });
-				addToast(`Food ${isFavourite ? '' : 'un'}favourited successfully.`, 'success');
+				const newIsFavourite = !isFavourite;
+				setIsFavourite(newIsFavourite);
+				addToast(`Food ${newIsFavourite ? '' : 'un'}favourited successfully.`, 'success');
 			})
 			.catch((response) => {
 				const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
@@ -87,11 +89,11 @@ export default function Edit() {
 			<MetaTitle title={readOnly ? row.name : `Edit ${row.name}`}>
 				{row.is_verified && <CheckIcon alt="Verified" className="verified" height={16} width={16} />}
 				<button
-					className={`heart ${row.is_favourite ? 'un' : ''}favourite`}
+					className={`heart ${isFavourite ? 'un' : ''}favourite`}
 					onClick={favourite}
 					type="button"
 				>
-					<HeartIcon alt={row.is_favourite ? 'Unfavourite' : 'Favourite'} height={16} width={16} />
+					<HeartIcon alt={isFavourite ? 'Unfavourite' : 'Favourite'} height={16} width={16} />
 				</button>
 				{!readOnly && <button className="formosa-button button--small" form="edit-form" type="submit">Save</button>}
 				{!readOnly && row.deleteable && (
