@@ -6,13 +6,14 @@ import MyForm from '../../Components/MyForm';
 import { useHistory } from 'react-router-dom';
 
 export default function New() {
-	const [row, setRow] = useState({});
+	const defaultRow = { is_favourite: true };
+	const [row, setRow] = useState(defaultRow);
 	const [addAnother, setAddAnother] = useState(false);
 	const history = useHistory();
 
 	const afterSubmit = (response) => {
 		if (addAnother) {
-			setRow({});
+			setRow(defaultRow);
 		} else {
 			history.push(`/meals/${response.id}`);
 		}
