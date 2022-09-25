@@ -107,7 +107,7 @@ export default function Fields({ readOnly, row }) {
 
 			{!readOnly && (
 				<div className="formosa-responsive">
-					{Auth.getValue('is_admin') && <Field label="User ID" name="user.id" size={5} />}
+					{Auth.getValue('is_admin') && !!row.id && <Field label="User ID" name="user.id" size={5} />}
 					<Field afterChange={autopopulate} label="Name" name="name" readOnly={readOnly} required />
 					<Field label="Slug" name="slug" readOnly required />
 					<div className="formosa-field formosa-field--serving_size">
