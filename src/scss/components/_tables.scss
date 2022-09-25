@@ -10,15 +10,15 @@ table {
 		border-color: $lightest-gray;
 		border-style: solid;
 		border-width: 1px 0 0;
-		padding: $table-cell-padding $margin;
+		padding: $table-cell-padding #{$table-cell-padding * 2};
 	}
 
 	th {
 		padding: 0;
 	}
 
-	tr:nth-of-type(odd) {
-		td {
+	tbody {
+		tr:nth-of-type(odd) {
 			background-color: $white;
 		}
 	}
@@ -31,6 +31,12 @@ table {
 		margin-left: 0;
 		margin-right: 0;
 		width: 100%;
+	}
+
+	@media screen and (min-width: $breakpoint) {
+		td {
+			padding: $table-cell-padding $margin;
+		}
 	}
 }
 
@@ -73,10 +79,60 @@ th {
 	width: 147px;
 }
 
-.column--trackable {
-	min-width: 93px;
-	white-space: nowrap;
-	width: 93px;
+.column--trackables {
+	padding: 0;
+
+	tbody & {
+		position: relative;
+	}
+}
+
+.trackable-list {
+	display: flex;
+
+	tbody & {
+		bottom: 0;
+		left: 0;
+		position: absolute;
+		right: 0;
+		top: 0;
+	}
+
+	@media screen and (max-width: ($breakpoint - 1px)) {
+		overflow: auto;
+	}
+}
+
+.trackable-item {
+	align-items: center;
+	display: flex;
+	flex-basis: 0;
+	flex-grow: 1;
+	justify-content: center;
+	min-width: 0;
+
+	#diary-table & {
+		.formosa-input-wrapper {
+			margin: 0;
+		}
+	}
+
+	.formosa-field__input {
+		margin: 0 8px;
+		width: calc(100% - 16px);
+	}
+
+	thead & {
+		padding-left: 4px;
+		padding-right: 4px;
+	}
+
+	thead &,
+	tfoot & {
+		@media screen and (min-width: $breakpoint) {
+			background: transparent !important; // stylelint-disable-line declaration-no-important
+		}
+	}
 }
 
 .column--serving {
@@ -98,6 +154,7 @@ th {
 	background: transparent;
 	border: 0;
 	border-radius: 0;
+	color: $black;
 	font-weight: bold;
 	height: $button-size;
 	padding: 0 0 0 12px;
@@ -115,5 +172,112 @@ th {
 
 	&.hide {
 		visibility: hidden;
+	}
+}
+
+@media screen and (max-width: ($breakpoint - 1px)) {
+	#food-list {
+		.column--name {
+			width: calc(100% - 44px);
+		}
+	}
+
+	.responsive-table {
+		margin-bottom: -$article-padding;
+
+		thead {
+			.column--name,
+			.column--serving,
+			.column--button,
+			.column--size,
+			.column--units {
+				display: none;
+			}
+		}
+
+		td {
+			border-width: 0;
+		}
+
+		.table-button {
+			padding: 0;
+
+			.caret {
+				display: none;
+			}
+		}
+
+		.column--name {
+			display: inline-block;
+			padding-bottom: 0;
+			padding-top: 0;
+			width: 100%;
+		}
+
+		.column--serving {
+			display: inline-block;
+			padding-top: 0;
+			width: calc(100% - 44px);
+		}
+
+		.column--size {
+			color: $dark-gray;
+			display: inline-block;
+			font-size: 14px;
+			margin-left: #{$button-size + ($table-cell-padding * 2)};
+			margin-top: -6px;
+			min-width: 0;
+			padding: 0 0 12px;
+			text-align: right;
+			width: auto;
+
+			&::before {
+				content: '(';
+			}
+		}
+
+		.column--units {
+			color: $dark-gray;
+			display: inline-block;
+			font-size: 14px;
+			margin-top: -6px;
+			min-width: 0;
+			padding: 0 0 12px;
+			width: auto;
+
+			&::after {
+				content: ')';
+			}
+
+			&:not(:empty) {
+				margin-left: 4px;
+			}
+		}
+
+		.column--button {
+			display: inline-block;
+			padding-bottom: 0;
+			padding-top: 0;
+			width: 44px;
+		}
+
+		.column--trackables {
+			display: inline-block;
+			min-height: 32px;
+			width: 100%;
+		}
+
+		tbody {
+			.column--trackables {
+				border-bottom-color: $dark-gray;
+				border-bottom-width: 1px;
+			}
+		}
+
+		tfoot {
+			th:empty {
+				display: none;
+			}
+		}
 	}
 }

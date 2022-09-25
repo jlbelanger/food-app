@@ -1,4 +1,3 @@
-$breakpoint: 800px;
 $fieldset-padding: 16px;
 $add-meal-button-margin: 8px;
 
@@ -35,9 +34,11 @@ $add-meal-button-margin: 8px;
 }
 
 #diary-table {
-	.formosa-input-wrapper {
-		margin-left: #{-1 * ($margin - $table-cell-padding)};
-		margin-right: #{-1 * ($margin - $table-cell-padding)};
+	@media screen and (min-width: $breakpoint) {
+		.formosa-input-wrapper {
+			margin-left: #{-1 * ($margin - $table-cell-padding)};
+			margin-right: #{-1 * ($margin - $table-cell-padding)};
+		}
 	}
 }
 

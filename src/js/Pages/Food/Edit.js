@@ -89,11 +89,12 @@ export default function Edit() {
 			<MetaTitle title={readOnly ? row.name : `Edit ${row.name}`}>
 				{row.is_verified && <CheckIcon alt="Verified" className="verified" height={16} width={16} />}
 				<button
+					aria-label={isFavourite ? 'Unfavourite' : 'Favourite'}
 					className={`heart ${isFavourite ? 'un' : ''}favourite`}
 					onClick={favourite}
 					type="button"
 				>
-					<HeartIcon alt={isFavourite ? 'Unfavourite' : 'Favourite'} height={16} width={16} />
+					<HeartIcon aria-hidden height={16} width={16} />
 				</button>
 				{!readOnly && <button className="formosa-button button--small" form="edit-form" type="submit">Save</button>}
 				{!readOnly && row.deleteable && (

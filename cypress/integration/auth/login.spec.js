@@ -40,6 +40,7 @@ describe('login', () => {
 			cy.location('pathname').should('eq', '/');
 
 			// Logout.
+			cy.get('.nav__link').contains('Profile').click();
 			cy.get('.nav__button').contains('Logout').click();
 			cy.wait('@logout').its('response.statusCode').should('equal', 204);
 			cy.location('pathname').should('eq', '/');

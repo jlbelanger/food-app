@@ -3,8 +3,9 @@ import { filterByKeys, sortByKey } from '../../Utilities/Table';
 import React, { useContext, useEffect, useState } from 'react';
 import { ReactComponent as ArrowIcon } from '../../../svg/arrow.svg';
 import Auth from '../../Utilities/Auth';
-import { ReactComponent as CheckIcon } from '../../../svg/check.svg';
+import { colorsLight } from '../../Utilities/Colors';
 import Error from '../../Error';
+import FoodLink from '../../Components/FoodLink';
 import { ReactComponent as HeartIcon } from '../../../svg/heart.svg';
 import { Link } from 'react-router-dom';
 import { mapTrackables } from '../../Utilities/Helpers';
@@ -124,16 +125,22 @@ export default function List() {
 			{(!isLoading && totalFiltered <= 0) ? (
 				<p>No results found.</p>
 			) : (
-				<table>
+				<table className="responsive-table" id="food-list">
 					<thead>
 						<tr>
-							<th className="column--button" scope="col">{tableButton('is_favourite', '')}</th>
+							<th aria-label="Actions" className="column--button" scope="col">{tableButton('is_favourite', '')}</th>
 							<th className="column--name" scope="col">{tableButton('slug', 'Name')}</th>
 							<th className="column--size" scope="col">{tableButton('serving_size', 'Size')}</th>
 							<th className="column--units" scope="col">{tableButton('serving_units', 'Units')}</th>
-							{trackables.map((trackable) => (
-								<th className="column--trackable" key={trackable.id} scope="col">{tableButton(trackable.slug, trackable.name)}</th>
-							))}
+							<th className="column--trackables" scope="col">
+								<div className="trackable-list">
+									{trackables.map((trackable, i) => (
+										<span className="trackable-item" key={trackable.id} style={{ backgroundColor: colorsLight[i + 1] }}>
+											{tableButton(trackable.slug, trackable.name)}
+										</span>
+									))}
+								</div>
+							</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -148,19 +155,17 @@ export default function List() {
 								<tr key={row.id}>
 									<td className="column--button">
 										<button
+											aria-label={row.is_favourite ? 'Unfavourite' : 'Favourite'}
 											className={`heart ${row.is_favourite ? 'un' : ''}favourite`}
 											data-id={row.id}
 											onClick={favourite}
 											type="button"
 										>
-											<HeartIcon alt={row.is_favourite ? 'Unfavourite' : 'Favourite'} height={16} width={16} />
+											<HeartIcon aria-hidden height={16} width={16} />
 										</button>
 									</td>
 									<td className="column--name">
-										<Link className="table-link" to={`/food/${row.id}`}>
-											{row.name}
-											{row.is_verified && <CheckIcon alt="Verified" className="verified" height={16} width={16} />}
-										</Link>
+										<FoodLink food={row} />
 									</td>
 									<td className="column--size">{row.serving_size}</td>
 									<td className="column--units">{row.serving_units}</td>

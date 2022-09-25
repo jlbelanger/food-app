@@ -20,6 +20,7 @@ $red: #f33;
 $dark-red: #c33;
 
 $body-background-color: $off-white;
+$breakpoint: 800px;
 $button-border-bottom-width: 4px;
 $button-size: 44px;
 $article-padding: 16px;
@@ -29,6 +30,8 @@ $margin: 20px;
 $max-width: 1200px;
 $nav-height: $button-size;
 $table-cell-padding: 6px;
+
+$formosa-autocomplete-options-background-color-highlighted: $yellow;
 
 $formosa-button-background-color: $pink;
 $formosa-button-border-color: scale-color($pink, $lightness: -15%, $saturation: -25%);

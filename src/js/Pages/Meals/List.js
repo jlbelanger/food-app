@@ -132,7 +132,7 @@ export default function List() {
 				<table>
 					<thead>
 						<tr>
-							<th className="column--button" scope="col">{tableButton('is_favourite', '')}</th>
+							<th aria-label="Actions" className="column--button" scope="col">{tableButton('is_favourite', '')}</th>
 							<th className="column--name" scope="col">{tableButton('name', 'Name')}</th>
 						</tr>
 					</thead>
@@ -148,12 +148,13 @@ export default function List() {
 								<tr key={row.id}>
 									<td className="column--button">
 										<button
+											aria-label={row.is_favourite ? 'Unfavourite' : 'Favourite'}
 											className={`heart ${row.is_favourite ? 'un' : ''}favourite`}
 											data-id={row.id}
 											onClick={favourite}
 											type="button"
 										>
-											<HeartIcon alt={row.is_favourite ? 'Unfavourite' : 'Favourite'} height={16} width={16} />
+											<HeartIcon aria-hidden height={16} width={16} />
 										</button>
 									</td>
 									<td className="column--name"><Link className="table-link" to={`/meals/${row.id}`}>{row.name}</Link></td>

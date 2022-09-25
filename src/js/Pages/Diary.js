@@ -1,19 +1,19 @@
 import { Api, Field, Form, FormosaContext } from '@jlbelanger/formosa';
-import { Link, useHistory } from 'react-router-dom';
 import { mapTrackables, pluralize, prettyDate } from '../Utilities/Helpers';
 import React, { useContext, useEffect, useState } from 'react';
 import Auth from '../Utilities/Auth';
-import { ReactComponent as CheckIcon } from '../../svg/check.svg';
 import { ReactComponent as ChevronIcon } from '../../svg/chevron.svg';
 import { colorsLight } from '../Utilities/Colors';
 import DiaryAddExtra from '../Components/DiaryAddExtra';
 import DiaryAddFood from '../Components/DiaryAddFood';
 import DiaryAddMeal from '../Components/DiaryAddMeal';
 import DiaryWeight from '../Components/DiaryWeight';
+import FoodLink from '../Components/FoodLink';
 import MetaTitle from '../Components/MetaTitle';
 import TrackableBody from '../Components/TrackableBody';
 import TrackableFoot from '../Components/TrackableFoot';
 import TrackableHead from '../Components/TrackableHead';
+import { useHistory } from 'react-router-dom';
 import { ReactComponent as XIcon } from '../../svg/x.svg';
 
 export default function Diary() {
@@ -141,23 +141,20 @@ export default function Diary() {
 			{errorExtras && (<p className="formosa-message formosa-message--error">Error getting extras.</p>)}
 
 			{(diary.entries.length > 0 || diary.extras.length > 0) && (
-				<table id="diary-table">
+				<table className="responsive-table" id="diary-table">
 					<thead>
 						<tr>
 							<th className="column--name" scope="col"><span className="table-heading">Name</span></th>
 							<th className="column--serving" scope="col"><span className="table-heading">Serving Size</span></th>
+							<th aria-label="Actions" className="column--button" scope="col"><span className="table-heading" /></th>
 							<TrackableHead trackables={trackables} />
-							<th className="column--button" scope="col"><span className="table-heading" /></th>
 						</tr>
 					</thead>
 					<tbody>
 						{diary.entries.map((entry, i) => (
 							<tr className="entry" id={`entry-row-${i}`} key={entry.id}>
 								<td className="column--name">
-									<Link className="table-link" to={`/food/${entry.food.id}`}>
-										{entry.food.name}
-										{entry.food.is_verified && <CheckIcon alt="Verified" className="verified" height={16} width={16} />}
-									</Link>
+									<FoodLink food={entry.food} />
 								</td>
 								<td className="column--serving">
 									<Form
@@ -196,7 +193,6 @@ export default function Diary() {
 										<button id={`entry-${entry.id}-submit`} style={{ display: 'none' }} type="submit" />
 									</Form>
 								</td>
-								<TrackableBody food={entry.food} servingSize={parseFloat(entry.user_serving_size)} trackables={trackables} />
 								<td className="column--button">
 									<button
 										className="button--icon button--remove"
@@ -206,9 +202,10 @@ export default function Diary() {
 										type="button"
 									>
 										Remove
-										<XIcon height={16} width={16} />
+										<XIcon aria-hidden height={16} width={16} />
 									</button>
 								</td>
+								<TrackableBody food={entry.food} servingSize={parseFloat(entry.user_serving_size)} trackables={trackables} />
 							</tr>
 						))}
 
@@ -249,44 +246,6 @@ export default function Diary() {
 									</Form>
 								</td>
 								<td className="column--serving" />
-								{trackables.map((trackable, j) => (
-									<td className="center column--trackable" key={trackable.id} style={{ backgroundColor: colorsLight[j + 1] }}>
-										<Form
-											id={extra.id}
-											method="PUT"
-											path="extras"
-											preventEmptyRequest
-											preventEmptyRequestText={false}
-											row={extra}
-											setRow={(newNote) => {
-												const e = [...diary.extras];
-												e[i].note = newNote;
-												setDiary({ ...diary, extras: e });
-											}}
-											successToastText="Extra saved successfully."
-										>
-											<Field
-												onBlur={() => {
-													document.getElementById(`extra-${trackable.slug}-${extra.id}-submit`).click();
-												}}
-												id={`${trackable.slug}-${i}`}
-												inputMode="numeric"
-												name={trackable.slug}
-												setValue={(newValue) => {
-													const e = [...diary.extras];
-													e[i][trackable.slug] = newValue;
-													setDiary({
-														...diary,
-														extras: e,
-													});
-												}}
-												size={6}
-												value={diary.extras[i][trackable.slug] === null ? '' : diary.extras[i][trackable.slug]}
-											/>
-											<button id={`extra-${trackable.slug}-${extra.id}-submit`} style={{ display: 'none' }} type="submit" />
-										</Form>
-									</td>
-								))}
 								<td className="column--button">
 									<button
 										className="button--icon button--remove"
@@ -296,18 +255,59 @@ export default function Diary() {
 										type="button"
 									>
 										Remove
-										<XIcon height={16} width={16} />
+										<XIcon aria-hidden height={16} width={16} />
 									</button>
+								</td>
+								<td className="center column--trackables">
+									<div className="trackable-list">
+										{trackables.map((trackable, j) => (
+											<Form
+												className="trackable-item"
+												id={extra.id}
+												key={trackable.id}
+												method="PUT"
+												path="extras"
+												preventEmptyRequest
+												preventEmptyRequestText={false}
+												row={extra}
+												setRow={(newNote) => {
+													const e = [...diary.extras];
+													e[i].note = newNote;
+													setDiary({ ...diary, extras: e });
+												}}
+												style={{ backgroundColor: colorsLight[j + 1] }}
+												successToastText="Extra saved successfully."
+											>
+												<Field
+													onBlur={() => {
+														document.getElementById(`extra-${trackable.slug}-${extra.id}-submit`).click();
+													}}
+													id={`${trackable.slug}-${i}`}
+													inputMode="numeric"
+													name={trackable.slug}
+													setValue={(newValue) => {
+														const e = [...diary.extras];
+														e[i][trackable.slug] = newValue;
+														setDiary({
+															...diary,
+															extras: e,
+														});
+													}}
+													size={6}
+													value={diary.extras[i][trackable.slug] === null ? '' : diary.extras[i][trackable.slug]}
+												/>
+												<button id={`extra-${trackable.slug}-${extra.id}-submit`} style={{ display: 'none' }} type="submit" />
+											</Form>
+										))}
+									</div>
 								</td>
 							</tr>
 						))}
 					</tbody>
 					<tfoot>
 						<tr>
-							<th />
-							<th />
+							<th colSpan={3} />
 							<TrackableFoot extras={diary.extras} rows={diary.entries} trackables={trackables} />
-							<th />
 						</tr>
 					</tfoot>
 				</table>

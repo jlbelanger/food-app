@@ -34,7 +34,7 @@ export default function Edit() {
 
 	if (row === null) {
 		return (
-			<MetaTitle title="Edit profile" />
+			<MetaTitle title="Profile" />
 		);
 	}
 
@@ -129,7 +129,7 @@ export default function Edit() {
 
 	return (
 		<>
-			<MetaTitle title="Edit profile" />
+			<MetaTitle title="Profile" />
 
 			<MyForm
 				afterSubmit={afterSubmit}
@@ -195,7 +195,7 @@ export default function Edit() {
 						note={row.weight
 							? `This is the most recent weight entered in the diary (${weightDate}).`
 							: 'Enter your weight in the diary section.'}
-						size={5}
+						size={7}
 						suffix={row.measurement_units === 'i' ? 'lbs' : 'kgs'}
 					/>
 					<Submit id="save-bmi" label="Save" />
@@ -224,7 +224,7 @@ export default function Edit() {
 
 				<Field
 					name="trackables"
-					fieldsetClassName="formosa-radio--inline"
+					fieldsetClassName="radio-list"
 					inputAttributes={(option) => ({ id: `trackable-${option.slug}` })}
 					type="checkbox-list"
 					url="trackables?fields[trackables]=name,slug&sort=slug"
@@ -313,6 +313,15 @@ export default function Edit() {
 				<Message />
 
 				<Field
+					autoComplete="current-password"
+					id="current-password-password"
+					label="Current password"
+					name="password"
+					required
+					type="password"
+				/>
+
+				<Field
 					autcomplete="new-password"
 					label="New password"
 					name="new_password"
@@ -324,15 +333,6 @@ export default function Edit() {
 					autcomplete="new-password"
 					label="Confirm new password"
 					name="new_password_confirmation"
-					required
-					type="password"
-				/>
-
-				<Field
-					autoComplete="current-password"
-					id="current-password-password"
-					label="Current password"
-					name="password"
 					required
 					type="password"
 				/>
@@ -363,7 +363,7 @@ export default function Edit() {
 				}}
 			>
 				<Field
-					fieldsetClassName="formosa-radio--inline"
+					fieldsetClassName="radio-list"
 					options={['entries', 'meals', 'weights']}
 					name="types"
 					value={types}
@@ -371,7 +371,7 @@ export default function Edit() {
 					type="checkbox-list"
 				/>
 
-				<Submit className="formosa-button--danger" label="Delete data" />
+				<Submit className="formosa-button--danger" label="Delete selected data" />
 			</Form>
 
 			<Form

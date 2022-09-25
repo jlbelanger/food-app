@@ -21,6 +21,10 @@
 		margin: 0;
 		padding: 0 16px;
 		text-transform: none;
+
+		&[disabled] {
+			visibility: hidden;
+		}
 	}
 
 	.nav__button,

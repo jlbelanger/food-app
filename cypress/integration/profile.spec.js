@@ -424,6 +424,7 @@ describe('profile', () => {
 			cy.intercept('DELETE', '**/api/auth/logout').as('logout');
 
 			// Logout.
+			cy.get('.nav__link').contains('Profile').click();
 			cy.get('.nav__button').contains('Logout').click();
 			cy.wait('@logout').its('response.statusCode').should('equal', 204);
 

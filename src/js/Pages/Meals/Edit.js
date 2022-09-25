@@ -1,11 +1,11 @@
 import { Api, Field, FormosaContext, Input } from '@jlbelanger/formosa';
 import { foodLabelFn, mapTrackables, pluralize } from '../../Utilities/Helpers';
-import { Link, useHistory, useParams } from 'react-router-dom';
 import React, { useContext, useEffect, useState } from 'react';
+import { useHistory, useParams } from 'react-router-dom';
 import Auth from '../../Utilities/Auth';
-import { ReactComponent as CheckIcon } from '../../../svg/check.svg';
 import Error from '../../Error';
 import Fields from './Partials/Fields';
+import FoodLink from '../../Components/FoodLink';
 import { ReactComponent as HeartIcon } from '../../../svg/heart.svg';
 import MetaTitle from '../../Components/MetaTitle';
 import MyForm from '../../Components/MyForm';
@@ -108,11 +108,12 @@ export default function Edit() {
 		<>
 			<MetaTitle title={`Edit ${row.name}`}>
 				<button
+					aria-label={row.is_favourite ? 'Unfavourite' : 'Favourite'}
 					className={`heart ${row.is_favourite ? 'un' : ''}favourite`}
 					onClick={favourite}
 					type="button"
 				>
-					<HeartIcon alt={row.is_favourite ? 'Unfavourite' : 'Favourite'} height={16} width={16} />
+					<HeartIcon aria-hidden height={16} width={16} />
 				</button>
 				<button className="formosa-button button--small" form="edit-form" type="submit">Save</button>
 				<button className="formosa-button formosa-button--danger button--small" onClick={deleteRow} type="submit">Delete</button>
@@ -169,23 +170,20 @@ export default function Edit() {
 				)}
 
 				{row.foods.length > 0 ? (
-					<table>
+					<table className="responsive-table">
 						<thead>
 							<tr>
 								<th className="column--name" scope="col">Food</th>
 								<th className="column--serving" scope="col">Serving Size</th>
+								<th aria-label="Actions" className="column--button" />
 								<TrackableHead trackables={trackables} />
-								<th className="column--button" />
 							</tr>
 						</thead>
 						<tbody>
 							{row.foods.map((foodMeal, i) => (
 								<tr className={`row--${foodMeal.food.slug}`} key={foodMeal.id}>
 									<td className="column--name">
-										<Link className="table-link" to={`/food/${foodMeal.food.id}`}>
-											{foodMeal.food.name}
-											{foodMeal.food.is_verified && <CheckIcon alt="Verified" className="verified" height={16} width={16} />}
-										</Link>
+										<FoodLink food={foodMeal.food} />
 									</td>
 									<td className="column--serving">
 										<Field
@@ -195,11 +193,6 @@ export default function Edit() {
 											suffix={pluralize(foodMeal.food.serving_units, foodMeal.user_serving_size || '')}
 										/>
 									</td>
-									<TrackableBody
-										food={foodMeal.food}
-										servingSize={parseFloat(foodMeal.user_serving_size)}
-										trackables={trackables}
-									/>
 									<td className="column--button">
 										<button
 											className="button--icon button--remove"
@@ -216,18 +209,21 @@ export default function Edit() {
 											type="button"
 										>
 											Remove
-											<XIcon height={16} width={16} />
+											<XIcon aria-hidden height={16} width={16} />
 										</button>
 									</td>
+									<TrackableBody
+										food={foodMeal.food}
+										servingSize={parseFloat(foodMeal.user_serving_size)}
+										trackables={trackables}
+									/>
 								</tr>
 							))}
 						</tbody>
 						<tfoot>
 							<tr>
-								<th />
-								<th />
+								<th colSpan={3} />
 								<TrackableFoot rows={row.foods} trackables={trackables} />
-								<th />
 							</tr>
 						</tfoot>
 					</table>

@@ -1,0 +1,29 @@
+$radio-breakpoint-small: 430px;
+$radio-breakpoint-medium: 630px;
+$radio-breakpoint-large: 830px;
+$radio-breakpoint-xlarge: 1030px;
+
+.radio-list {
+	column-count: 1;
+
+	.formosa-radio__item {
+		margin-bottom: $formosa-radio-margin;
+		margin-top: 0;
+	}
+
+	@media screen and (min-width: $radio-breakpoint-small) {
+		column-count: 2;
+	}
+
+	@media screen and (min-width: $radio-breakpoint-medium) {
+		column-count: 3;
+	}
+
+	@media screen and (min-width: $radio-breakpoint-large) {
+		column-count: 4;
+	}
+
+	@media screen and (min-width: $radio-breakpoint-xlarge) {
+		column-count: 5;
+	}
+}
