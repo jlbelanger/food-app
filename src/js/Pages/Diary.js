@@ -179,6 +179,7 @@ export default function Diary() {
 												document.getElementById(`entry-${entry.id}-submit`).click();
 											}}
 											id={`user_serving_size-${i}`}
+											inputMode="decimal"
 											name="user_serving_size"
 											size={6}
 											suffix={pluralize(entry.food.serving_units, entry.user_serving_size)}
@@ -269,6 +270,7 @@ export default function Diary() {
 													document.getElementById(`extra-${trackable.slug}-${extra.id}-submit`).click();
 												}}
 												id={`${trackable.slug}-${i}`}
+												inputMode="numeric"
 												name={trackable.slug}
 												setValue={(newValue) => {
 													const e = [...diary.extras];

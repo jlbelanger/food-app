@@ -189,6 +189,7 @@ export default function Edit() {
 									</td>
 									<td className="column--serving">
 										<Field
+											inputMode="decimal"
 											name={`foods.${i}.user_serving_size`}
 											size={6}
 											suffix={pluralize(foodMeal.food.serving_units, foodMeal.user_serving_size || '')}

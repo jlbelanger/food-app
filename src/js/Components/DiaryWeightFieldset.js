@@ -12,6 +12,7 @@ export default function DiaryWeightFieldset({ disabled }) {
 				disabled={disabled}
 				id={disabled ? 'fake-weight' : 'weight'}
 				inputInnerWrapperClassName="flex"
+				inputMode="decimal"
 				maxLength={6}
 				name="weight"
 				postfix={(
