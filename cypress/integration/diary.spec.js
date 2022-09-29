@@ -166,6 +166,20 @@ describe('diary', () => {
 			cy.wait('@getExtras').its('response.statusCode').should('equal', 200);
 			cy.get('#diary-table').should('not.exist');
 			cy.get('#note-0').should('not.exist');
+
+			// Add to other date.
+			cy.visit('/?date=2001-01-01');
+			cy.wait('@getExtras').its('response.statusCode').should('equal', 200);
+			cy.get('#note').type('Example extra');
+			cy.get('#note + button').click();
+			cy.wait('@postExtra').its('response.statusCode').should('equal', 201);
+			cy.contains('Extra added successfully.').should('exist');
+			cy.get('.formosa-toast__close').click();
+			cy.get('#diary-table').should('be.visible');
+			cy.get('#note-0').should('have.value', 'Example extra');
+			cy.reload();
+			cy.get('#diary-table').should('be.visible');
+			cy.get('#note-0').should('have.value', 'Example extra');
 		});
 	});
 
@@ -315,6 +329,19 @@ describe('diary', () => {
 			cy.get('.nav__link').contains('Profile').click();
 			cy.wait('@getUser').its('response.statusCode').should('equal', 200);
 			cy.get('[id="weight.weight"]').should('have.value', '');
+
+			// Add to other date.
+			cy.visit('/?date=2002-02-02');
+			cy.wait('@getWeight').its('response.statusCode').should('equal', 200);
+			cy.get('#weight').should('have.value', '');
+			cy.get('#weight').type('77');
+			cy.get('#weight-form button').click();
+			cy.wait('@addWeight').its('response.statusCode').should('equal', 201);
+			cy.contains('Weight saved successfully.').should('exist');
+			cy.get('.formosa-toast__close').click();
+			cy.reload();
+			cy.wait('@getWeight').its('response.statusCode').should('equal', 200);
+			cy.get('#weight').should('have.value', '77');
 		});
 	});
 
@@ -455,6 +482,22 @@ describe('diary', () => {
 				cy.wait('@getEntries').its('response.statusCode').should('equal', 200);
 				cy.get('#diary-table').should('not.exist');
 				cy.get('#user_serving_size-0').should('not.exist');
+
+				// Add to other date.
+				cy.visit('/?date=2003-03-03');
+				cy.wait('@getEntries').its('response.statusCode').should('equal', 200);
+				cy.get('#diary-table').should('not.exist');
+				cy.get('#food').type(`Foo ${timestamp}`);
+				cy.get('.formosa-autocomplete__option__button').contains(`Foo ${timestamp}`).click();
+				cy.wait('@postEntry').its('response.statusCode').should('equal', 201);
+				cy.contains('Food added successfully.').should('exist');
+				cy.get('.formosa-toast__close').click();
+				cy.reload();
+				cy.wait('@getEntries').its('response.statusCode').should('equal', 200);
+				cy.get('#diary-table').should('be.visible');
+				cy.get('#user_serving_size-0').should('have.value', '2');
+				cy.get('.entry .column--calories').should('have.text', '100');
+				cy.get('.column-total--calories').should('have.text', '100');
 			});
 		});
 	});
@@ -481,6 +524,34 @@ describe('diary', () => {
 			cy.wait('@getMeals').its('response.statusCode').should('equal', 200);
 			cy.get('#diary-table').should('not.exist');
 			cy.contains(`Meal ${timestamp}`).click();
+			cy.get('#diary-table').should('be.visible');
+			cy.get('#user_serving_size-0').should('have.value', '1');
+			cy.get('#user_serving_size-1').should('have.value', '2');
+			cy.get('#entry-row-0 .column--calories').should('have.text', '100');
+			cy.get('#entry-row-1 .column--calories').should('have.text', '50');
+			cy.get('.column-total--calories').should('have.text', '150');
+			cy.reload();
+			cy.wait('@getMeals').its('response.statusCode').should('equal', 200);
+			cy.get('#diary-table').should('be.visible');
+			cy.get('#user_serving_size-0').should('have.value', '1');
+			cy.get('#user_serving_size-1').should('have.value', '2');
+			cy.get('#entry-row-0 .column--calories').should('have.text', '100');
+			cy.get('#entry-row-1 .column--calories').should('have.text', '50');
+			cy.get('.column-total--calories').should('have.text', '150');
+
+			// Add to other date.
+			cy.visit('/?date=2004-04-04');
+			cy.wait('@getMeals').its('response.statusCode').should('equal', 200);
+			cy.get('#diary-table').should('not.exist');
+			cy.contains(`Meal ${timestamp}`).click();
+			cy.get('#diary-table').should('be.visible');
+			cy.get('#user_serving_size-0').should('have.value', '1');
+			cy.get('#user_serving_size-1').should('have.value', '2');
+			cy.get('#entry-row-0 .column--calories').should('have.text', '100');
+			cy.get('#entry-row-1 .column--calories').should('have.text', '50');
+			cy.get('.column-total--calories').should('have.text', '150');
+			cy.reload();
+			cy.wait('@getMeals').its('response.statusCode').should('equal', 200);
 			cy.get('#diary-table').should('be.visible');
 			cy.get('#user_serving_size-0').should('have.value', '1');
 			cy.get('#user_serving_size-1').should('have.value', '2');
