@@ -81,6 +81,11 @@ $breakpoint2: $image-width + ($list-width + $margin + $article-padding) * 2;
 	}
 }
 
+#nutrition-facts__img {
+	height: auto;
+	max-width: 100%;
+}
+
 .nutrition-facts__list {
 	align-self: flex-start;
 	background: $white;

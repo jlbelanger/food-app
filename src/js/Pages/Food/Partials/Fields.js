@@ -172,9 +172,10 @@ export default function Fields({ readOnly, row }) {
 					>
 						<img
 							alt="Nutrition facts"
+							id="nutrition-facts__img"
 							loading="lazy"
 							src={infoImageSrc}
-							width={300}
+							width={500}
 						/>
 					</a>
 				)}
