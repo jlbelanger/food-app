@@ -11,6 +11,7 @@ export default function Edit() {
 	const { id } = useParams();
 	const [row, setRow] = useState(null);
 	const [error, setError] = useState(false);
+	const [errorFood, setErrorFood] = useState(false);
 	const [favouritesOnly, setFavouritesOnly] = useState(Auth.getValue('favourites_only', false));
 	const [favouriteFood, setFavouriteFood] = useState([]);
 	const [food, setFood] = useState([]);
@@ -30,8 +31,8 @@ export default function Edit() {
 				setFood(response);
 				setFavouriteFood(response.filter((r) => (r.is_favourite)));
 			})
-			.catch(() => {
-				setError(true);
+			.catch((response) => {
+				setErrorFood(response.status);
 			});
 	}, [id]);
 
@@ -52,6 +53,10 @@ export default function Edit() {
 			<MetaTitle title="Edit entry">
 				<button className="formosa-button button--small" form="edit-form" type="submit">Save</button>
 			</MetaTitle>
+
+			{errorFood && (
+				<p className="formosa-message formosa-message--error">Error getting food.</p>
+			)}
 
 			<MyForm
 				className="formosa-responsive"
@@ -77,30 +82,32 @@ export default function Edit() {
 					size={10}
 					type="date"
 				/>
-				<Field
-					label="Food"
-					labelFn={foodLabelLinkFn}
-					max={1}
-					name="food"
-					options={favouritesOnly ? favouriteFood : food}
-					optionLabelFn={foodLabelFn}
-					placeholder="Search food"
-					postfix={(
-						<Field
-							id="search-favourites"
-							label="Search favourite foods only"
-							labelPosition="after"
-							setValue={(newValue) => {
-								Auth.setValue('favourites_only', newValue);
-								setFavouritesOnly(newValue);
-							}}
-							type="checkbox"
-							value={favouritesOnly}
-						/>
-					)}
-					required
-					type="autocomplete"
-				/>
+				{!errorFood && (
+					<Field
+						label="Food"
+						labelFn={foodLabelLinkFn}
+						max={1}
+						name="food"
+						options={favouritesOnly ? favouriteFood : food}
+						optionLabelFn={foodLabelFn}
+						placeholder="Search food"
+						postfix={(
+							<Field
+								id="search-favourites"
+								label="Search favourite foods only"
+								labelPosition="after"
+								setValue={(newValue) => {
+									Auth.setValue('favourites_only', newValue);
+									setFavouritesOnly(newValue);
+								}}
+								type="checkbox"
+								value={favouritesOnly}
+							/>
+						)}
+						required
+						type="autocomplete"
+					/>
+				)}
 				<Field
 					inputMode="decimal"
 					label="Serving size"
