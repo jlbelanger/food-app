@@ -80,8 +80,8 @@ describe('food', () => {
 
 		// Verify all fields.
 		cy.get('[name="name"]').should('have.value', `Barfoo ${timestamp}`);
-		cy.get('[id="front_image-name"]').should('contain', `/uploads/food/front_image/barfoo-${timestamp}.jpg`);
-		cy.get('[id="info_image-name"]').should('contain', `/uploads/food/info_image/barfoo-${timestamp}.jpg`);
+		cy.get('[id="front_image-name"]').invoke('text').should('match', new RegExp(`/uploads/food/front_image/[^/]+/barfoo-${timestamp}.jpg`));
+		cy.get('[id="info_image-name"]').invoke('text').should('match', new RegExp(`/uploads/food/info_image/[^/]+/barfoo-${timestamp}.jpg`));
 		cy.get('[name="serving_size"]').should('have.value', '2');
 		cy.get('[name="serving_units"]').should('have.value', 'cup');
 		cy.get('[name="calories"]').should('have.value', '3');
@@ -246,8 +246,8 @@ describe('food', () => {
 		// Verify all fields.
 		cy.reload();
 		cy.get('[name="name"]').should('have.value', `Example ${timestamp}`);
-		cy.get('[id="front_image-name"]').should('contain', `/uploads/food/front_image/example-${timestamp}.jpg`);
-		cy.get('[id="info_image-name"]').should('contain', `/uploads/food/info_image/example-${timestamp}.jpg`);
+		cy.get('[id="front_image-name"]').invoke('text').should('match', new RegExp(`/uploads/food/front_image/[^/]+/example-${timestamp}.jpg`));
+		cy.get('[id="info_image-name"]').invoke('text').should('match', new RegExp(`/uploads/food/info_image/[^/]+/example-${timestamp}.jpg`));
 		cy.get('[name="serving_size"]').should('have.value', '2');
 		cy.get('[name="serving_units"]').should('have.value', 'bottle');
 		cy.get('[name="calories"]').should('have.value', '98');
