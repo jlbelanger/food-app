@@ -10,6 +10,7 @@ import { ReactComponent as HeartIcon } from '../../../svg/heart.svg';
 import MetaTitle from '../../Components/MetaTitle';
 import MyForm from '../../Components/MyForm';
 import PaginatedTable from '../../Components/PaginatedTable';
+import { ReactComponent as PencilIcon } from '../../../svg/pencil.svg';
 
 export default function Edit() {
 	const { addToast } = useContext(FormosaContext);
@@ -143,8 +144,9 @@ export default function Edit() {
 							head={(
 								<tr>
 									<th>Date</th>
-									<th style={{ width: '100%' }}>Serving</th>
+									<th className="column--name">Serving</th>
 									{Auth.getValue('is_admin') && <th>User</th>}
+									<th className="column--button" />
 								</tr>
 							)}
 							body={(entry) => (
@@ -154,6 +156,12 @@ export default function Edit() {
 									</td>
 									<td>{`${entry.user_serving_size} ${pluralize(row.serving_units, entry.user_serving_size)}`}</td>
 									{Auth.getValue('is_admin') && <td>{entry.user.username}</td>}
+									<td className="column--button">
+										<Link className="button--icon button--edit" to={`/entries/${entry.id}`}>
+											Edit
+											<PencilIcon aria-hidden height={16} width={16} />
+										</Link>
+									</td>
 								</tr>
 							)}
 						/>
