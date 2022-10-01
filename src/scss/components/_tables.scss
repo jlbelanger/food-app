@@ -63,6 +63,13 @@ th {
 	width: $button-size;
 }
 
+.column--button-large {
+	padding-left: 0;
+	padding-right: 0;
+	white-space: nowrap;
+	width: #{$button-size * 2};
+}
+
 .column--name {
 	width: 100%;
 }
@@ -189,6 +196,7 @@ th {
 			.column--name,
 			.column--serving,
 			.column--button,
+			.column--button-large,
 			.column--size,
 			.column--units {
 				display: none;
@@ -217,7 +225,7 @@ th {
 		.column--serving {
 			display: inline-block;
 			padding-top: 0;
-			width: calc(100% - 44px);
+			width: calc(100% - #{$button-size * 2});
 		}
 
 		.column--size {
@@ -258,7 +266,14 @@ th {
 			display: inline-block;
 			padding-bottom: 0;
 			padding-top: 0;
-			width: 44px;
+			width: $button-size;
+		}
+
+		.column--button-large {
+			display: inline-block;
+			padding-bottom: 0;
+			padding-top: 0;
+			width: #{$button-size * 2};
 		}
 
 		.column--trackables {

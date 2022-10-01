@@ -3,6 +3,7 @@ import Auth from './Utilities/Auth';
 import Calendar from './Pages/Calendar';
 import Charts from './Pages/Charts';
 import Diary from './Pages/Diary';
+import EntryEdit from './Pages/Entries/Edit';
 import Error404 from './Error404';
 import FoodEdit from './Pages/Food/Edit';
 import FoodList from './Pages/Food/List';
@@ -35,6 +36,7 @@ export default function Routes() {
 			<Route exact path="/"><Diary /></Route>
 			<Route exact path="/calendar"><Calendar /></Route>
 			<Route exact path="/charts"><Charts /></Route>
+			<Route exact path="/entries/:id(\d+)"><EntryEdit /></Route>
 			<Route exact path="/profile"><Profile /></Route>
 			<Route exact path="/food"><FoodList /></Route>
 			<Route exact path="/food/new"><FoodNew /></Route>

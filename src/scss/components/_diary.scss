@@ -48,14 +48,14 @@ $add-meal-button-margin: 8px;
 	}
 }
 
-#food-wrapper {
-	border-bottom-right-radius: 0;
-	border-right-width: 0;
-	border-top-right-radius: 0;
-	width: 100%;
-}
-
 #diary-top {
+	#food-wrapper {
+		border-bottom-right-radius: 0;
+		border-right-width: 0;
+		border-top-right-radius: 0;
+		width: 100%;
+	}
+
 	@media screen and (min-width: $breakpoint) {
 		display: flex;
 
@@ -132,15 +132,29 @@ $add-meal-button-margin: 8px;
 	}
 }
 
+.button--edit,
 .button--remove {
+	align-items: center;
 	background: transparent;
 	border-radius: 0;
 	border-width: 0;
+	display: flex;
 	height: $button-size;
+	justify-content: center;
 	padding: 0;
+	position: relative;
+	text-align: center;
+	vertical-align: middle;
 	width: $button-size;
+	z-index: 1;
+}
 
+.button--remove {
 	path {
 		fill: $dark-red;
 	}
+}
+
+.formosa-field--search-favourites {
+	margin-top: 8px;
 }

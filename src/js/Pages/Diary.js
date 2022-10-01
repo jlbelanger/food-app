@@ -1,4 +1,5 @@
 import { Api, Field, Form, FormosaContext } from '@jlbelanger/formosa';
+import { Link, useHistory } from 'react-router-dom';
 import { mapTrackables, pluralize, prettyDate } from '../Utilities/Helpers';
 import React, { useContext, useEffect, useState } from 'react';
 import Auth from '../Utilities/Auth';
@@ -10,10 +11,10 @@ import DiaryAddMeal from '../Components/DiaryAddMeal';
 import DiaryWeight from '../Components/DiaryWeight';
 import FoodLink from '../Components/FoodLink';
 import MetaTitle from '../Components/MetaTitle';
+import { ReactComponent as PencilIcon } from '../../svg/pencil.svg';
 import TrackableBody from '../Components/TrackableBody';
 import TrackableFoot from '../Components/TrackableFoot';
 import TrackableHead from '../Components/TrackableHead';
-import { useHistory } from 'react-router-dom';
 import { ReactComponent as XIcon } from '../../svg/x.svg';
 
 export default function Diary() {
@@ -146,7 +147,7 @@ export default function Diary() {
 						<tr>
 							<th className="column--name" scope="col"><span className="table-heading">Name</span></th>
 							<th className="column--serving" scope="col"><span className="table-heading">Serving Size</span></th>
-							<th aria-label="Actions" className="column--button" scope="col"><span className="table-heading" /></th>
+							<th aria-label="Actions" className="column--button-large" scope="col"><span className="table-heading" /></th>
 							<TrackableHead trackables={trackables} />
 						</tr>
 					</thead>
@@ -193,17 +194,23 @@ export default function Diary() {
 										<button id={`entry-${entry.id}-submit`} style={{ display: 'none' }} type="submit" />
 									</Form>
 								</td>
-								<td className="column--button">
-									<button
-										className="button--icon button--remove"
-										data-id={entry.id}
-										data-index={i}
-										onClick={deleteEntry}
-										type="button"
-									>
-										Remove
-										<XIcon aria-hidden height={16} width={16} />
-									</button>
+								<td className="column--button-large">
+									<div className="flex">
+										<button
+											className="button--icon button--remove"
+											data-id={entry.id}
+											data-index={i}
+											onClick={deleteEntry}
+											type="button"
+										>
+											Remove
+											<XIcon aria-hidden height={16} width={16} />
+										</button>
+										<Link className="button--icon button--edit" to={`/entries/${entry.id}`}>
+											Edit
+											<PencilIcon aria-hidden height={16} width={16} />
+										</Link>
+									</div>
 								</td>
 								<TrackableBody food={entry.food} servingSize={parseFloat(entry.user_serving_size)} trackables={trackables} />
 							</tr>
@@ -246,7 +253,7 @@ export default function Diary() {
 									</Form>
 								</td>
 								<td className="column--serving" />
-								<td className="column--button">
+								<td className="column--button-large">
 									<button
 										className="button--icon button--remove"
 										data-id={extra.id}

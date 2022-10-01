@@ -51,6 +51,12 @@ button {
 	padding: 4px 8px 0;
 }
 
+.formosa-button.formosa-postfix {
+	display: inline-block;
+	padding-bottom: #{$formosa-input-padding - 3px};
+	padding-top: $formosa-input-padding;
+}
+
 .button--icon {
 	font-size: 0;
 }
