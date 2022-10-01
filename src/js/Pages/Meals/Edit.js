@@ -19,10 +19,12 @@ export default function Edit() {
 	const { addToast } = useContext(FormosaContext);
 	const { id } = useParams();
 	const [row, setRow] = useState(null);
+	const [error, setError] = useState(false);
+	const [errorFood, setErrorFood] = useState(false);
+	const [favouritesOnly, setFavouritesOnly] = useState(Auth.getValue('favourites_only', false));
+	const [favouriteFood, setFavouriteFood] = useState([]);
 	const [allFood, setAllFood] = useState([]);
 	const [trackables, setTrackables] = useState([]);
-	const [errorFood, setErrorFood] = useState(false);
-	const [error, setError] = useState(false);
 	const [newFood, setNewFood] = useState(null);
 	const history = useHistory();
 	const foodFields = ['name', 'slug', 'serving_size', 'serving_units', 'is_verified'].concat(Auth.trackables());
@@ -36,9 +38,10 @@ export default function Edit() {
 				setError(response.status);
 			});
 
-		Api.get(`food?fields[food]=${foodFields.join(',')}`)
+		Api.get(`food?fields[food]=${foodFields.concat(['is_favourite']).join(',')}`)
 			.then((response) => {
 				setAllFood(response);
+				setFavouriteFood(response.filter((r) => (r.is_favourite)));
 			})
 			.catch((response) => {
 				setErrorFood(response.status);
@@ -103,6 +106,7 @@ export default function Edit() {
 
 	const mealFoodIds = row.foods.map((f) => (f.food.id));
 	const filteredFood = allFood.filter((f) => (!mealFoodIds.includes(f.id)));
+	const filteredFavouriteFood = favouriteFood.filter((f) => (!mealFoodIds.includes(f.id)));
 
 	return (
 		<>
@@ -137,36 +141,49 @@ export default function Edit() {
 				{errorFood ? (
 					<p className="formosa-message formosa-message--error">Error getting food.</p>
 				) : (
-					<Input
-						aria-label="Add food"
-						className="formosa-prefix"
-						id="new-food"
-						labelFn={foodLabelFn}
-						max={1}
-						options={filteredFood}
-						optionLabelFn={foodLabelFn}
-						placeholder="Search foods"
-						type="autocomplete"
-						setValue={(food) => {
-							const newValue = {
-								id: `temp-${uuidv4()}`,
-								type: 'food-meal',
-								food_id: food.id,
-								meal_id: row.id,
-								food,
-								user_serving_size: food.serving_size,
-							};
-							setRow({
-								...row,
-								foods: [...row.foods, newValue],
-							});
-							setNewFood(null);
-							setTimeout(() => {
-								document.getElementById('new-food').focus();
-							});
-						}}
-						value={newFood}
-					/>
+					<>
+						<Input
+							aria-label="Add food"
+							className="formosa-prefix"
+							id="new-food"
+							labelFn={foodLabelFn}
+							max={1}
+							options={favouritesOnly ? filteredFavouriteFood : filteredFood}
+							optionLabelFn={foodLabelFn}
+							placeholder="Search foods"
+							type="autocomplete"
+							setValue={(food) => {
+								const newValue = {
+									id: `temp-${uuidv4()}`,
+									type: 'food-meal',
+									food_id: food.id,
+									meal_id: row.id,
+									food,
+									user_serving_size: food.serving_size,
+								};
+								setRow({
+									...row,
+									foods: [...row.foods, newValue],
+								});
+								setNewFood(null);
+								setTimeout(() => {
+									document.getElementById('new-food').focus();
+								});
+							}}
+							value={newFood}
+						/>
+						<Field
+							id="search-favourites"
+							label="Search favourite foods only"
+							labelPosition="after"
+							setValue={(newValue) => {
+								Auth.setValue('favourites_only', newValue);
+								setFavouritesOnly(newValue);
+							}}
+							type="checkbox"
+							value={favouritesOnly}
+						/>
+					</>
 				)}
 
 				{row.foods.length > 0 ? (
