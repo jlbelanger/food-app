@@ -129,8 +129,8 @@ export default function Diary() {
 
 			<div id="diary">
 				<div id="diary-top">
-					<DiaryAddFood date={currentDate} diary={diary} key={currentDate} foodFields={foodFields} setDiary={setDiary} />
-					<DiaryAddExtra date={currentDate} diary={diary} key={currentDate} setDiary={setDiary} />
+					<DiaryAddFood date={currentDate} diary={diary} key={`add-food-${currentDate}`} foodFields={foodFields} setDiary={setDiary} />
+					<DiaryAddExtra date={currentDate} diary={diary} key={`add-extra-${currentDate}`} setDiary={setDiary} />
 					<DiaryWeight date={currentDate} />
 				</div>
 
