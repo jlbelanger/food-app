@@ -28,9 +28,10 @@ export default function Edit() {
 	const [newFood, setNewFood] = useState(null);
 	const history = useHistory();
 	const foodFields = ['name', 'slug', 'serving_size', 'serving_units', 'is_verified'].concat(Auth.trackables());
+	const mealParams = `include=foods,foods.food&fields[food]=${foodFields.join(',')}&fields[food_meal]=user_serving_size`;
 
 	useEffect(() => {
-		Api.get(`meals/${id}?include=foods,foods.food&fields[food]=${foodFields.join(',')}&fields[food_meal]=user_serving_size`)
+		Api.get(`meals/${id}?${mealParams}`)
 			.then((response) => {
 				setRow(response);
 			})
@@ -124,10 +125,23 @@ export default function Edit() {
 			</MetaTitle>
 
 			<MyForm
+				afterSubmit={(response) => {
+					setRow({ ...row, foods: response.foods });
+				}}
+				filterValues={(values) => {
+					const oldFoods = JSON.parse(JSON.stringify(values.foods));
+					const newFoods = [];
+					oldFoods.forEach((f) => {
+						delete f.food;
+						newFoods.push(f);
+					});
+					return { ...values, foods: newFoods };
+				}}
 				htmlId="edit-form"
 				id={id}
 				method="PUT"
 				path="meals"
+				params={mealParams}
 				preventEmptyRequest
 				relationshipNames={['foods', 'foods.food', 'user']}
 				row={row}
