@@ -3,22 +3,6 @@
 	border-radius: $formosa-input-border-radius;
 }
 
-.formosa-postfix {
-	background: $light-pink;
-	border-color: scale-color($light-pink, $lightness: -5%);
-
-	&:hover,
-	&:active,
-	&:focus {
-		background: scale-color($light-pink, $lightness: -10%);
-		border-color: scale-color($light-pink, $lightness: -15%);
-	}
-
-	&[disabled] {
-		border-color: $formosa-input-border-color;
-	}
-}
-
 .formosa-autocomplete,
 .formosa-button,
 .formosa-field__input,

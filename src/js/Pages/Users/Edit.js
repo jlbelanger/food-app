@@ -10,6 +10,8 @@ export default function Edit() {
 	const id = Auth.id();
 	const [row, setRow] = useState(null);
 	const [error, setError] = useState(false);
+	const [errorTrackables, setErrorTrackables] = useState(false);
+	const [allTrackables, setAllTrackables] = useState([]);
 	const [types, setTypes] = useState([]);
 	const [isMeasurementUnitsDisabled, setIsMeasurementUnitsDisabled] = useState(true);
 
@@ -23,6 +25,14 @@ export default function Edit() {
 			})
 			.catch((response) => {
 				setError(response.status);
+			});
+
+		Api.get('trackables?fields[trackables]=name,slug&sort=slug')
+			.then((response) => {
+				setAllTrackables(response);
+			})
+			.catch((response) => {
+				setErrorTrackables(response.status);
 			});
 	}, [id]);
 
@@ -127,6 +137,14 @@ export default function Edit() {
 		});
 	}
 
+	const checkAll = () => {
+		setRow({ ...row, trackables: [...allTrackables] });
+	};
+
+	const uncheckAll = () => {
+		setRow({ ...row, trackables: [] });
+	};
+
 	return (
 		<>
 			<MetaTitle title="Profile" />
@@ -204,34 +222,40 @@ export default function Edit() {
 
 			<hr />
 
-			<MyForm
-				afterSubmit={() => {
-					Auth.setTrackables(row.trackables);
-				}}
-				id={row.id}
-				method="PUT"
-				path="users"
-				preventEmptyRequest
-				relationshipNames={['trackables']}
-				row={row}
-				setRow={setRow}
-				showMessage={false}
-				successToastText="Tracking settings updated successfully."
-			>
-				<h2>Tracking</h2>
+			{errorTrackables ? (<p className="formosa-message formosa-message--error">Error getting trackables.</p>) : (
+				<MyForm
+					afterSubmit={() => {
+						Auth.setTrackables(row.trackables.sort((a, b) => (a.id > b.id)));
+					}}
+					id={row.id}
+					method="PUT"
+					path="users"
+					preventEmptyRequest
+					relationshipNames={['trackables']}
+					row={row}
+					setRow={setRow}
+					showMessage={false}
+					successToastText="Tracking settings updated successfully."
+				>
+					<h2 className="flex">
+						<span style={{ alignSelf: 'center', flex: '1 1 auto' }}>Tracking</span>
+						<button className="formosa-button button--small button--tertiary" onClick={checkAll} type="button">Check All</button>
+						<button className="formosa-button button--small button--tertiary" onClick={uncheckAll} type="button">Uncheck All</button>
+					</h2>
 
-				<Message />
+					<Message />
 
-				<Field
-					name="trackables"
-					fieldsetClassName="radio-list"
-					inputAttributes={(option) => ({ id: `trackable-${option.slug}` })}
-					type="checkbox-list"
-					url="trackables?fields[trackables]=name,slug&sort=slug"
-				/>
+					<Field
+						name="trackables"
+						fieldsetClassName="radio-list"
+						inputAttributes={(option) => ({ id: `trackable-${option.slug}` })}
+						options={allTrackables}
+						type="checkbox-list"
+					/>
 
-				<Submit id="save-tracking" label="Save" />
-			</MyForm>
+					<Submit id="save-tracking" label="Save" />
+				</MyForm>
+			)}
 
 			<hr />
 

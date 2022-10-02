@@ -16,7 +16,7 @@ export default function DiaryWeightFieldset({ disabled }) {
 				maxLength={6}
 				name="weight"
 				postfix={(
-					<button className="formosa-button formosa-postfix button--icon" disabled={disabled} type="submit">
+					<button className="formosa-button formosa-postfix button--tertiary button--icon" disabled={disabled} type="submit">
 						Save
 						<CheckIcon height={16} width={16} />
 					</button>

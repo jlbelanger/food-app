@@ -29,6 +29,26 @@ button {
 	}
 }
 
+.button--tertiary {
+	background: $light-pink;
+	border-color: scale-color($light-pink, $lightness: -5%);
+
+	&:hover,
+	&:active,
+	&:focus {
+		background: scale-color($light-pink, $lightness: -10%);
+		border-color: scale-color($light-pink, $lightness: -15%);
+	}
+
+	&[disabled] {
+		border-color: $formosa-input-border-color;
+	}
+
+	& + .button--tertiary {
+		margin-left: 4px;
+	}
+}
+
 .button--header {
 	background-color: $dark-gray;
 	border-color: scale-color($dark-gray, $lightness: -20%);

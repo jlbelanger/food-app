@@ -31,7 +31,7 @@ export default function DiaryAddExtra({ date, diary, setDiary }) {
 					name="note"
 					placeholder="Enter description"
 					postfix={(
-						<button className="formosa-button formosa-postfix button--icon" type="submit">
+						<button className="formosa-button formosa-postfix button--tertiary button--icon" type="submit">
 							Add
 							<PlusIcon height={16} width={16} />
 						</button>

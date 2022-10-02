@@ -64,7 +64,7 @@ export default function DiaryAddFood({ date, diary, foodFields, setDiary }) {
 					optionLabelFn={foodLabelFn}
 					placeholder="Search food"
 					postfix={(
-						<button className="formosa-button formosa-postfix button--icon" id="add-food" type="submit">
+						<button className="formosa-button formosa-postfix button--tertiary button--icon" id="add-food" type="submit">
 							Add
 							<PlusIcon height={16} width={16} />
 						</button>

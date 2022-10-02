@@ -76,7 +76,7 @@ export default function Edit() {
 					maxLength={10}
 					name="date"
 					postfix={row.date ? (
-						<Link className="formosa-button formosa-postfix" to={`/?date=${row.date}`}>Go</Link>
+						<Link className="formosa-button formosa-postfix button--tertiary" to={`/?date=${row.date}`}>Go</Link>
 					) : null}
 					required
 					size={10}
