@@ -39,6 +39,7 @@ export const pluralize = (servingUnits, servingSize) => { // eslint-disable-line
 	}
 
 	const specialPluralize = {
+		cherry: 'cherries',
 		leaf: 'leaves',
 		pastry: 'pastries',
 		patty: 'patties',
