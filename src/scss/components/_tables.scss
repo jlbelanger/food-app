@@ -283,6 +283,22 @@ th {
 			width: 100%;
 		}
 
+		.extra {
+			.column--name {
+				padding-bottom: 6px;
+				padding-top: 6px;
+				width: calc(100% - #{$button-size * 2});
+			}
+
+			.column--serving {
+				display: none;
+			}
+
+			.column--trackables {
+				min-height: 54px;
+			}
+		}
+
 		tbody {
 			.column--trackables {
 				border-bottom-color: $dark-gray;
