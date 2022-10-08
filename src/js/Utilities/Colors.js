@@ -1,5 +1,5 @@
 // https://material.io/color/ 100
-export const colors = [
+const colors1 = [
 	'#ffcdd2', // red
 	'#bbdefb', // blue
 	'#c8e6c9', // green
@@ -21,8 +21,10 @@ export const colors = [
 	'#cfd8dc', // blue grey
 ];
 
+export const colors = colors1.concat(colors1).concat(colors1);
+
 // https://material.io/color/ 50
-export const colorsLight = [
+const colorsLight1 = [
 	'#ffebee', // red
 	'#e3f2fd', // blue
 	'#e8f5e9', // green
@@ -66,3 +68,5 @@ export const colorsDark = [
 	'#e64a19', // deep orange
 	'#455a64', // blue grey
 ];
+
+export const colorsLight = colorsLight1.concat(colorsLight1).concat(colorsLight1);
