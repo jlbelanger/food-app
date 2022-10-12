@@ -4,16 +4,13 @@
 	"description": "Track calories and nutrients in the food you eat.",
 	"icons": [
 		{
-			"src": "favicon.png",
-			"sizes": "32x32",
-			"type": "image/png"
-		},
-		{
-			"src": "apple-touch-icon.png",
-			"sizes": "180x180",
+			"src": "icon.png",
+			"sizes": "512x512",
 			"type": "image/png"
 		}
 	],
 	"start_url": "/",
-	"display": "standalone"
+	"display": "standalone",
+	"theme_color": "#000",
+	"background_color": "#f9f9f9"
 }
