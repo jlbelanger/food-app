@@ -83,7 +83,7 @@ $calendar__legend__item-margin: 4px;
 	padding: $calendar__item-padding $calendar__item-padding 0;
 	position: relative;
 	vertical-align: top;
-	width: #{(100% / 8)};
+	width: #{math.div(100%, 8)};
 
 	tr &:first-of-type {
 		border-left-width: 0;

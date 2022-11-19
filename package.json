@@ -22,7 +22,7 @@
 		"eject": "react-scripts eject"
 	},
 	"dependencies": {
-		"@jlbelanger/formosa": "jlbelanger/formosa#0a7f95f7033b3efbc902439ca1152c52855d8295",
+		"@jlbelanger/formosa": "jlbelanger/formosa#e15158b097378023df12853267b4976bbb8e6c30",
 		"chart.js": "^3.9.1",
 		"chartjs-adapter-luxon": "^1.2.0",
 		"chartjs-plugin-zoom": "^1.2.1",
@@ -30,7 +30,7 @@
 		"get-value": "^3.0.1",
 		"js-cookie": "^3.0.1",
 		"luxon": "^3.0.3",
-		"node-sass": "^7.0.0",
+		"sass": "^1.55.0",
 		"prop-types": "^15.8.0",
 		"react": "^17.0.2",
 		"react-chartjs-2": "^4.3.1",

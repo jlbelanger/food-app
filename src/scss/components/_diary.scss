@@ -60,8 +60,8 @@ $add-meal-button-margin: 8px;
 		display: flex;
 
 		.form {
-			margin-left: #{$margin / 2};
-			margin-right: #{$margin / 2};
+			margin-left: #{$margin * .5};
+			margin-right: #{$margin * .5};
 		}
 
 		& > :first-child {
