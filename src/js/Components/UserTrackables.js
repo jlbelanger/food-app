@@ -27,6 +27,10 @@ export default function UserTrackables({ user }) {
 		setRow({ ...row, trackables: [] });
 	};
 
+	const afterSubmit = () => {
+		Auth.setTrackables(row.trackables.sort((a, b) => (a.id > b.id)));
+	};
+
 	if (errorTrackables) {
 		return (
 			<p className="formosa-message formosa-message--error">Error getting trackables.</p>
@@ -35,9 +39,8 @@ export default function UserTrackables({ user }) {
 
 	return (
 		<MyForm
-			afterSubmit={() => {
-				Auth.setTrackables(row.trackables.sort((a, b) => (a.id > b.id)));
-			}}
+			afterSubmit={afterSubmit}
+			afterNoSubmit={afterSubmit}
 			id={row.id}
 			method="PUT"
 			path="users"
