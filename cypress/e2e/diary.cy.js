@@ -1,5 +1,5 @@
 describe('diary', () => {
-	before(() => {
+	beforeEach(() => {
 		cy.login();
 		cy.deleteAllData();
 	});
@@ -35,11 +35,9 @@ describe('diary', () => {
 	});
 
 	describe('extras', () => {
-		before(() => {
-			cy.removeEntriesExtras();
-		});
-
 		it('works', () => {
+			cy.removeEntriesExtras();
+
 			cy.intercept('GET', '**/api/extras?**').as('getExtras');
 			cy.intercept('POST', '**/api/extras').as('postExtra');
 			cy.intercept('PUT', '**/api/extras/**').as('putExtra');
@@ -184,7 +182,7 @@ describe('diary', () => {
 	});
 
 	describe('weight', () => {
-		before(() => {
+		it('works', () => {
 			cy.intercept('GET', '**/api/weights?**').as('getWeight');
 			cy.intercept('POST', '**/api/weights').as('addWeight');
 			cy.intercept('PUT', '**/api/weights/*').as('putWeight');
@@ -203,9 +201,7 @@ describe('diary', () => {
 						cy.get('.formosa-toast__close').click();
 					}
 				});
-		});
 
-		it('works', () => {
 			cy.intercept('GET', '**/api/users/**').as('getUser');
 
 			cy.visit('/');
@@ -346,12 +342,10 @@ describe('diary', () => {
 	});
 
 	describe('food', () => {
-		before(() => {
-			cy.removeEntriesExtras();
-		});
-
 		describe('when filtering by favourites', () => {
 			it('works', () => {
+				cy.removeEntriesExtras();
+
 				// Uncheck by default.
 				cy.visit('/');
 				cy.get('#search-favourites').uncheck();
@@ -383,6 +377,8 @@ describe('diary', () => {
 
 		describe('when adding/editing/deleting food', () => {
 			it('works', () => {
+				cy.removeEntriesExtras();
+
 				cy.intercept('GET', '**/api/entries?**').as('getEntries');
 				cy.intercept('POST', '**/api/entries').as('postEntry');
 				cy.intercept('PUT', '**/api/entries/**').as('putEntry');
@@ -503,11 +499,9 @@ describe('diary', () => {
 	});
 
 	describe('meals', () => {
-		before(() => {
-			cy.removeEntriesExtras();
-		});
-
 		it('works', () => {
+			cy.removeEntriesExtras();
+
 			cy.intercept('GET', '**/api/meals?**').as('getMeals');
 
 			// Ensure calories is in trackables.

@@ -1,5 +1,5 @@
 describe('meals', () => {
-	before(() => {
+	beforeEach(() => {
 		cy.login();
 		cy.deleteAllData();
 	});

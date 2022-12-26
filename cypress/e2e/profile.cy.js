@@ -1,17 +1,15 @@
 describe('profile', () => {
-	before(() => {
+	beforeEach(() => {
 		cy.login();
 		cy.deleteAllData();
 	});
 
 	describe('when updating BMI settings', () => {
-		before(() => {
-			cy.setWeight('130.5');
-			cy.clearBmiSettings();
-		});
-
 		describe('when adding BMI settings', () => {
 			it('works', () => {
+				cy.setWeight('130.5');
+				cy.clearBmiSettings();
+
 				cy.intercept('GET', '**/api/users/**').as('getUser');
 				cy.intercept('PUT', '**/api/users/**').as('putUser');
 
@@ -36,8 +34,11 @@ describe('profile', () => {
 			});
 		});
 
-		describe('when adding BMI and calories settings', () => {
+		describe('when adding and clearing BMI and calories settings', () => {
 			it('works', () => {
+				cy.setWeight('130.5');
+				cy.clearBmiSettings();
+
 				cy.intercept('GET', '**/api/users/**').as('getUser');
 				cy.intercept('PUT', '**/api/users/**').as('putUser');
 
@@ -63,13 +64,6 @@ describe('profile', () => {
 				+ 'To lose one pound a week, you should be eating 1,632 calories a day.'
 				+ 'There are 3,500 calories in one pound of fat, and 3,500 divided by 7 days of the week is 500, so to lose one pound a week, '
 				+ 'you should eat 500 calories less in a day than the calories you would eat to maintain your weight.');
-			});
-		});
-
-		describe('when clearing settings', () => {
-			it('works', () => {
-				cy.intercept('GET', '**/api/users/**').as('getUser');
-				cy.intercept('PUT', '**/api/users/**').as('putUser');
 
 				cy.visit('/profile');
 				cy.wait('@getUser').its('response.statusCode').should('equal', 200);

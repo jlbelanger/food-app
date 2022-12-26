@@ -49,9 +49,8 @@ describe('register', () => {
 		it('works', () => {
 			cy.intercept('GET', '**/api/calendar/**').as('getCalendar');
 
-			const username = `foo+${Date.now()}`;
-
 			// Register.
+			const username = `foo+${Date.now()}`;
 			cy.clearCookies();
 			cy.visit('/register');
 			cy.get('[name="username"]').type(username);

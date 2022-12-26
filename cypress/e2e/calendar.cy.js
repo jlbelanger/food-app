@@ -1,5 +1,5 @@
 describe('calendar', () => {
-	before(() => {
+	beforeEach(() => {
 		cy.login();
 		cy.deleteAllData();
 	});
