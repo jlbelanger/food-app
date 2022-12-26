@@ -1,5 +1,5 @@
 import 'luxon';
-import 'chartjs-adapter-luxon';
+import 'chartjs-adapter-luxon'; // eslint-disable-line import/no-unresolved
 import {
 	Chart as ChartJS,
 	LinearScale,
@@ -12,7 +12,7 @@ import {
 import React, { createRef, useEffect, useMemo, useState } from 'react';
 import { Api } from '@jlbelanger/formosa';
 import Auth from '../Utilities/Auth';
-import { Chart } from 'react-chartjs-2';
+import { Chart } from 'react-chartjs-2'; // eslint-disable-line import/no-unresolved
 import ChartScale from '../Components/ChartScale';
 import { colorsDark } from '../Utilities/Colors';
 import Error from '../Error';
