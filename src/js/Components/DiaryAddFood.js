@@ -36,6 +36,9 @@ export default function DiaryAddFood({ date, diary, foodFields, setDiary }) {
 				newEntries.push({ ...response, food: row.food });
 				setDiary({ ...diary, entries: newEntries });
 				setRow({ ...row, food: null });
+				setTimeout(() => {
+					document.getElementById('food').focus();
+				}, 100);
 			}}
 			className="form"
 			htmlId="food-form"
