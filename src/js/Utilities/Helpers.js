@@ -3,6 +3,12 @@ import { ReactComponent as CheckIcon } from '../../svg/check.svg';
 import { Link } from 'react-router-dom';
 import React from 'react';
 
+export const pad = (n, width = 2, z = '0') => {
+	z = z || '0';
+	n = n.toString();
+	return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+};
+
 export const pluralize = (servingUnits, servingSize) => { // eslint-disable-line import/prefer-default-export
 	if (!servingUnits) {
 		return '';

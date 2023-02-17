@@ -1,6 +1,6 @@
 import { Api, Field, Form, FormosaContext } from '@jlbelanger/formosa';
 import { Link, useHistory } from 'react-router-dom';
-import { mapTrackables, pluralize, prettyDate } from '../Utilities/Helpers';
+import { mapTrackables, pad, pluralize, prettyDate } from '../Utilities/Helpers';
 import React, { useContext, useEffect, useState } from 'react';
 import Auth from '../Utilities/Auth';
 import { ReactComponent as ChevronIcon } from '../../svg/chevron.svg';
@@ -19,7 +19,7 @@ import { ReactComponent as XIcon } from '../../svg/x.svg';
 
 export default function Diary() {
 	const history = useHistory();
-	const ymd = (date) => date.toLocaleString('en-CA').substring(0, 10);
+	const ymd = (date) => `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
 	const today = ymd(new Date());
 	const urlSearchParams = new URLSearchParams(history.location.search);
 	const currentDate = urlSearchParams.get('date') || today;
