@@ -28,13 +28,29 @@ describe('login', () => {
 	describe('with a valid username and password', () => {
 		it('works', () => {
 			cy.intercept('DELETE', '**/api/auth/logout').as('logout');
+			cy.intercept('POST', '**/api/auth/register').as('register');
+			cy.intercept('POST', '**/api/auth/login').as('login');
+
+			// Register.
+			const username = `foo+${Date.now()}`;
+			cy.clearCookies();
+			cy.visit('/register');
+			cy.get('[name="username"]').type(username);
+			cy.get('[name="email"]').type(`${username}@example.com`);
+			cy.get('[name="password"]').type(Cypress.env('default_password'));
+			cy.get('[name="password_confirmation"]').type(Cypress.env('default_password'));
+			cy.get('[type="submit"]').click();
+			cy.wait('@register').its('response.statusCode').should('equal', 200);
+			cy.get('.nav__link').contains('Profile').click();
+			cy.get('.nav__button').contains('Logout').click();
+			cy.wait('@logout').its('response.statusCode').should('equal', 204);
+			cy.location('pathname').should('eq', '/');
 
 			// Login.
 			cy.clearCookies();
 			cy.visit('/');
-			cy.get('[name="username"]').type(Cypress.env('default_username'));
+			cy.get('[name="username"]').type(username);
 			cy.get('[name="password"]').type(Cypress.env('default_password'));
-			cy.intercept('POST', '**/api/auth/login').as('login');
 			cy.get('[type="submit"]').click();
 			cy.wait('@login').its('response.statusCode').should('equal', 200);
 			cy.location('pathname').should('eq', '/');

@@ -3,7 +3,7 @@ describe('register', () => {
 		it('shows an error', () => {
 			cy.clearCookies();
 			cy.visit('/register');
-			cy.get('[name="username"]').type(Cypress.env('default_username'));
+			cy.get('[name="username"]').type(Cypress.env('taken_username'));
 			cy.get('[name="email"]').type(`foo+${Date.now()}@example.com`);
 			cy.get('[name="password"]').type(Cypress.env('default_password'));
 			cy.get('[name="password_confirmation"]').type(Cypress.env('default_password'));
@@ -19,7 +19,7 @@ describe('register', () => {
 			cy.clearCookies();
 			cy.visit('/register');
 			cy.get('[name="username"]').type(`foo+${Date.now()}`);
-			cy.get('[name="email"]').type(Cypress.env('default_email'));
+			cy.get('[name="email"]').type(Cypress.env('taken_email'));
 			cy.get('[name="password"]').type(Cypress.env('default_password'));
 			cy.get('[name="password_confirmation"]').type(Cypress.env('default_password'));
 			cy.intercept('POST', '**/api/auth/register').as('register');
