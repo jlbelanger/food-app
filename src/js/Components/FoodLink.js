@@ -4,7 +4,7 @@ import React from 'react';
 
 export default function FoodLink({ food }) {
 	return (
-		<Link className="table-link verifiable" to={`/food/${food.id}`}>
+		<Link className={`table-link${food.is_verified ? ' verifiable' : ''}`} to={`/food/${food.id}`}>
 			{food.is_verified ? (
 				<>
 					<span className="verified-text">{food.name}</span>
