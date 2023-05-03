@@ -2,7 +2,7 @@ import { Api, FormosaContext } from '@jlbelanger/formosa';
 import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
-export default function DiaryMeals({ date, diary, foodFields, setDiary }) {
+export default function DiaryMeals({ date, entries, foodFields, setEntries }) {
 	const { addToast } = useContext(FormosaContext);
 	const [meals, setMeals] = useState([]);
 	const [error, setError] = useState(false);
@@ -21,10 +21,7 @@ export default function DiaryMeals({ date, diary, foodFields, setDiary }) {
 		Api.post(`meals/${e.target.getAttribute('data-id')}/add`, JSON.stringify({ date, fields: foodFields }))
 			.then((response) => {
 				addToast('Meal added successfully.', 'success');
-				setDiary({
-					...diary,
-					entries: [...diary.entries].concat(response),
-				});
+				setEntries([...entries].concat(response));
 			})
 			.catch((response) => {
 				const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
@@ -56,7 +53,7 @@ export default function DiaryMeals({ date, diary, foodFields, setDiary }) {
 
 DiaryMeals.propTypes = {
 	date: PropTypes.string.isRequired,
-	diary: PropTypes.object.isRequired,
+	entries: PropTypes.array.isRequired,
 	foodFields: PropTypes.array.isRequired,
-	setDiary: PropTypes.func.isRequired,
+	setEntries: PropTypes.func.isRequired,
 };

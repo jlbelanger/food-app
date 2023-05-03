@@ -5,7 +5,7 @@ import { foodLabelFn } from '../Utilities/Helpers';
 import { ReactComponent as PlusIcon } from '../../svg/plus.svg';
 import PropTypes from 'prop-types';
 
-export default function DiaryAddFood({ date, diary, foodFields, setDiary }) {
+export default function DiaryAddFood({ date, entries, foodFields, setEntries }) {
 	const [row, setRow] = useState({ date });
 	const [error, setError] = useState(false);
 	const [favouritesOnly, setFavouritesOnly] = useState(Auth.getValue('favourites_only', false));
@@ -32,9 +32,9 @@ export default function DiaryAddFood({ date, diary, foodFields, setDiary }) {
 	return (
 		<Form
 			afterSubmit={(response) => {
-				const newEntries = [...diary.entries];
+				const newEntries = [...entries];
 				newEntries.push({ ...response, food: row.food });
-				setDiary({ ...diary, entries: newEntries });
+				setEntries(newEntries);
 				setRow({ ...row, food: null });
 				setTimeout(() => {
 					document.getElementById('food').focus();
@@ -92,7 +92,7 @@ export default function DiaryAddFood({ date, diary, foodFields, setDiary }) {
 
 DiaryAddFood.propTypes = {
 	date: PropTypes.string.isRequired,
-	diary: PropTypes.object.isRequired,
+	entries: PropTypes.array.isRequired,
 	foodFields: PropTypes.array.isRequired,
-	setDiary: PropTypes.func.isRequired,
+	setEntries: PropTypes.func.isRequired,
 };

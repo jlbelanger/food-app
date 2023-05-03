@@ -26,9 +26,10 @@ export default function Diary() {
 	const foodFields = ['name', 'serving_size', 'serving_units', 'is_verified'].concat(Auth.trackables());
 
 	const { addToast } = useContext(FormosaContext);
-	const [errorExtras, setErrorExtras] = useState(false);
-	const [errorEntries, setErrorEntries] = useState(false);
-	const [diary, setDiary] = useState({ entries: [], extras: [] });
+	const [error, setError] = useState(null);
+	const [entries, setEntries] = useState([]);
+	const [extras, setExtras] = useState([]);
+	const [weight, setWeight] = useState(null);
 	const [trackables, setTrackables] = useState([]);
 
 	const getEntries = (date) => {
@@ -36,20 +37,22 @@ export default function Diary() {
 			return;
 		}
 
-		Api.get(`entries?filter[date][eq]=${date}&fields[entries]=user_serving_size&fields[food]=${foodFields.join(',')}&include=food`)
-			.then((entriesResponse) => {
-				setDiary({ ...diary, entries: entriesResponse });
+		let url = `date?filter[date][eq]=${date}`;
+		url += '&fields[entries]=user_serving_size';
+		url += `&fields[extras]=${['note'].concat(Auth.trackables()).join(',')}`;
+		url += `&fields[food]=${foodFields.join(',')}`;
+		url += '&fields[weights]=date,weight';
+		url += '&include=food';
 
-				Api.get(`extras?filter[date][eq]=${date}&fields[extras]=${['note'].concat(Auth.trackables()).join(',')}`)
-					.then((extrasResponse) => {
-						setDiary({ entries: entriesResponse, extras: extrasResponse });
-					})
-					.catch(() => {
-						setErrorExtras(true);
-					});
+		Api.get(url)
+			.then((response) => {
+				const w = Api.deserialize(response.weights);
+				setEntries(Api.deserialize(response.entries));
+				setExtras(Api.deserialize(response.extras));
+				setWeight(w.length > 0 ? w[0] : { date });
 			})
 			.catch(() => {
-				setErrorEntries(true);
+				setError(true);
 			});
 	};
 
@@ -86,9 +89,9 @@ export default function Diary() {
 			.then(() => {
 				addToast('Food removed successfully.', 'success');
 
-				const newEntries = [...diary.entries];
+				const newEntries = [...entries];
 				newEntries.splice(e.target.getAttribute('data-index'), 1);
-				setDiary({ ...diary, entries: newEntries });
+				setEntries(newEntries);
 			})
 			.catch((response) => {
 				const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
@@ -101,9 +104,9 @@ export default function Diary() {
 			.then(() => {
 				addToast('Extra removed successfully.', 'success');
 
-				const newExtras = [...diary.extras];
+				const newExtras = [...extras];
 				newExtras.splice(e.target.getAttribute('data-index'), 1);
-				setDiary({ ...diary, extras: newExtras });
+				setExtras(newExtras);
 			})
 			.catch((response) => {
 				const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
@@ -130,18 +133,24 @@ export default function Diary() {
 
 			<div id="diary">
 				<div id="diary-top">
-					<DiaryAddFood date={currentDate} diary={diary} key={`add-food-${currentDate}`} foodFields={foodFields} setDiary={setDiary} />
-					<DiaryAddExtra date={currentDate} diary={diary} key={`add-extra-${currentDate}`} setDiary={setDiary} />
-					<DiaryWeight date={currentDate} />
+					<DiaryAddFood
+						date={currentDate}
+						entries={entries}
+						key={`add-food-${currentDate}`}
+						foodFields={foodFields}
+						setEntries={setEntries}
+					/>
+					<DiaryAddExtra date={currentDate} extras={extras} key={`add-extra-${currentDate}`} setExtras={setExtras} />
+					<DiaryWeight date={currentDate} error={error} setWeight={setWeight} weight={weight} />
 				</div>
 
-				<DiaryAddMeal date={currentDate} diary={diary} foodFields={foodFields} setDiary={setDiary} />
+				<DiaryAddMeal date={currentDate} entries={entries} foodFields={foodFields} setEntries={setEntries} />
 			</div>
 
-			{errorEntries && (<p className="formosa-message formosa-message--error">Error getting entries.</p>)}
-			{errorExtras && (<p className="formosa-message formosa-message--error">Error getting extras.</p>)}
+			{error && (<p className="formosa-message formosa-message--error">Error getting entries.</p>)}
+			{error && (<p className="formosa-message formosa-message--error">Error getting extras.</p>)}
 
-			{(diary.entries.length > 0 || diary.extras.length > 0) && (
+			{(entries.length > 0 || extras.length > 0) && (
 				<table className="responsive-table" id="diary-table">
 					<thead>
 						<tr>
@@ -152,7 +161,7 @@ export default function Diary() {
 						</tr>
 					</thead>
 					<tbody>
-						{diary.entries.map((entry, i) => (
+						{entries.map((entry, i) => (
 							<tr className="entry" id={`entry-row-${i}`} key={entry.id}>
 								<td className="column--name">
 									<FoodLink food={entry.food} />
@@ -165,11 +174,7 @@ export default function Diary() {
 										preventEmptyRequest
 										preventEmptyRequestText={false}
 										row={entry}
-										setRow={(newUserServingSize) => {
-											const e = [...diary.entries];
-											e[i].user_serving_size = newUserServingSize;
-											setDiary({ ...diary, entries: e });
-										}}
+										setRow={() => {}}
 										successToastText="Entry saved successfully."
 									>
 										<Field
@@ -182,14 +187,11 @@ export default function Diary() {
 											size={6}
 											suffix={pluralize(entry.food.serving_units, entry.user_serving_size)}
 											setValue={(newValue) => {
-												const e = [...diary.entries];
+												const e = [...entries];
 												e[i].user_serving_size = newValue;
-												setDiary({
-													...diary,
-													entries: e,
-												});
+												setEntries(e);
 											}}
-											value={diary.entries[i].user_serving_size}
+											value={entry.user_serving_size}
 										/>
 										<button id={`entry-${entry.id}-submit`} style={{ display: 'none' }} type="submit" />
 									</Form>
@@ -216,7 +218,7 @@ export default function Diary() {
 							</tr>
 						))}
 
-						{diary.extras.map((extra, i) => (
+						{extras.map((extra, i) => (
 							<tr className="extra" id={`extra-row-${i}`} key={extra.id}>
 								<td className="column--name">
 									<Form
@@ -226,11 +228,7 @@ export default function Diary() {
 										preventEmptyRequest
 										preventEmptyRequestText={false}
 										row={extra}
-										setRow={(newNote) => {
-											const e = [...diary.extras];
-											e[i].note = newNote;
-											setDiary({ ...diary, extras: e });
-										}}
+										setRow={() => {}}
 										successToastText="Extra saved successfully."
 									>
 										<Field
@@ -240,14 +238,11 @@ export default function Diary() {
 											id={`note-${i}`}
 											name="note"
 											setValue={(newValue) => {
-												const e = [...diary.extras];
+												const e = [...extras];
 												e[i].note = newValue;
-												setDiary({
-													...diary,
-													extras: e,
-												});
+												setExtras(e);
 											}}
-											value={diary.extras[i].note}
+											value={extra.note}
 										/>
 										<button id={`extra-${extra.id}-submit`} style={{ display: 'none' }} type="submit" />
 									</Form>
@@ -277,11 +272,7 @@ export default function Diary() {
 												preventEmptyRequest
 												preventEmptyRequestText={false}
 												row={extra}
-												setRow={(newNote) => {
-													const e = [...diary.extras];
-													e[i].note = newNote;
-													setDiary({ ...diary, extras: e });
-												}}
+												setRow={() => {}}
 												style={{ backgroundColor: colorsLight[j + 1] }}
 												successToastText="Extra saved successfully."
 											>
@@ -293,15 +284,12 @@ export default function Diary() {
 													inputMode="numeric"
 													name={trackable.slug}
 													setValue={(newValue) => {
-														const e = [...diary.extras];
+														const e = [...extras];
 														e[i][trackable.slug] = newValue;
-														setDiary({
-															...diary,
-															extras: e,
-														});
+														setExtras(e);
 													}}
 													size={6}
-													value={diary.extras[i][trackable.slug] === null ? '' : diary.extras[i][trackable.slug]}
+													value={extra[trackable.slug] === null ? '' : extra[trackable.slug]}
 												/>
 												<button id={`extra-${trackable.slug}-${extra.id}-submit`} style={{ display: 'none' }} type="submit" />
 											</Form>
@@ -314,7 +302,7 @@ export default function Diary() {
 					<tfoot>
 						<tr>
 							<th colSpan={3} />
-							<TrackableFoot extras={diary.extras} rows={diary.entries} trackables={trackables} />
+							<TrackableFoot extras={extras} rows={entries} trackables={trackables} />
 						</tr>
 					</tfoot>
 				</table>

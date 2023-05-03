@@ -76,14 +76,12 @@ Cypress.Commands.add('deleteAllData', () => {
 });
 
 Cypress.Commands.add('removeEntriesExtras', () => {
-	cy.intercept('GET', '**/api/entries?**').as('getEntries');
+	cy.intercept('GET', '**/api/date?**').as('getDate');
 	cy.intercept('DELETE', '**/api/entries/**').as('deleteEntryRecord');
-	cy.intercept('GET', '**/api/extras?**').as('getExtras');
 	cy.intercept('DELETE', '**/api/extras/**').as('deleteExtraRecord');
 
 	cy.visit('/');
-	cy.wait('@getEntries').its('response.statusCode').should('equal', 200);
-	cy.wait('@getExtras').its('response.statusCode').should('equal', 200);
+	cy.wait('@getDate').its('response.statusCode').should('equal', 200);
 	cy.get('body')
 		.then(($body) => {
 			if ($body.find('.entry .button--remove').length > 0) {
@@ -107,12 +105,12 @@ Cypress.Commands.add('removeEntriesExtras', () => {
 });
 
 Cypress.Commands.add('setWeight', (weight) => {
-	cy.intercept('GET', '**/api/weights?**').as('getWeightRecord');
+	cy.intercept('GET', '**/api/date?**').as('getDate');
 	cy.intercept('POST', '**/api/weights').as('postWeightRecord');
 	cy.intercept('PUT', '**/api/weights/**').as('putWeightRecord');
 
 	cy.visit('/');
-	cy.wait('@getWeightRecord').its('response.statusCode').should('equal', 200);
+	cy.wait('@getDate').its('response.statusCode').should('equal', 200);
 	cy.get('#weight')
 		.then(($el) => {
 			const val = $el.val();

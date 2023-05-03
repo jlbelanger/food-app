@@ -3,15 +3,15 @@ import React, { useState } from 'react';
 import { ReactComponent as PlusIcon } from '../../svg/plus.svg';
 import PropTypes from 'prop-types';
 
-export default function DiaryAddExtra({ date, diary, setDiary }) {
+export default function DiaryAddExtra({ date, extras, setExtras }) {
 	const [row, setRow] = useState({ date });
 
 	return (
 		<Form
 			afterSubmit={(response) => {
-				const newExtras = [...diary.extras];
+				const newExtras = [...extras];
 				newExtras.push({ ...response });
-				setDiary({ ...diary, extras: newExtras });
+				setExtras(newExtras);
 				setRow({ ...row, note: '' });
 			}}
 			className="form"
@@ -46,6 +46,6 @@ export default function DiaryAddExtra({ date, diary, setDiary }) {
 
 DiaryAddExtra.propTypes = {
 	date: PropTypes.string.isRequired,
-	diary: PropTypes.object.isRequired,
-	setDiary: PropTypes.func.isRequired,
+	extras: PropTypes.array.isRequired,
+	setExtras: PropTypes.func.isRequired,
 };

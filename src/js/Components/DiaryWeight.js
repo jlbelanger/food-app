@@ -1,28 +1,10 @@
 import { Api, Form, FormosaContext } from '@jlbelanger/formosa';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import DiaryWeightFieldset from './DiaryWeightFieldset';
 import PropTypes from 'prop-types';
 
-export default function DiaryWeight({ date }) {
+export default function DiaryWeight({ date, error, setWeight, weight }) {
 	const { addToast } = useContext(FormosaContext);
-	const [row, setRow] = useState(null);
-	const [rowId, setRowId] = useState(null);
-	const [error, setError] = useState(false);
-
-	useEffect(() => {
-		Api.get(`weights?filter[date][eq]=${date}`)
-			.then((response) => {
-				if (response.length > 0) {
-					setRow(response[0]);
-					setRowId(response[0].id);
-				} else {
-					setRow({ date });
-				}
-			})
-			.catch(() => {
-				setError(true);
-			});
-	}, [date]);
 
 	if (error) {
 		return (
@@ -30,7 +12,7 @@ export default function DiaryWeight({ date }) {
 		);
 	}
 
-	if (row === null) {
+	if (weight === null) {
 		return (
 			<Form className="form" key="fake-form">
 				<DiaryWeightFieldset disabled />
@@ -40,18 +22,18 @@ export default function DiaryWeight({ date }) {
 
 	return (
 		<Form
-			afterSubmit={(response) => {
-				if (response.id) {
-					setRowId(response.id);
+			afterSubmit={(response, formState, setFormState) => {
+				if (response.id && !weight.id) {
+					setWeight({ ...weight, id: response.id });
+					formState.setOriginalValue(formState, setFormState, 'id', response.id);
 				}
 			}}
 			beforeSubmit={() => {
-				if (rowId && row.weight === '') {
-					Api.delete(`weights/${rowId}`)
+				if (weight.id && weight.weight === '') {
+					Api.delete(`weights/${weight.id}`)
 						.then(() => {
 							addToast('Weight removed successfully.', 'success');
-							setRow({ date });
-							setRowId(null);
+							setWeight({ date });
 						})
 						.catch((response) => {
 							const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
@@ -63,13 +45,15 @@ export default function DiaryWeight({ date }) {
 			}}
 			className="form"
 			htmlId="weight-form"
-			id={rowId}
+			id={weight && weight.id ? weight.id : null}
 			key="real-form"
-			method={rowId ? 'PUT' : 'POST'}
+			method={weight && weight.id ? 'PUT' : 'POST'}
 			path="weights"
 			preventEmptyRequest
-			row={row}
-			setRow={setRow}
+			row={weight}
+			setRow={(value) => {
+				setWeight(value);
+			}}
 			successToastText="Weight saved successfully."
 		>
 			<DiaryWeightFieldset />
@@ -79,8 +63,13 @@ export default function DiaryWeight({ date }) {
 
 DiaryWeight.propTypes = {
 	date: PropTypes.string,
+	error: PropTypes.object,
+	setWeight: PropTypes.func.isRequired,
+	weight: PropTypes.object,
 };
 
 DiaryWeight.defaultProps = {
 	date: null,
+	error: null,
+	weight: null,
 };
