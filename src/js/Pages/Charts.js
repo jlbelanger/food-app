@@ -29,9 +29,13 @@ export default function Charts() {
 	const [max] = useState((new Date()).getTime());
 	const [min, setMin] = useState('original');
 
-	const getEntries = () => {
+	const getEntries = (ignore) => {
 		Api.get('charts')
 			.then((response) => {
+				if (ignore) {
+					return;
+				}
+
 				const output = [];
 				const names = Object.keys(response);
 				let newMin = max;
@@ -76,6 +80,7 @@ export default function Charts() {
 						maxY: Math.ceil(maxY + threshold),
 					});
 				});
+
 				setMin(newMin);
 				setDatasets(output);
 			})
@@ -85,22 +90,28 @@ export default function Charts() {
 	};
 
 	useEffect(() => {
-		window.HAS_ZOOMED = {};
+		let ignore = false;
 
-		getEntries();
+		getEntries(ignore);
+
+		window.HAS_ZOOMED = {};
 
 		const defaultZoomPlugin = {
 			id: 'defaultzoom',
 			beforeBuildTicks: (chart) => {
-				if (window.HAS_ZOOMED[chart.id]) {
-					return;
+				if (!window.HAS_ZOOMED[chart.id]) {
+					const oneMonthInMilliseconds = 30 * 24 * 60 * 60 * 1000;
+					window.HAS_ZOOMED[chart.id] = true;
+					chart.zoomScale('x', { min: max - oneMonthInMilliseconds, max });
 				}
-				const oneMonthInMilliseconds = 30 * 24 * 60 * 60 * 1000;
-				window.HAS_ZOOMED[chart.id] = true;
-				chart.zoomScale('x', { min: max - oneMonthInMilliseconds, max });
 			},
 		};
+
 		ChartJS.register(LineController, LineElement, LinearScale, PointElement, TimeScale, Tooltip, zoomPlugin, defaultZoomPlugin);
+
+		return () => {
+			ignore = true;
+		};
 	}, []);
 
 	if (error) {
@@ -113,19 +124,19 @@ export default function Charts() {
 		maintainAspectRatio: false,
 		scales: {
 			x: {
-				type: 'time',
-				time: {
-					unit: 'day',
-					tooltipFormat: 'MMM d, yyyy',
-				},
+				bounds: 'data',
 				ticks: {
 					maxRotation: 0,
 					minRotation: 0,
 				},
+				time: {
+					tooltipFormat: 'MMM d, yyyy',
+					unit: 'day',
+				},
+				type: 'time',
 			},
 			y: {
-				min: minY,
-				max: maxY,
+				bounds: 'data',
 				ticks: {
 					precision: null,
 				},
@@ -138,8 +149,14 @@ export default function Charts() {
 			},
 			zoom: {
 				limits: {
-					x: { min, max },
-					y: { min: minY, max: maxY },
+					x: {
+						min,
+						max,
+					},
+					y: {
+						min: minY,
+						max: maxY,
+					},
 				},
 				pan: {
 					enabled: true,
