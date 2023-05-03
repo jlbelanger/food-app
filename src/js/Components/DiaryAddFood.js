@@ -1,33 +1,13 @@
-import { Api, Field, Form } from '@jlbelanger/formosa';
-import React, { useEffect, useState } from 'react';
+import { Field, Form } from '@jlbelanger/formosa';
+import React, { useState } from 'react';
 import Auth from '../Utilities/Auth';
 import { foodLabelFn } from '../Utilities/Helpers';
 import { ReactComponent as PlusIcon } from '../../svg/plus.svg';
 import PropTypes from 'prop-types';
 
-export default function DiaryAddFood({ date, entries, foodFields, setEntries }) {
+export default function DiaryAddFood({ date, entries, favouriteFood, food, setEntries }) {
 	const [row, setRow] = useState({ date });
-	const [error, setError] = useState(false);
 	const [favouritesOnly, setFavouritesOnly] = useState(Auth.getValue('favourites_only', false));
-	const [favouriteFood, setFavouriteFood] = useState([]);
-	const [food, setFood] = useState([]);
-
-	useEffect(() => {
-		Api.get(`food?fields[food]=${foodFields.concat(['is_favourite']).join(',')}`)
-			.then((response) => {
-				setFood(response);
-				setFavouriteFood(response.filter((r) => (r.is_favourite)));
-			})
-			.catch(() => {
-				setError(true);
-			});
-	}, []);
-
-	if (error) {
-		return (
-			<p className="formosa-message formosa-message--error form">Error getting food.</p>
-		);
-	}
 
 	return (
 		<Form
@@ -93,6 +73,7 @@ export default function DiaryAddFood({ date, entries, foodFields, setEntries }) 
 DiaryAddFood.propTypes = {
 	date: PropTypes.string.isRequired,
 	entries: PropTypes.array.isRequired,
-	foodFields: PropTypes.array.isRequired,
+	favouriteFood: PropTypes.array.isRequired,
+	food: PropTypes.array.isRequired,
 	setEntries: PropTypes.func.isRequired,
 };

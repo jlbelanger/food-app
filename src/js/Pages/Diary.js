@@ -31,6 +31,9 @@ export default function Diary() {
 	const [extras, setExtras] = useState([]);
 	const [weight, setWeight] = useState(null);
 	const [trackables, setTrackables] = useState([]);
+	const [food, setFood] = useState([]);
+	const [favouriteFood, setFavouriteFood] = useState([]);
+	const [foodError, setFoodError] = useState(false);
 
 	const getEntries = (date) => {
 		if (!date) {
@@ -63,6 +66,15 @@ export default function Diary() {
 					setTrackables(mapTrackables(response));
 				});
 		}
+
+		Api.get(`food?fields[food]=${foodFields.concat(['is_favourite']).join(',')}`)
+			.then((response) => {
+				setFood(response);
+				setFavouriteFood(response.filter((r) => (r.is_favourite)));
+			})
+			.catch(() => {
+				setFoodError(true);
+			});
 
 		getEntries(currentDate);
 	}, []);
@@ -133,13 +145,18 @@ export default function Diary() {
 
 			<div id="diary">
 				<div id="diary-top">
-					<DiaryAddFood
-						date={currentDate}
-						entries={entries}
-						key={`add-food-${currentDate}`}
-						foodFields={foodFields}
-						setEntries={setEntries}
-					/>
+					{foodError ? (
+						<p className="formosa-message formosa-message--error form">Error getting food.</p>
+					) : (
+						<DiaryAddFood
+							date={currentDate}
+							entries={entries}
+							key={`add-food-${currentDate}`}
+							favouriteFood={favouriteFood}
+							food={food}
+							setEntries={setEntries}
+						/>
+					)}
 					<DiaryAddExtra date={currentDate} extras={extras} key={`add-extra-${currentDate}`} setExtras={setExtras} />
 					<DiaryWeight date={currentDate} error={error} setWeight={setWeight} weight={weight} />
 				</div>
