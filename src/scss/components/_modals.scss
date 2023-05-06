@@ -1,0 +1,45 @@
+.modal-open {
+	overflow: hidden;
+}
+
+.modal {
+	align-items: center;
+	background: transparent;
+	border: 0;
+	bottom: 0;
+	display: flex;
+	justify-content: center;
+	left: 0;
+	padding: 0;
+	position: fixed;
+	right: 0;
+	top: 0;
+	z-index: $modal-zindex;
+}
+
+.modal::backdrop {
+	background-color: $modal-container-background-color;
+}
+
+.modal__box {
+	background-color: $modal-background-color;
+	color: $modal-text-color;
+	max-width: $modal-max-width;
+	padding: $modal-padding;
+	width: 100%;
+}
+
+.modal__text {
+	margin: 0;
+}
+
+.modal__options {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	margin: $modal-button-margin-top auto 0;
+
+	button + button {
+		margin-left: $modal-button-margin-side;
+	}
+}

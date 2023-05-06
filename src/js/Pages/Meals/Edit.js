@@ -8,6 +8,7 @@ import Fields from './Partials/Fields';
 import FoodLink from '../../Components/FoodLink';
 import { ReactComponent as HeartIcon } from '../../../svg/heart.svg';
 import MetaTitle from '../../Components/MetaTitle';
+import Modal from '../../Components/Modal';
 import MyForm from '../../Components/MyForm';
 import TrackableBody from '../../Components/TrackableBody';
 import TrackableFoot from '../../Components/TrackableFoot';
@@ -26,6 +27,7 @@ export default function Edit() {
 	const [allFood, setAllFood] = useState([]);
 	const [trackables, setTrackables] = useState([]);
 	const [newFood, setNewFood] = useState(null);
+	const [showModal, setShowModal] = useState(false);
 	const history = useHistory();
 	const foodFields = ['name', 'slug', 'serving_size', 'serving_units', 'is_verified'].concat(Auth.trackables());
 	const mealParams = `include=foods,foods.food&fields[food]=${foodFields.join(',')}&fields[food_meal]=user_serving_size`;
@@ -90,10 +92,7 @@ export default function Edit() {
 	};
 
 	const deleteRow = () => {
-		if (!confirm('Are you sure you want to delete this meal?')) { // eslint-disable-line no-restricted-globals
-			return;
-		}
-
+		setShowModal(false);
 		Api.delete(`meals/${id}`)
 			.then(() => {
 				addToast('Meal deleted successfully.', 'success');
@@ -121,7 +120,23 @@ export default function Edit() {
 					<HeartIcon aria-hidden height={16} width={16} />
 				</button>
 				<button className="formosa-button button--small" form="edit-form" type="submit">Save</button>
-				<button className="formosa-button formosa-button--danger button--small" onClick={deleteRow} type="submit">Delete</button>
+				<button
+					className="formosa-button formosa-button--danger button--small"
+					onClick={(e) => { setShowModal(e); }}
+					type="button"
+				>
+					Delete
+				</button>
+				{showModal && (
+					<Modal
+						event={showModal}
+						okButtonClass="formosa-button--danger"
+						okButtonText="Delete"
+						onClickOk={deleteRow}
+						onClickCancel={() => { setShowModal(false); }}
+						text="Are you sure you want to delete this meal?"
+					/>
+				)}
 			</MetaTitle>
 
 			<MyForm

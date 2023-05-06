@@ -8,6 +8,7 @@ import Error from '../../Error';
 import Fields from './Partials/Fields';
 import { ReactComponent as HeartIcon } from '../../../svg/heart.svg';
 import MetaTitle from '../../Components/MetaTitle';
+import Modal from '../../Components/Modal';
 import MyForm from '../../Components/MyForm';
 import PaginatedTable from '../../Components/PaginatedTable';
 import { ReactComponent as PencilIcon } from '../../../svg/pencil.svg';
@@ -18,6 +19,7 @@ export default function Edit() {
 	const [row, setRow] = useState(null);
 	const [isFavourite, setIsFavourite] = useState(false);
 	const [error, setError] = useState(false);
+	const [showModal, setShowModal] = useState(false);
 	const history = useHistory();
 
 	useEffect(() => {
@@ -68,10 +70,7 @@ export default function Edit() {
 	};
 
 	const deleteRow = () => {
-		if (!confirm('Are you sure you want to delete this food?')) { // eslint-disable-line no-restricted-globals
-			return;
-		}
-
+		setShowModal(false);
 		Api.delete(`food/${id}`)
 			.then(() => {
 				addToast('Food deleted successfully.', 'success');
@@ -99,7 +98,25 @@ export default function Edit() {
 				</button>
 				{!readOnly && <button className="formosa-button button--small" form="edit-form" type="submit">Save</button>}
 				{!readOnly && row.deleteable && (
-					<button className="formosa-button formosa-button--danger button--small" onClick={deleteRow} type="submit">Delete</button>
+					<>
+						<button
+							className="formosa-button formosa-button--danger button--small"
+							onClick={(e) => { setShowModal(e); }}
+							type="button"
+						>
+							Delete
+						</button>
+						{showModal && (
+							<Modal
+								event={showModal}
+								okButtonClass="formosa-button--danger"
+								okButtonText="Delete"
+								onClickOk={deleteRow}
+								onClickCancel={() => { setShowModal(false); }}
+								text="Are you sure you want to delete this food?"
+							/>
+						)}
+					</>
 				)}
 			</MetaTitle>
 

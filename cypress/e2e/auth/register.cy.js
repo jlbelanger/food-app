@@ -85,6 +85,7 @@ describe('register', () => {
 			// Delete.
 			cy.get('.nav__link').contains('Profile').click();
 			cy.get('.formosa-button--danger').contains('Delete account').click();
+			cy.get('dialog .formosa-button--danger').contains('Delete').click();
 			cy.location('pathname').should('eq', '/');
 		});
 	});

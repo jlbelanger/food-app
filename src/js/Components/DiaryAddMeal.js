@@ -43,7 +43,7 @@ export default function DiaryMeals({ date, entries, foodFields, setEntries }) {
 		<fieldset id="add-meal">
 			<legend>Add meal</legend>
 			{meals.map((meal) => (
-				<button className="formosa-button add-meal__button button--tertiary" data-id={meal.id} key={meal.id} onClick={addMeal} type="button">
+				<button className="formosa-button add-meal__button button--secondary" data-id={meal.id} key={meal.id} onClick={addMeal} type="button">
 					{meal.name}
 				</button>
 			))}

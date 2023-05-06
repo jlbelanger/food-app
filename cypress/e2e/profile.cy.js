@@ -169,7 +169,8 @@ describe('profile', () => {
 			cy.get('.table-heading').contains('Protein').should('exist');
 			cy.get('.table-heading').contains('Sodium').should('exist');
 			cy.get('.table-heading').contains('Fat').should('not.exist');
-			cy.get('.formosa-button').contains('Delete').click();
+			cy.get('.formosa-button--danger').contains('Delete').click();
+			cy.get('dialog .formosa-button--danger').contains('Delete').click();
 			cy.contains('Meal deleted successfully.').should('exist');
 			cy.get('.formosa-toast__close').click();
 

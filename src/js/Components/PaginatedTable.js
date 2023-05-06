@@ -30,7 +30,7 @@ export default function PaginatedTable({ body, head, perPage, rows }) {
 			{numPages > 1 && (
 				<div className="pagination">
 					<button
-						className="formosa-button button--secondary button--small"
+						className="formosa-button button--tertiary button--small"
 						disabled={currentPage <= 1}
 						onClick={prevPage}
 						type="button"
@@ -39,7 +39,7 @@ export default function PaginatedTable({ body, head, perPage, rows }) {
 					</button>
 					<span className="pagination__num">{`Page ${currentPage.toLocaleString()} of ${numPages.toLocaleString()}`}</span>
 					<button
-						className="formosa-button button--secondary button--small"
+						className="formosa-button button--tertiary button--small"
 						disabled={currentPage >= numPages}
 						onClick={nextPage}
 						type="button"

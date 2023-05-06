@@ -70,6 +70,7 @@ Cypress.Commands.add('deleteAllData', () => {
 	cy.get('[value="meals"]').check();
 	cy.get('[value="weights"]').check();
 	cy.get('.formosa-button--danger').contains('Delete selected data').click();
+	cy.get('dialog .formosa-button--danger').contains('Delete').click();
 	cy.wait('@deleteData').its('response.statusCode').should('equal', 204);
 	cy.contains('Data deleted successfully.').should('exist');
 	cy.get('.formosa-toast__close').click();

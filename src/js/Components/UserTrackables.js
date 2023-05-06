@@ -53,8 +53,8 @@ export default function UserTrackables({ user }) {
 		>
 			<h2 className="flex">
 				<span style={{ alignSelf: 'center', flex: '1 1 auto' }}>Tracking</span>
-				<button className="formosa-button button--small button--tertiary" onClick={checkAll} type="button">Check All</button>
-				<button className="formosa-button button--small button--tertiary" onClick={uncheckAll} type="button">Uncheck All</button>
+				<button className="formosa-button button--small button--secondary" onClick={checkAll} type="button">Check All</button>
+				<button className="formosa-button button--small button--secondary" onClick={uncheckAll} type="button">Uncheck All</button>
 			</h2>
 
 			<Message />

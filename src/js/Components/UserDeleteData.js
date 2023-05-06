@@ -1,29 +1,26 @@
-import { Api, Field, Form, FormosaContext, Submit } from '@jlbelanger/formosa';
+import { Api, Field, FormosaContext } from '@jlbelanger/formosa';
 import React, { useContext, useState } from 'react';
+import Modal from './Modal';
 
 export default function UserDeleteData() {
 	const { addToast } = useContext(FormosaContext);
 	const [types, setTypes] = useState([]);
+	const [showModal, setShowModal] = useState(false);
+
+	const onClickOk = () => {
+		setShowModal(false);
+		Api.post('users/delete-data', JSON.stringify({ types }))
+			.then(() => {
+				addToast('Data deleted successfully.', 'success');
+			})
+			.catch((response) => {
+				const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
+				addToast(text, 'error', 10000);
+			});
+	};
 
 	return (
-		<Form
-			onSubmit={(e) => {
-				e.preventDefault();
-
-				if (!confirm('Are you sure you want to delete this data?')) { // eslint-disable-line no-restricted-globals
-					return;
-				}
-
-				Api.post('users/delete-data', JSON.stringify({ types }))
-					.then(() => {
-						addToast('Data deleted successfully.', 'success');
-					})
-					.catch((response) => {
-						const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
-						addToast(text, 'error', 10000);
-					});
-			}}
-		>
+		<>
 			<Field
 				fieldsetClassName="radio-list"
 				options={['entries', 'meals', 'weights']}
@@ -33,7 +30,22 @@ export default function UserDeleteData() {
 				type="checkbox-list"
 			/>
 
-			<Submit className="formosa-button--danger" label="Delete selected data" />
-		</Form>
+			<p>
+				<button className="formosa-button formosa-button--danger" onClick={(e) => { setShowModal(e); }} type="button">
+					Delete selected data
+				</button>
+			</p>
+
+			{showModal && (
+				<Modal
+					event={showModal}
+					okButtonClass="formosa-button--danger"
+					okButtonText="Delete"
+					onClickOk={onClickOk}
+					onClickCancel={() => { setShowModal(false); }}
+					text="Are you sure you want to delete this data?"
+				/>
+			)}
+		</>
 	);
 }

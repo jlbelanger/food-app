@@ -18,7 +18,28 @@ button {
 	}
 }
 
-.button--secondary {
+.button--secondary,
+.formosa-button--toggle-password {
+	background: $lightest-pink;
+	border-color: scale-color($lightest-pink, $lightness: -5%);
+
+	&:hover,
+	&:active,
+	&:focus {
+		background: scale-color($lightest-pink, $lightness: -2.5%);
+		border-color: scale-color($lightest-pink, $lightness: -7.5%);
+	}
+
+	&[disabled] {
+		border-color: $formosa-input-border-color;
+	}
+
+	& + .button--secondary {
+		margin-left: 4px;
+	}
+}
+
+.button--tertiary {
 	background-color: $yellow;
 	border-color: $dark-yellow;
 
@@ -26,26 +47,6 @@ button {
 	&:active,
 	&:focus {
 		background-color: scale-color($yellow, $lightness: -5%);
-	}
-}
-
-.button--tertiary {
-	background: $light-pink;
-	border-color: scale-color($light-pink, $lightness: -5%);
-
-	&:hover,
-	&:active,
-	&:focus {
-		background: scale-color($light-pink, $lightness: -10%);
-		border-color: scale-color($light-pink, $lightness: -15%);
-	}
-
-	&[disabled] {
-		border-color: $formosa-input-border-color;
-	}
-
-	& + .button--tertiary {
-		margin-left: 4px;
 	}
 }
 

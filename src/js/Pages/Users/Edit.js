@@ -1,8 +1,9 @@
-import { Api, Form, Message, Submit } from '@jlbelanger/formosa';
-import React, { useEffect, useState } from 'react';
+import { Api, FormosaContext } from '@jlbelanger/formosa';
+import React, { useContext, useEffect, useState } from 'react';
 import Auth from '../../Utilities/Auth';
 import Error from '../../Error';
 import MetaTitle from '../../Components/MetaTitle';
+import Modal from '../../Components/Modal';
 import UserBmi from '../../Components/UserBmi';
 import UserChangeEmail from '../../Components/UserChangeEmail';
 import UserChangePassword from '../../Components/UserChangePassword';
@@ -11,9 +12,23 @@ import UserDeleteData from '../../Components/UserDeleteData';
 import UserTrackables from '../../Components/UserTrackables';
 
 export default function Edit() {
+	const { addToast } = useContext(FormosaContext);
 	const id = Auth.id();
 	const [row, setRow] = useState(null);
 	const [error, setError] = useState(false);
+	const [showModal, setShowModal] = useState(false);
+
+	const onClickDelete = () => {
+		setShowModal(false);
+		Api.delete(`users/${row.id}`)
+			.then(() => {
+				Auth.logout();
+			})
+			.catch((response) => {
+				const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
+				addToast(text, 'error', 10000);
+			});
+	};
 
 	useEffect(() => {
 		Api.get(`users/${id}?fields[trackables]=name,slug&include=trackables`)
@@ -62,22 +77,22 @@ export default function Edit() {
 
 			<UserDeleteData user={row} />
 
-			<Form
-				afterSubmit={() => {
-					Auth.logout();
-				}}
-				beforeSubmit={() => (
-					confirm('Are you sure you want to delete your account?') // eslint-disable-line no-restricted-globals
-				)}
-				id={row.id}
-				method="DELETE"
-				path="users"
-				showMessage={false}
-			>
-				<Message />
+			<p>
+				<button className="formosa-button formosa-button--danger" onClick={(e) => { setShowModal(e); }} type="button">
+					Delete account
+				</button>
+			</p>
 
-				<Submit className="formosa-button--danger" label="Delete account" />
-			</Form>
+			{showModal && (
+				<Modal
+					event={showModal}
+					okButtonClass="formosa-button--danger"
+					okButtonText="Delete"
+					onClickOk={onClickDelete}
+					onClickCancel={() => { setShowModal(false); }}
+					text="Are you sure you want to delete your account?"
+				/>
+			)}
 		</>
 	);
 }
