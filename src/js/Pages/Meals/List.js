@@ -19,20 +19,21 @@ export default function List() {
 
 	useEffect(() => {
 		Api.get('meals?fields[meals]=is_favourite,name&sort=name', false)
+			.catch((response) => {
+				setError(response);
+				setIsLoading(false);
+				throw response;
+			})
 			.then((response) => {
 				setRows(response);
 				setFilteredRows(response);
-				setIsLoading(false);
-			})
-			.catch((response) => {
-				setError(response.status);
 				setIsLoading(false);
 			});
 	}, []);
 
 	if (error) {
 		return (
-			<Error status={error} />
+			<Error error={error} />
 		);
 	}
 
@@ -58,14 +59,15 @@ export default function List() {
 		};
 
 		Api.put(`meals/${id}`, JSON.stringify(body))
+			.catch((response) => {
+				const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
+				addToast(text, 'error', 10000);
+				throw response;
+			})
 			.then(() => {
 				newRows[i].is_favourite = isFavourite;
 				setRows(newRows);
 				addToast(`Meal ${isFavourite ? '' : 'un'}favourited successfully.`, 'success');
-			})
-			.catch((response) => {
-				const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
-				addToast(text, 'error', 10000);
 			});
 	};
 

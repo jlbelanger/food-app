@@ -40,8 +40,8 @@ describe('diary', () => {
 
 			cy.intercept('GET', '**/api/date?**').as('getDate');
 			cy.intercept('POST', '**/api/extras').as('postExtra');
-			cy.intercept('PUT', '**/api/extras/**').as('putExtra');
-			cy.intercept('DELETE', '**/api/extras/**').as('deleteExtra');
+			cy.intercept('PUT', '**/api/extras/*').as('putExtra');
+			cy.intercept('DELETE', '**/api/extras/*').as('deleteExtra');
 
 			// Ensure calories is in trackables.
 			cy.setTrackables(['calories']);
@@ -53,8 +53,7 @@ describe('diary', () => {
 			cy.get('#note').type('Example extra');
 			cy.get('#note + button').click();
 			cy.wait('@postExtra').its('response.statusCode').should('equal', 201);
-			cy.contains('Extra added successfully.').should('exist');
-			cy.get('.formosa-toast__close').click();
+			cy.closeToast('Extra added successfully.');
 			cy.get('#diary-table').should('be.visible');
 			cy.get('#note-0').should('have.value', 'Example extra');
 			cy.get('.column-total--calories').should('have.text', '0');
@@ -62,51 +61,45 @@ describe('diary', () => {
 			// Edit note and press enter.
 			cy.get('#note-0').clear().type('New note{enter}');
 			cy.wait('@putExtra').its('response.statusCode').should('equal', 200);
-			cy.contains('Extra saved successfully.').should('exist');
-			cy.get('.formosa-toast__close').click();
+			cy.closeToast('Extra saved successfully.');
 			cy.get('#note-0').should('have.value', 'New note');
 			cy.get('.column-total--calories').should('have.text', '0');
 
 			// Edit note and blur.
 			cy.get('#note-0').clear().type('Another note').blur();
 			cy.wait('@putExtra').its('response.statusCode').should('equal', 200);
-			cy.contains('Extra saved successfully.').should('exist');
-			cy.get('.formosa-toast__close').click();
+			cy.closeToast('Extra saved successfully.');
 			cy.get('#note-0').should('have.value', 'Another note');
 			cy.get('.column-total--calories').should('have.text', '0');
 
 			// Edit trackable and press enter.
 			cy.get('#calories-0').type('100{enter}');
 			cy.wait('@putExtra').its('response.statusCode').should('equal', 200);
-			cy.contains('Extra saved successfully.').should('exist');
-			cy.get('.formosa-toast__close').click();
+			cy.closeToast('Extra saved successfully.');
 			cy.get('#calories-0').should('have.value', '100');
 			cy.get('.column-total--calories').should('have.text', '100');
 
 			// Edit trackable and blur.
 			cy.get('#calories-0').clear().type('50').blur();
 			cy.wait('@putExtra').its('response.statusCode').should('equal', 200);
-			cy.contains('Extra saved successfully.').should('exist');
-			cy.get('.formosa-toast__close').click();
+			cy.closeToast('Extra saved successfully.');
 			cy.get('#calories-0').should('have.value', '50');
 			cy.get('.column-total--calories').should('have.text', '50');
 
 			// Delete.
 			cy.get('.button--remove').click();
 			cy.wait('@deleteExtra').its('response.statusCode').should('equal', 204);
-			cy.contains('Extra removed successfully.').should('exist');
-			cy.get('.formosa-toast__close').click();
+			cy.closeToast('Extra removed successfully.');
 			cy.get('#diary-table').should('not.exist');
 			cy.get('#note-0').should('not.exist');
 
 			// Add then refresh.
-			cy.visit('/');
+			cy.reload();
 			cy.wait('@getDate').its('response.statusCode').should('equal', 200);
 			cy.get('#note').type('Example extra 2');
 			cy.get('#note + button').click();
 			cy.wait('@postExtra').its('response.statusCode').should('equal', 201);
-			cy.contains('Extra added successfully.').should('exist');
-			cy.get('.formosa-toast__close').click();
+			cy.closeToast('Extra added successfully.');
 			cy.get('#diary-table').should('be.visible');
 			cy.get('#note-0').should('have.value', 'Example extra 2');
 			cy.reload();
@@ -116,8 +109,7 @@ describe('diary', () => {
 			// Edit note and press enter then refresh.
 			cy.get('#note-0').clear().type('New note{enter}');
 			cy.wait('@putExtra').its('response.statusCode').should('equal', 200);
-			cy.contains('Extra saved successfully.').should('exist');
-			cy.get('.formosa-toast__close').click();
+			cy.closeToast('Extra saved successfully.');
 			cy.reload();
 			cy.wait('@getDate').its('response.statusCode').should('equal', 200);
 			cy.get('#note-0').should('have.value', 'New note');
@@ -126,8 +118,7 @@ describe('diary', () => {
 			// Edit note and blur then refresh.
 			cy.get('#note-0').clear().type('Another note').blur();
 			cy.wait('@putExtra').its('response.statusCode').should('equal', 200);
-			cy.contains('Extra saved successfully.').should('exist');
-			cy.get('.formosa-toast__close').click();
+			cy.closeToast('Extra saved successfully.');
 			cy.reload();
 			cy.wait('@getDate').its('response.statusCode').should('equal', 200);
 			cy.get('#note-0').should('have.value', 'Another note');
@@ -136,8 +127,7 @@ describe('diary', () => {
 			// Edit trackable and press enter then refresh.
 			cy.get('#calories-0').type('100{enter}');
 			cy.wait('@putExtra').its('response.statusCode').should('equal', 200);
-			cy.contains('Extra saved successfully.').should('exist');
-			cy.get('.formosa-toast__close').click();
+			cy.closeToast('Extra saved successfully.');
 			cy.reload();
 			cy.wait('@getDate').its('response.statusCode').should('equal', 200);
 			cy.get('#calories-0').should('have.value', '100');
@@ -146,8 +136,7 @@ describe('diary', () => {
 			// Edit trackable and blur then refresh.
 			cy.get('#calories-0').clear().type('50').blur();
 			cy.wait('@putExtra').its('response.statusCode').should('equal', 200);
-			cy.contains('Extra saved successfully.').should('exist');
-			cy.get('.formosa-toast__close').click();
+			cy.closeToast('Extra saved successfully.');
 			cy.reload();
 			cy.wait('@getDate').its('response.statusCode').should('equal', 200);
 			cy.get('#calories-0').should('have.value', '50');
@@ -156,8 +145,7 @@ describe('diary', () => {
 			// Delete then refresh.
 			cy.get('.button--remove').click();
 			cy.wait('@deleteExtra').its('response.statusCode').should('equal', 204);
-			cy.contains('Extra removed successfully.').should('exist');
-			cy.get('.formosa-toast__close').click();
+			cy.closeToast('Extra removed successfully.');
 			cy.get('#diary-table').should('not.exist');
 			cy.get('#note-0').should('not.exist');
 			cy.reload();
@@ -171,8 +159,7 @@ describe('diary', () => {
 			cy.get('#note').type('Example extra');
 			cy.get('#note + button').click();
 			cy.wait('@postExtra').its('response.statusCode').should('equal', 201);
-			cy.contains('Extra added successfully.').should('exist');
-			cy.get('.formosa-toast__close').click();
+			cy.closeToast('Extra added successfully.');
 			cy.get('#diary-table').should('be.visible');
 			cy.get('#note-0').should('have.value', 'Example extra');
 			cy.reload();
@@ -187,6 +174,7 @@ describe('diary', () => {
 			cy.intercept('POST', '**/api/weights').as('addWeight');
 			cy.intercept('PUT', '**/api/weights/*').as('putWeight');
 			cy.intercept('DELETE', '**/api/weights/*').as('deleteWeight');
+			cy.intercept('GET', '**/api/users/*').as('getUser');
 
 			// Remove weight.
 			cy.visit('/');
@@ -197,68 +185,58 @@ describe('diary', () => {
 						cy.get('#weight').clear();
 						cy.get('#weight-form button').click();
 						cy.wait('@deleteWeight').its('response.statusCode').should('equal', 204);
-						cy.contains('Weight removed successfully.').should('exist');
-						cy.get('.formosa-toast__close').click();
+						cy.closeToast('Weight removed successfully.');
 					}
 				});
 
-			cy.intercept('GET', '**/api/users/**').as('getUser');
-
-			cy.visit('/');
+			cy.reload();
 			cy.wait('@getDate').its('response.statusCode').should('equal', 200);
 			cy.get('#weight').should('have.value', '');
 
 			// Add without weight.
 			cy.get('#weight-form button').click();
-			cy.contains('No changes to save.').should('exist');
-			cy.get('.formosa-toast__close').click();
+			cy.closeToast('No changes to save.');
 
 			// Add with invalid weight.
 			cy.get('#weight').type('a');
 			cy.get('#weight-form button').click();
 			cy.wait('@addWeight').its('response.statusCode').should('equal', 422);
 			cy.get('#weight-error').should('have.text', 'The weight must be a number.');
-			cy.contains('Error.').should('exist');
-			cy.get('.formosa-toast__close').click();
+			cy.closeToast('Error.');
 
 			// Add without weight.
 			cy.get('#weight').clear();
 			cy.get('#weight-form button').click();
 			cy.wait('@addWeight').its('response.statusCode').should('equal', 422);
 			cy.get('#weight-error').should('have.text', 'The weight field is required.');
-			cy.contains('Error.').should('exist');
-			cy.get('.formosa-toast__close').click();
+			cy.closeToast('Error.');
 
 			// Add.
 			cy.get('#weight').type('11');
 			cy.get('#weight-form button').click();
 			cy.wait('@addWeight').its('response.statusCode').should('equal', 201);
-			cy.contains('Weight saved successfully.').should('exist');
-			cy.get('.formosa-toast__close').click();
+			cy.closeToast('Weight saved successfully.');
 
 			// Edit.
 			cy.get('#weight').clear().type('22');
 			cy.get('#weight-form button').click();
 			cy.wait('@putWeight').its('response.statusCode').should('equal', 200);
-			cy.contains('Weight saved successfully.').should('exist');
-			cy.get('.formosa-toast__close').click();
+			cy.closeToast('Weight saved successfully.');
 
 			// Delete.
 			cy.get('#weight').clear();
 			cy.get('#weight-form button').click();
 			cy.wait('@deleteWeight').its('response.statusCode').should('equal', 204);
-			cy.contains('Weight removed successfully.').should('exist');
-			cy.get('.formosa-toast__close').click();
+			cy.closeToast('Weight removed successfully.');
 
 			// Add then refresh.
-			cy.visit('/');
+			cy.reload();
 			cy.wait('@getDate').its('response.statusCode').should('equal', 200);
 			cy.get('#weight').should('have.value', '');
 			cy.get('#weight').type('33');
 			cy.get('#weight-form button').click();
 			cy.wait('@addWeight').its('response.statusCode').should('equal', 201);
-			cy.contains('Weight saved successfully.').should('exist');
-			cy.get('.formosa-toast__close').click();
+			cy.closeToast('Weight saved successfully.');
 			cy.reload();
 			cy.wait('@getDate').its('response.statusCode').should('equal', 200);
 			cy.get('#weight').should('have.value', '33');
@@ -267,43 +245,37 @@ describe('diary', () => {
 			cy.get('#weight').clear().type('44');
 			cy.get('#weight-form button').click();
 			cy.wait('@putWeight').its('response.statusCode').should('equal', 200);
-			cy.contains('Weight saved successfully.').should('exist');
-			cy.get('.formosa-toast__close').click();
+			cy.closeToast('Weight saved successfully.');
 			cy.reload();
 			cy.wait('@getDate').its('response.statusCode').should('equal', 200);
 			cy.get('#weight').should('have.value', '44');
 			cy.get('#weight-form button').click();
-			cy.contains('No changes to save.').should('exist');
-			cy.get('.formosa-toast__close').click();
+			cy.closeToast('No changes to save.');
 
 			// Delete then refresh.
 			cy.get('#weight').clear();
 			cy.get('#weight-form button').click();
 			cy.wait('@deleteWeight').its('response.statusCode').should('equal', 204);
-			cy.contains('Weight removed successfully.').should('exist');
-			cy.get('.formosa-toast__close').click();
+			cy.closeToast('Weight removed successfully.');
 			cy.reload();
 			cy.wait('@getDate').its('response.statusCode').should('equal', 200);
 			cy.get('#weight').should('have.value', '');
 
 			// Add then delete then add.
-			cy.visit('/');
+			cy.reload();
 			cy.wait('@getDate').its('response.statusCode').should('equal', 200);
 			cy.get('#weight').type('55');
 			cy.get('#weight-form button').click();
 			cy.wait('@addWeight').its('response.statusCode').should('equal', 201);
-			cy.contains('Weight saved successfully.').should('exist');
-			cy.get('.formosa-toast__close').click();
+			cy.closeToast('Weight saved successfully.');
 			cy.get('#weight').clear();
 			cy.get('#weight-form button').click();
 			cy.wait('@deleteWeight').its('response.statusCode').should('equal', 204);
-			cy.contains('Weight removed successfully.').should('exist');
-			cy.get('.formosa-toast__close').click();
+			cy.closeToast('Weight removed successfully.');
 			cy.get('#weight').type('66');
 			cy.get('#weight-form button').click();
 			cy.wait('@addWeight').its('response.statusCode').should('equal', 201);
-			cy.contains('Weight saved successfully.').should('exist');
-			cy.get('.formosa-toast__close').click();
+			cy.closeToast('Weight saved successfully.');
 			cy.reload();
 			cy.wait('@getDate').its('response.statusCode').should('equal', 200);
 			cy.get('#weight').should('have.value', '66');
@@ -320,8 +292,7 @@ describe('diary', () => {
 			cy.get('#weight').clear();
 			cy.get('#weight-form button').click();
 			cy.wait('@deleteWeight').its('response.statusCode').should('equal', 204);
-			cy.contains('Weight removed successfully.').should('exist');
-			cy.get('.formosa-toast__close').click();
+			cy.closeToast('Weight removed successfully.');
 			cy.get('.nav__link').contains('Profile').click();
 			cy.wait('@getUser').its('response.statusCode').should('equal', 200);
 			cy.get('[id="weight.weight"]').should('have.value', '');
@@ -333,8 +304,7 @@ describe('diary', () => {
 			cy.get('#weight').type('77');
 			cy.get('#weight-form button').click();
 			cy.wait('@addWeight').its('response.statusCode').should('equal', 201);
-			cy.contains('Weight saved successfully.').should('exist');
-			cy.get('.formosa-toast__close').click();
+			cy.closeToast('Weight saved successfully.');
 			cy.reload();
 			cy.wait('@getDate').its('response.statusCode').should('equal', 200);
 			cy.get('#weight').should('have.value', '77');
@@ -356,7 +326,7 @@ describe('diary', () => {
 				cy.createFood(`Bar ${timestamp}`, 1, {}, false);
 
 				// With option checked.
-				cy.visit('/');
+				cy.reload();
 				cy.get('#search-favourites').should('not.be.checked');
 				cy.get('#search-favourites').check();
 				cy.get('#food').type(`Foo ${timestamp}`);
@@ -365,7 +335,7 @@ describe('diary', () => {
 				cy.get('.formosa-autocomplete__option__button').should('not.exist');
 
 				// With option unchecked.
-				cy.visit('/');
+				cy.reload();
 				cy.get('#search-favourites').should('be.checked');
 				cy.get('#search-favourites').uncheck();
 				cy.get('#food').type(`Foo ${timestamp}`);
@@ -381,8 +351,8 @@ describe('diary', () => {
 
 				cy.intercept('GET', '**/api/date?**').as('getDate');
 				cy.intercept('POST', '**/api/entries').as('postEntry');
-				cy.intercept('PUT', '**/api/entries/**').as('putEntry');
-				cy.intercept('DELETE', '**/api/entries/**').as('deleteEntry');
+				cy.intercept('PUT', '**/api/entries/*').as('putEntry');
+				cy.intercept('DELETE', '**/api/entries/*').as('deleteEntry');
 
 				// Ensure calories is in trackables.
 				cy.setTrackables(['calories']);
@@ -398,8 +368,7 @@ describe('diary', () => {
 				cy.get('#food').type(`Foo ${timestamp}`);
 				cy.get('.formosa-autocomplete__option__button').contains(`Foo ${timestamp}`).click();
 				cy.wait('@postEntry').its('response.statusCode').should('equal', 201);
-				cy.contains('Food added successfully.').should('exist');
-				cy.get('.formosa-toast__close').click();
+				cy.closeToast('Food added successfully.');
 				cy.get('#diary-table').should('be.visible');
 				cy.get('#user_serving_size-0').should('have.value', '2');
 				cy.get('.entry .column--calories').should('have.text', '100');
@@ -408,8 +377,7 @@ describe('diary', () => {
 				// Edit serving size and press enter.
 				cy.get('#user_serving_size-0').clear().type('1{enter}');
 				cy.wait('@putEntry').its('response.statusCode').should('equal', 200);
-				cy.contains('Entry saved successfully.').should('exist');
-				cy.get('.formosa-toast__close').click();
+				cy.closeToast('Entry saved successfully.');
 				cy.get('#user_serving_size-0').should('have.value', '1');
 				cy.get('.entry .column--calories').should('have.text', '50');
 				cy.get('.column-total--calories').should('have.text', '50');
@@ -417,8 +385,7 @@ describe('diary', () => {
 				// Edit serving size and blur.
 				cy.get('#user_serving_size-0').clear().type('.5').blur();
 				cy.wait('@putEntry').its('response.statusCode').should('equal', 200);
-				cy.contains('Entry saved successfully.').should('exist');
-				cy.get('.formosa-toast__close').click();
+				cy.closeToast('Entry saved successfully.');
 				cy.get('#user_serving_size-0').should('have.value', '.5');
 				cy.get('.entry .column--calories').should('have.text', '25');
 				cy.get('.column-total--calories').should('have.text', '25');
@@ -426,20 +393,18 @@ describe('diary', () => {
 				// Delete.
 				cy.get('.button--remove').click();
 				cy.wait('@deleteEntry').its('response.statusCode').should('equal', 204);
-				cy.contains('Food removed successfully.').should('exist');
-				cy.get('.formosa-toast__close').click();
+				cy.closeToast('Food removed successfully.');
 				cy.get('#diary-table').should('not.exist');
 				cy.get('#user_serving_size-0').should('not.exist');
 
 				// Add then refresh.
-				cy.visit('/');
+				cy.reload();
 				cy.wait('@getDate').its('response.statusCode').should('equal', 200);
 				cy.get('#diary-table').should('not.exist');
 				cy.get('#food').type(`Foo ${timestamp}`);
 				cy.get('.formosa-autocomplete__option__button').contains(`Foo ${timestamp}`).click();
 				cy.wait('@postEntry').its('response.statusCode').should('equal', 201);
-				cy.contains('Food added successfully.').should('exist');
-				cy.get('.formosa-toast__close').click();
+				cy.closeToast('Food added successfully.');
 				cy.reload();
 				cy.wait('@getDate').its('response.statusCode').should('equal', 200);
 				cy.get('#diary-table').should('be.visible');
@@ -450,8 +415,7 @@ describe('diary', () => {
 				// Edit serving size and press enter then refresh.
 				cy.get('#user_serving_size-0').clear().type('1{enter}');
 				cy.wait('@putEntry').its('response.statusCode').should('equal', 200);
-				cy.contains('Entry saved successfully.').should('exist');
-				cy.get('.formosa-toast__close').click();
+				cy.closeToast('Entry saved successfully.');
 				cy.reload();
 				cy.wait('@getDate').its('response.statusCode').should('equal', 200);
 				cy.get('#user_serving_size-0').should('have.value', '1');
@@ -461,8 +425,7 @@ describe('diary', () => {
 				// Edit serving size and blur then refresh.
 				cy.get('#user_serving_size-0').clear().type('.5').blur();
 				cy.wait('@putEntry').its('response.statusCode').should('equal', 200);
-				cy.contains('Entry saved successfully.').should('exist');
-				cy.get('.formosa-toast__close').click();
+				cy.closeToast('Entry saved successfully.');
 				cy.reload();
 				cy.wait('@getDate').its('response.statusCode').should('equal', 200);
 				cy.get('#user_serving_size-0').should('have.value', '0.5');
@@ -472,8 +435,7 @@ describe('diary', () => {
 				// Delete then refresh.
 				cy.get('.button--remove').click();
 				cy.wait('@deleteEntry').its('response.statusCode').should('equal', 204);
-				cy.contains('Food removed successfully.').should('exist');
-				cy.get('.formosa-toast__close').click();
+				cy.closeToast('Food removed successfully.');
 				cy.reload();
 				cy.wait('@getDate').its('response.statusCode').should('equal', 200);
 				cy.get('#diary-table').should('not.exist');
@@ -486,8 +448,7 @@ describe('diary', () => {
 				cy.get('#food').type(`Foo ${timestamp}`);
 				cy.get('.formosa-autocomplete__option__button').contains(`Foo ${timestamp}`).click();
 				cy.wait('@postEntry').its('response.statusCode').should('equal', 201);
-				cy.contains('Food added successfully.').should('exist');
-				cy.get('.formosa-toast__close').click();
+				cy.closeToast('Food added successfully.');
 				cy.reload();
 				cy.wait('@getDate').its('response.statusCode').should('equal', 200);
 				cy.get('#diary-table').should('be.visible');

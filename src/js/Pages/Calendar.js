@@ -24,11 +24,12 @@ export default function Calendar() {
 		}
 
 		Api.get(`calendar/${date}`)
+			.catch((response) => {
+				setError(response);
+				throw response;
+			})
 			.then((response) => {
 				setMonths(response);
-			})
-			.catch((response) => {
-				setError(response.status);
 			});
 	};
 
@@ -45,7 +46,7 @@ export default function Calendar() {
 
 	if (error) {
 		return (
-			<Error status={error} />
+			<Error error={error} />
 		);
 	}
 

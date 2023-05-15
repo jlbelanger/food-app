@@ -4,6 +4,7 @@ import Auth from '../../Utilities/Auth';
 import Error from '../../Error';
 import MetaTitle from '../../Components/MetaTitle';
 import Modal from '../../Components/Modal';
+import { useHistory } from 'react-router-dom';
 import UserBmi from '../../Components/UserBmi';
 import UserChangeEmail from '../../Components/UserChangeEmail';
 import UserChangePassword from '../../Components/UserChangePassword';
@@ -17,32 +18,35 @@ export default function Edit() {
 	const [row, setRow] = useState(null);
 	const [error, setError] = useState(false);
 	const [showModal, setShowModal] = useState(false);
+	const history = useHistory();
 
 	const onClickDelete = () => {
 		setShowModal(false);
 		Api.delete(`users/${row.id}`)
-			.then(() => {
-				Auth.logout();
-			})
 			.catch((response) => {
 				const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
 				addToast(text, 'error', 10000);
+				throw response;
+			})
+			.then(() => {
+				Auth.logout(history);
 			});
 	};
 
 	useEffect(() => {
 		Api.get(`users/${id}?fields[trackables]=name,slug&include=trackables`)
+			.catch((response) => {
+				setError(response);
+				throw response;
+			})
 			.then((response) => {
 				setRow(response);
-			})
-			.catch((response) => {
-				setError(response.status);
 			});
 	}, [id]);
 
 	if (error) {
 		return (
-			<Error status={error} />
+			<Error error={error} />
 		);
 	}
 

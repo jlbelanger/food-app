@@ -34,20 +34,22 @@ export default function Edit() {
 
 	useEffect(() => {
 		Api.get(`meals/${id}?${mealParams}`)
+			.catch((response) => {
+				setError(response);
+				throw response;
+			})
 			.then((response) => {
 				setRow(response);
-			})
-			.catch((response) => {
-				setError(response.status);
 			});
 
 		Api.get(`food?fields[food]=${foodFields.concat(['is_favourite']).join(',')}`)
+			.catch((response) => {
+				setErrorFood(response.status);
+				throw response;
+			})
 			.then((response) => {
 				setAllFood(response);
 				setFavouriteFood(response.filter((r) => (r.is_favourite)));
-			})
-			.catch((response) => {
-				setErrorFood(response.status);
 			});
 
 		if (Auth.hasTrackables()) {
@@ -60,7 +62,7 @@ export default function Edit() {
 
 	if (error) {
 		return (
-			<Error status={error} />
+			<Error error={error} />
 		);
 	}
 
@@ -81,26 +83,28 @@ export default function Edit() {
 		};
 
 		Api.put(`meals/${id}`, JSON.stringify(body))
-			.then(() => {
-				setRow({ ...row, is_favourite: isFavourite });
-				addToast(`Meal ${isFavourite ? '' : 'un'}favourited successfully.`, 'success');
-			})
 			.catch((response) => {
 				const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
 				addToast(text, 'error', 10000);
+				throw response;
+			})
+			.then(() => {
+				setRow({ ...row, is_favourite: isFavourite });
+				addToast(`Meal ${isFavourite ? '' : 'un'}favourited successfully.`, 'success');
 			});
 	};
 
 	const deleteRow = () => {
 		setShowModal(false);
 		Api.delete(`meals/${id}`)
-			.then(() => {
-				addToast('Meal deleted successfully.', 'success');
-				history.push('/meals');
-			})
 			.catch((response) => {
 				const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
 				addToast(text, 'error', 10000);
+				throw response;
+			})
+			.then(() => {
+				addToast('Meal deleted successfully.', 'success');
+				history.push('/meals');
 			});
 	};
 

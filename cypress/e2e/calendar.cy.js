@@ -6,7 +6,7 @@ describe('calendar', () => {
 
 	describe('navigation', () => {
 		it('works', () => {
-			cy.intercept('GET', '**/api/calendar/**').as('getCalendar');
+			cy.intercept('GET', '**/api/calendar/*').as('getCalendar');
 
 			cy.visit('/calendar');
 			cy.wait('@getCalendar').its('response.statusCode').should('equal', 200);

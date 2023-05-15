@@ -9,23 +9,25 @@ export default function DiaryMeals({ date, entries, foodFields, setEntries }) {
 
 	useEffect(() => {
 		Api.get('meals?fields[meals]=name&filter[is_favourite][eq]=1&sort=name')
+			.catch((response) => {
+				setError(response);
+				throw response;
+			})
 			.then((response) => {
 				setMeals(response);
-			})
-			.catch(() => {
-				setError(true);
 			});
 	}, []);
 
 	const addMeal = (e) => {
 		Api.post(`meals/${e.target.getAttribute('data-id')}/add`, JSON.stringify({ date, fields: foodFields }))
-			.then((response) => {
-				addToast('Meal added successfully.', 'success');
-				setEntries([...entries].concat(response));
-			})
 			.catch((response) => {
 				const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
 				addToast(text, 'error', 10000);
+				throw response;
+			})
+			.then((response) => {
+				addToast('Meal added successfully.', 'success');
+				setEntries([...entries].concat(response));
 			});
 	};
 

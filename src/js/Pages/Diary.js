@@ -48,14 +48,15 @@ export default function Diary() {
 		url += '&include=food';
 
 		Api.get(url)
+			.catch((response) => {
+				setError(response);
+				throw response;
+			})
 			.then((response) => {
 				const w = Api.deserialize(response.weights);
 				setEntries(Api.deserialize(response.entries));
 				setExtras(Api.deserialize(response.extras));
 				setWeight(w.length > 0 ? w[0] : { date });
-			})
-			.catch(() => {
-				setError(true);
 			});
 	};
 
@@ -68,12 +69,13 @@ export default function Diary() {
 		}
 
 		Api.get(`food?fields[food]=${foodFields.concat(['is_favourite']).join(',')}`)
+			.catch((response) => {
+				setFoodError(true);
+				throw response;
+			})
 			.then((response) => {
 				setFood(response);
 				setFavouriteFood(response.filter((r) => (r.is_favourite)));
-			})
-			.catch(() => {
-				setFoodError(true);
 			});
 
 		getEntries(currentDate);
@@ -98,31 +100,33 @@ export default function Diary() {
 
 	const deleteEntry = (e) => {
 		Api.delete(`entries/${e.target.getAttribute('data-id')}`)
+			.catch((response) => {
+				const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
+				addToast(text, 'error', 10000);
+				throw response;
+			})
 			.then(() => {
 				addToast('Food removed successfully.', 'success');
 
 				const newEntries = [...entries];
 				newEntries.splice(e.target.getAttribute('data-index'), 1);
 				setEntries(newEntries);
-			})
-			.catch((response) => {
-				const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
-				addToast(text, 'error', 10000);
 			});
 	};
 
 	const deleteExtra = (e) => {
 		Api.delete(`extras/${e.target.getAttribute('data-id')}`)
+			.catch((response) => {
+				const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
+				addToast(text, 'error', 10000);
+				throw response;
+			})
 			.then(() => {
 				addToast('Extra removed successfully.', 'success');
 
 				const newExtras = [...extras];
 				newExtras.splice(e.target.getAttribute('data-index'), 1);
 				setExtras(newExtras);
-			})
-			.catch((response) => {
-				const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
-				addToast(text, 'error', 10000);
 			});
 	};
 

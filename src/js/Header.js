@@ -1,23 +1,24 @@
 import { Api, FormosaContext } from '@jlbelanger/formosa';
-import { Link, NavLink, useLocation } from 'react-router-dom';
+import { Link, NavLink, useHistory, useLocation } from 'react-router-dom';
 import React, { useContext } from 'react';
 import Auth from './Utilities/Auth';
 
 export default function Header() {
 	const { addToast } = useContext(FormosaContext);
 	const location = useLocation();
+	const history = useHistory();
 
 	const logout = () => {
 		Api.delete('auth/logout')
-			.then(() => {
-				Auth.logout();
-			})
 			.catch((response) => {
-				if (response.status === 401 || response.status === 404) {
-					Auth.logout();
+				if (response.status === 401) {
 					return;
 				}
 				addToast('Error.', 'error');
+				throw response;
+			})
+			.then(() => {
+				Auth.logout(history);
 			});
 	};
 

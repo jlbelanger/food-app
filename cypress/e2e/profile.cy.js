@@ -10,8 +10,8 @@ describe('profile', () => {
 				cy.setWeight('130.5');
 				cy.clearBmiSettings();
 
-				cy.intercept('GET', '**/api/users/**').as('getUser');
-				cy.intercept('PUT', '**/api/users/**').as('putUser');
+				cy.intercept('GET', '**/api/users/*').as('getUser');
+				cy.intercept('PUT', '**/api/users/*').as('putUser');
 
 				cy.visit('/profile');
 				cy.wait('@getUser').its('response.statusCode').should('equal', 200);
@@ -27,8 +27,7 @@ describe('profile', () => {
 				cy.get('[name="height"]').clear().type('65');
 				cy.get('#save-bmi').click();
 				cy.wait('@putUser').its('response.statusCode').should('equal', 200);
-				cy.contains('BMI settings updated successfully.').should('exist');
-				cy.get('.formosa-toast__close').click();
+				cy.closeToast('BMI settings updated successfully.');
 				cy.get('#bmi').invoke('text').should('equal', 'Your BMI is 21.71 (normal - 18.5–24.9).');
 				cy.get('#calories').should('not.exist');
 			});
@@ -39,8 +38,8 @@ describe('profile', () => {
 				cy.setWeight('130.5');
 				cy.clearBmiSettings();
 
-				cy.intercept('GET', '**/api/users/**').as('getUser');
-				cy.intercept('PUT', '**/api/users/**').as('putUser');
+				cy.intercept('GET', '**/api/users/*').as('getUser');
+				cy.intercept('PUT', '**/api/users/*').as('putUser');
 
 				cy.visit('/profile');
 				cy.wait('@getUser').its('response.statusCode').should('equal', 200);
@@ -56,8 +55,7 @@ describe('profile', () => {
 				cy.get('[name="height"]').clear().type('65');
 				cy.get('#save-bmi').click();
 				cy.wait('@putUser').its('response.statusCode').should('equal', 200);
-				cy.contains('BMI settings updated successfully.').should('exist');
-				cy.get('.formosa-toast__close').click();
+				cy.closeToast('BMI settings updated successfully.');
 				cy.get('#bmi').invoke('text').should('equal', 'Your BMI is 21.71 (normal - 18.5–24.9).');
 				cy.get('#calories').invoke('text').should('equal', 'You should be eating 2,132 calories a day to maintain your current weight.'
 				+ 'You should not consume any less than 1,500 calories per day.'
@@ -79,8 +77,7 @@ describe('profile', () => {
 				cy.get('[name="height"]').clear();
 				cy.get('#save-bmi').click();
 				cy.wait('@putUser').its('response.statusCode').should('equal', 200);
-				cy.contains('BMI settings updated successfully.').should('exist');
-				cy.get('.formosa-toast__close').click();
+				cy.closeToast('BMI settings updated successfully.');
 				cy.get('#bmi').should('not.exist');
 				cy.get('#calories').should('not.exist');
 			});
@@ -90,11 +87,11 @@ describe('profile', () => {
 	describe('when updating trackable settings', () => {
 		it('works', () => {
 			cy.intercept('GET', '**/api/trackables?').as('getTrackables');
-			cy.intercept('GET', '**/api/users/**').as('getUser');
+			cy.intercept('GET', '**/api/users/*').as('getUser');
 			cy.intercept('GET', '**/api/meals?**').as('getMeals');
 			cy.intercept('GET', '**/api/food?**').as('getFoods');
 			cy.intercept('GET', '**/api/meals**').as('getMeal');
-			cy.intercept('PUT', '**/api/users/**').as('putUser');
+			cy.intercept('PUT', '**/api/users/*').as('putUser');
 			cy.intercept('POST', '**/api/entries').as('postEntry');
 
 			const timestamp = (new Date()).getTime();
@@ -113,8 +110,7 @@ describe('profile', () => {
 			cy.get('#trackable-calories').check();
 			cy.get('#save-tracking').click();
 			cy.wait('@putUser').its('response.statusCode').should('equal', 200);
-			cy.contains('Tracking settings updated successfully.').should('exist');
-			cy.get('.formosa-toast__close').click();
+			cy.closeToast('Tracking settings updated successfully.');
 
 			// Add more trackables.
 			cy.visit('/profile');
@@ -128,8 +124,7 @@ describe('profile', () => {
 			cy.get('#trackable-sodium').check();
 			cy.get('#save-tracking').click();
 			cy.wait('@putUser').its('response.statusCode').should('equal', 200);
-			cy.contains('Tracking settings updated successfully.').should('exist');
-			cy.get('.formosa-toast__close').click();
+			cy.closeToast('Tracking settings updated successfully.');
 
 			// Remove one trackable.
 			cy.visit('/profile');
@@ -142,8 +137,7 @@ describe('profile', () => {
 			cy.get('#trackable-calories').uncheck();
 			cy.get('#save-tracking').click();
 			cy.wait('@putUser').its('response.statusCode').should('equal', 200);
-			cy.contains('Tracking settings updated successfully.').should('exist');
-			cy.get('.formosa-toast__close').click();
+			cy.closeToast('Tracking settings updated successfully.');
 
 			// Create food and meal.
 			cy.createFood(`Foo ${timestamp}`, 1);
@@ -171,8 +165,7 @@ describe('profile', () => {
 			cy.get('.table-heading').contains('Fat').should('not.exist');
 			cy.get('.formosa-button--danger').contains('Delete').click();
 			cy.get('dialog .formosa-button--danger').contains('Delete').click();
-			cy.contains('Meal deleted successfully.').should('exist');
-			cy.get('.formosa-toast__close').click();
+			cy.closeToast('Meal deleted successfully.');
 
 			// Check columns on diary.
 			cy.get('.nav__link').contains('Diary').click();
@@ -180,8 +173,7 @@ describe('profile', () => {
 			cy.get('#food').type(`Foo ${timestamp}`);
 			cy.get('.formosa-autocomplete__option__button').contains(`Foo ${timestamp}`).click();
 			cy.wait('@postEntry').its('response.statusCode').should('equal', 201);
-			cy.contains('Food added successfully.').should('exist');
-			cy.get('.formosa-toast__close').click();
+			cy.closeToast('Food added successfully.');
 			cy.get('.table-heading').contains('Calories').should('not.exist');
 			cy.get('.table-heading').contains('Protein').should('exist');
 			cy.get('.table-heading').contains('Sodium').should('exist');
@@ -199,8 +191,7 @@ describe('profile', () => {
 			cy.get('#trackable-fat').check();
 			cy.get('#save-tracking').click();
 			cy.wait('@putUser').its('response.statusCode').should('equal', 200);
-			cy.contains('Tracking settings updated successfully.').should('exist');
-			cy.get('.formosa-toast__close').click();
+			cy.closeToast('Tracking settings updated successfully.');
 
 			// Remove all trackables.
 			cy.visit('/profile');
@@ -214,8 +205,7 @@ describe('profile', () => {
 			cy.get('#trackable-fat').uncheck();
 			cy.get('#save-tracking').click();
 			cy.wait('@putUser').its('response.statusCode').should('equal', 200);
-			cy.contains('Tracking settings updated successfully.').should('exist');
-			cy.get('.formosa-toast__close').click();
+			cy.closeToast('Tracking settings updated successfully.');
 
 			// Check trackables.
 			cy.visit('/profile');
@@ -231,45 +221,46 @@ describe('profile', () => {
 	describe('when changing username', () => {
 		describe('with taken username', () => {
 			it('shows an error', () => {
-				cy.intercept('GET', '**/api/users/**').as('getUser');
+				cy.intercept('GET', '**/api/users/*').as('getUser');
+				cy.intercept('PUT', '**/api/users/*').as('putUser');
+
 				cy.visit('/profile');
 				cy.wait('@getUser').its('response.statusCode').should('equal', 200);
 				cy.get('[name="username"]').clear().type(Cypress.env('taken_username'));
-				cy.intercept('PUT', '**/api/users/*').as('putUser');
 				cy.get('button').contains('Change username').click();
 				cy.wait('@putUser').its('response.statusCode').should('equal', 422);
+				cy.closeToast('Error.');
 				cy.get('#username-error').invoke('text').should('equal', 'The username has already been taken.');
 				cy.reload();
+				cy.wait('@getUser').its('response.statusCode').should('equal', 200);
 				cy.get(`[name="username"][value="${Cypress.env('default_username')}"]`).should('exist');
 			});
 		});
 
 		describe('with valid input', () => {
 			it('works', () => {
-				cy.intercept('GET', '**/api/users/**').as('getUser');
+				cy.intercept('GET', '**/api/users/*').as('getUser');
+				cy.intercept('PUT', '**/api/users/*').as('putUser');
 
 				// Change.
 				const name = `${Cypress.env('default_username')}2`;
 				cy.visit('/profile');
 				cy.wait('@getUser').its('response.statusCode').should('equal', 200);
 				cy.get('[name="username"]').clear().type(name);
-				cy.intercept('PUT', '**/api/users/*').as('putUser');
 				cy.get('button').contains('Change username').click();
 				cy.wait('@putUser').its('response.statusCode').should('equal', 200);
-				cy.contains('Username changed successfully.').should('exist');
-				cy.get('.formosa-toast__close').click();
+				cy.closeToast('Username changed successfully.');
 				cy.reload();
+				cy.wait('@getUser').its('response.statusCode').should('equal', 200);
 				cy.get(`[name="username"][value="${name}"]`).should('exist');
 
 				// Change back.
-				cy.visit('/profile');
-				cy.wait('@getUser').its('response.statusCode').should('equal', 200);
 				cy.get('[name="username"]').clear().type(Cypress.env('default_username'));
 				cy.get('button').contains('Change username').click();
 				cy.wait('@putUser').its('response.statusCode').should('equal', 200);
-				cy.contains('Username changed successfully.').should('exist');
-				cy.get('.formosa-toast__close').click();
+				cy.closeToast('Username changed successfully.');
 				cy.reload();
+				cy.wait('@getUser').its('response.statusCode').should('equal', 200);
 				cy.get(`[name="username"][value="${Cypress.env('default_username')}"]`).should('exist');
 			});
 		});
@@ -278,40 +269,46 @@ describe('profile', () => {
 	describe('when changing email', () => {
 		describe('with taken email', () => {
 			it('shows an error', () => {
-				cy.intercept('GET', '**/api/users/**').as('getUser');
+				cy.intercept('GET', '**/api/users/*').as('getUser');
+				cy.intercept('PUT', '**/api/users/*/change-email').as('changeEmail');
+
 				cy.visit('/profile');
 				cy.wait('@getUser').its('response.statusCode').should('equal', 200);
 				cy.get('[name="email"]').clear().type(Cypress.env('taken_email'));
 				cy.get('#current-password-email').clear().type(Cypress.env('default_password'));
-				cy.intercept('PUT', '**/api/users/*/change-email').as('changeEmail');
 				cy.get('button').contains('Change email').click();
 				cy.wait('@changeEmail').its('response.statusCode').should('equal', 422);
+				cy.closeToast('Error.');
 				cy.get('#email-error').invoke('text').should('equal', 'The email has already been taken.');
 				cy.reload();
+				cy.wait('@getUser').its('response.statusCode').should('equal', 200);
 				cy.get(`[name="email"][value="${Cypress.env('default_email')}"]`).should('exist');
 			});
 		});
 
 		describe('with invalid current password', () => {
 			it('shows an error', () => {
-				cy.intercept('GET', '**/api/users/**').as('getUser');
-				const email = `${Cypress.env('default_email')}2`;
+				cy.intercept('GET', '**/api/users/*').as('getUser');
+				cy.intercept('PUT', '**/api/users/*/change-email').as('changeEmail');
+
 				cy.visit('/profile');
 				cy.wait('@getUser').its('response.statusCode').should('equal', 200);
-				cy.get('[name="email"]').clear().type(email);
+				cy.get('[name="email"]').clear().type(`${Cypress.env('default_email')}2`);
 				cy.get('#current-password-email').clear().type('wrongpassword');
-				cy.intercept('PUT', '**/api/users/*/change-email').as('changeEmail');
 				cy.get('button').contains('Change email').click();
 				cy.wait('@changeEmail').its('response.statusCode').should('equal', 422);
+				cy.closeToast('Error.');
 				cy.get('#current-password-email-error').invoke('text').should('equal', 'Current password is incorrect.');
 				cy.reload();
+				cy.wait('@getUser').its('response.statusCode').should('equal', 200);
 				cy.get(`[name="email"][value="${Cypress.env('default_email')}"]`).should('exist');
 			});
 		});
 
 		describe('with valid input', () => {
 			it('works', () => {
-				cy.intercept('GET', '**/api/users/**').as('getUser');
+				cy.intercept('GET', '**/api/users/*').as('getUser');
+				cy.intercept('PUT', '**/api/users/*/change-email').as('changeEmail');
 
 				// Change.
 				const email = `${Cypress.env('default_email')}2`;
@@ -319,24 +316,21 @@ describe('profile', () => {
 				cy.wait('@getUser').its('response.statusCode').should('equal', 200);
 				cy.get('[name="email"]').clear().type(email);
 				cy.get('#current-password-email').clear().type(Cypress.env('default_password'));
-				cy.intercept('PUT', '**/api/users/*/change-email').as('changeEmail');
 				cy.get('button').contains('Change email').click();
 				cy.wait('@changeEmail').its('response.statusCode').should('equal', 204);
-				cy.contains('Email changed successfully.').should('exist');
-				cy.get('.formosa-toast__close').click();
+				cy.closeToast('Email changed successfully.');
 				cy.reload();
+				cy.wait('@getUser').its('response.statusCode').should('equal', 200);
 				cy.get(`[name="email"][value="${email}"]`).should('exist');
 
 				// Change back.
-				cy.visit('/profile');
-				cy.wait('@getUser').its('response.statusCode').should('equal', 200);
 				cy.get('[name="email"]').clear().type(Cypress.env('default_email'));
 				cy.get('#current-password-email').clear().type(Cypress.env('default_password'));
 				cy.get('button').contains('Change email').click();
 				cy.wait('@changeEmail').its('response.statusCode').should('equal', 204);
-				cy.contains('Email changed successfully.').should('exist');
-				cy.get('.formosa-toast__close').click();
+				cy.closeToast('Email changed successfully.');
 				cy.reload();
+				cy.wait('@getUser').its('response.statusCode').should('equal', 200);
 				cy.get(`[name="email"][value="${Cypress.env('default_email')}"]`).should('exist');
 			});
 		});
@@ -345,25 +339,26 @@ describe('profile', () => {
 	describe('when changing password', () => {
 		describe('with non-matching passwords', () => {
 			it('shows an error', () => {
-				cy.intercept('GET', '**/api/users/**').as('getUser');
+				cy.intercept('GET', '**/api/users/*').as('getUser');
+				cy.intercept('PUT', '**/api/users/*/change-password').as('changePassword');
 
 				// Change.
-				const password = `${Cypress.env('default_password')}2`;
 				cy.visit('/profile');
 				cy.wait('@getUser').its('response.statusCode').should('equal', 200);
-				cy.get('#new_password').clear().type(password);
+				cy.get('#new_password').clear().type(`${Cypress.env('default_password')}2`);
 				cy.get('#new_password_confirmation').clear().type('somethingelse');
 				cy.get('#current-password-password').clear().type(Cypress.env('default_password'));
-				cy.intercept('PUT', '**/api/users/*/change-password').as('changePassword');
 				cy.get('button').contains('Change password').click();
 				cy.wait('@changePassword').its('response.statusCode').should('equal', 422);
+				cy.closeToast('Error.');
 				cy.get('#new_password-error').invoke('text').should('equal', 'The new password confirmation does not match.');
 			});
 		});
 
 		describe('with invalid current password', () => {
 			it('shows an error', () => {
-				cy.intercept('GET', '**/api/users/**').as('getUser');
+				cy.intercept('GET', '**/api/users/*').as('getUser');
+				cy.intercept('PUT', '**/api/users/*/change-password').as('changePassword');
 
 				// Change.
 				const password = `${Cypress.env('default_password')}2`;
@@ -372,16 +367,17 @@ describe('profile', () => {
 				cy.get('#new_password').clear().type(password);
 				cy.get('#new_password_confirmation').clear().type(password);
 				cy.get('#current-password-password').clear().type('wrongpassword');
-				cy.intercept('PUT', '**/api/users/*/change-password').as('changePassword');
 				cy.get('button').contains('Change password').click();
 				cy.wait('@changePassword').its('response.statusCode').should('equal', 422);
+				cy.closeToast('Error.');
 				cy.get('#current-password-password-error').invoke('text').should('equal', 'Current password is incorrect.');
 			});
 		});
 
 		describe('with valid input', () => {
 			it('works', () => {
-				cy.intercept('GET', '**/api/users/**').as('getUser');
+				cy.intercept('GET', '**/api/users/*').as('getUser');
+				cy.intercept('PUT', '**/api/users/*/change-password').as('changePassword');
 
 				// Change.
 				const password = `${Cypress.env('default_password')}2`;
@@ -390,22 +386,19 @@ describe('profile', () => {
 				cy.get('#new_password').clear().type(password);
 				cy.get('#new_password_confirmation').clear().type(password);
 				cy.get('#current-password-password').clear().type(Cypress.env('default_password'));
-				cy.intercept('PUT', '**/api/users/*/change-password').as('changePassword');
 				cy.get('button').contains('Change password').click();
 				cy.wait('@changePassword').its('response.statusCode').should('equal', 204);
-				cy.contains('Password changed successfully.').should('exist');
-				cy.get('.formosa-toast__close').click();
+				cy.closeToast('Password changed successfully.');
 
 				// Change back.
-				cy.visit('/profile');
+				cy.reload();
 				cy.wait('@getUser').its('response.statusCode').should('equal', 200);
 				cy.get('#new_password').clear().type(Cypress.env('default_password'));
 				cy.get('#new_password_confirmation').clear().type(Cypress.env('default_password'));
 				cy.get('#current-password-password').clear().type(password);
 				cy.get('button').contains('Change password').click();
 				cy.wait('@changePassword').its('response.statusCode').should('equal', 204);
-				cy.contains('Password changed successfully.').should('exist');
-				cy.get('.formosa-toast__close').click();
+				cy.closeToast('Password changed successfully.');
 			});
 		});
 	});
@@ -434,9 +427,10 @@ describe('profile', () => {
 			cy.get('[name="username"]').clear().type('newdemousername');
 			cy.get('button').contains('Change username').click();
 			cy.wait('@putUser').its('response.statusCode').should('equal', 422);
-			cy.get('.formosa-toast').contains('Error.').should('exist');
-			cy.contains('The username cannot be changed.').should('exist');
+			cy.closeToast('Error.');
+			cy.get('#username-error').invoke('text').should('equal', 'The username cannot be changed.');
 			cy.reload();
+			cy.wait('@getUser').its('response.statusCode').should('equal', 200);
 			cy.get('[name="username"]').should('have.value', Cypress.env('demo_username'));
 
 			// Change email.
@@ -444,9 +438,10 @@ describe('profile', () => {
 			cy.get('#current-password-email').clear().type(Cypress.env('demo_password'));
 			cy.get('button').contains('Change email').click();
 			cy.wait('@changeEmail').its('response.statusCode').should('equal', 403);
-			cy.get('.formosa-toast').contains('Error.').should('exist');
-			cy.contains('You do not have permission to update this record.').should('exist');
+			cy.closeToast('Error.');
+			cy.get('.formosa-message').invoke('text').should('equal', 'You do not have permission to update this record.');
 			cy.reload();
+			cy.wait('@getUser').its('response.statusCode').should('equal', 200);
 			cy.get('[name="email"]').should('have.value', Cypress.env('demo_email'));
 
 			// Change password.
@@ -456,8 +451,8 @@ describe('profile', () => {
 			cy.get('#current-password-password').clear().type(Cypress.env('demo_password'));
 			cy.get('button').contains('Change password').click();
 			cy.wait('@changePassword').its('response.statusCode').should('equal', 403);
-			cy.get('.formosa-toast').contains('Error.').should('exist');
-			cy.contains('You do not have permission to update this record.').should('exist');
+			cy.closeToast('Error.');
+			cy.get('.formosa-message').invoke('text').should('equal', 'You do not have permission to update this record.');
 		});
 	});
 });

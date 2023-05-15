@@ -35,18 +35,19 @@ export default function Edit() {
 		}
 
 		Api.get(url)
+			.catch((response) => {
+				setError(response);
+				throw response;
+			})
 			.then((response) => {
 				setRow(response);
 				setIsFavourite(response.is_favourite);
-			})
-			.catch((response) => {
-				setError(response.status);
 			});
 	}, [id]);
 
 	if (error) {
 		return (
-			<Error status={error} />
+			<Error error={error} />
 		);
 	}
 
@@ -58,27 +59,29 @@ export default function Edit() {
 
 	const favourite = () => {
 		Api.post(`food/${id}/favourite`)
+			.catch((response) => {
+				const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
+				addToast(text, 'error', 10000);
+				throw response;
+			})
 			.then(() => {
 				const newIsFavourite = !isFavourite;
 				setIsFavourite(newIsFavourite);
 				addToast(`Food ${newIsFavourite ? '' : 'un'}favourited successfully.`, 'success');
-			})
-			.catch((response) => {
-				const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
-				addToast(text, 'error', 10000);
 			});
 	};
 
 	const deleteRow = () => {
 		setShowModal(false);
 		Api.delete(`food/${id}`)
-			.then(() => {
-				addToast('Food deleted successfully.', 'success');
-				history.push('/food');
-			})
 			.catch((response) => {
 				const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
 				addToast(text, 'error', 10000);
+				throw response;
+			})
+			.then(() => {
+				addToast('Food deleted successfully.', 'success');
+				history.push('/food');
 			});
 	};
 

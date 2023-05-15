@@ -11,11 +11,12 @@ export default function UserTrackables({ user }) {
 
 	useEffect(() => {
 		Api.get('trackables?fields[trackables]=name,slug&sort=slug')
-			.then((response) => {
-				setAllTrackables(response);
-			})
 			.catch((response) => {
 				setErrorTrackables(response.status);
+				throw response;
+			})
+			.then((response) => {
+				setAllTrackables(response);
 			});
 	}, []);
 

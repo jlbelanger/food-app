@@ -26,13 +26,14 @@ export default function List() {
 	useEffect(() => {
 		const foodFields = ['is_favourite', 'is_verified', 'name', 'serving_size', 'serving_units', 'slug'].concat(Auth.trackables());
 		Api.get(`food?fields[food]=${foodFields.join(',')}&sort=slug`, false)
+			.catch((response) => {
+				setError(response);
+				setIsLoading(false);
+				throw response;
+			})
 			.then((response) => {
 				setRows(response);
 				setFilteredRows(response);
-				setIsLoading(false);
-			})
-			.catch((response) => {
-				setError(response.status);
 				setIsLoading(false);
 			});
 		if (Auth.hasTrackables()) {
@@ -45,7 +46,7 @@ export default function List() {
 
 	if (error) {
 		return (
-			<Error status={error} />
+			<Error error={error} />
 		);
 	}
 
@@ -55,6 +56,11 @@ export default function List() {
 	const favourite = (e) => {
 		const id = e.target.getAttribute('data-id');
 		Api.post(`food/${id}/favourite`)
+			.catch((response) => {
+				const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
+				addToast(text, 'error', 10000);
+				throw response;
+			})
 			.then(() => {
 				const newRows = [...rows];
 				const i = newRows.findIndex((row) => (row.id === id));
@@ -65,10 +71,6 @@ export default function List() {
 				} else {
 					addToast('Error.', 'error');
 				}
-			})
-			.catch((response) => {
-				const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
-				addToast(text, 'error', 10000);
 			});
 	};
 

@@ -10,12 +10,13 @@ export default function UserDeleteData() {
 	const onClickOk = () => {
 		setShowModal(false);
 		Api.post('users/delete-data', JSON.stringify({ types }))
-			.then(() => {
-				addToast('Data deleted successfully.', 'success');
-			})
 			.catch((response) => {
 				const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
 				addToast(text, 'error', 10000);
+				throw response;
+			})
+			.then(() => {
+				addToast('Data deleted successfully.', 'success');
 			});
 	};
 

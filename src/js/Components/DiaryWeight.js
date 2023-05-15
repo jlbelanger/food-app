@@ -31,13 +31,14 @@ export default function DiaryWeight({ date, error, setWeight, weight }) {
 			beforeSubmit={() => {
 				if (weight.id && weight.weight === '') {
 					Api.delete(`weights/${weight.id}`)
-						.then(() => {
-							addToast('Weight removed successfully.', 'success');
-							setWeight({ date });
-						})
 						.catch((response) => {
 							const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
 							addToast(text, 'error', 10000);
+							throw response;
+						})
+						.then(() => {
+							addToast('Weight removed successfully.', 'success');
+							setWeight({ date });
 						});
 					return false;
 				}

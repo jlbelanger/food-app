@@ -1516,14 +1516,15 @@
     "@types/yargs" "^17.0.8"
     chalk "^4.0.0"
 
-"@jlbelanger/formosa@jlbelanger/formosa#bd2afbd0f6eae18f4687f027a9202f1f12d5ff9f":
+"@jlbelanger/formosa@jlbelanger/formosa#bd5242912c9132eef673f35debdacc90fb3f7802":
   version "1.0.2"
-  resolved "https://codeload.github.com/jlbelanger/formosa/tar.gz/bd2afbd0f6eae18f4687f027a9202f1f12d5ff9f"
+  resolved "https://codeload.github.com/jlbelanger/formosa/tar.gz/bd5242912c9132eef673f35debdacc90fb3f7802"
   dependencies:
     get-value "^3.0.1"
     prop-types "^15.8.1"
     react-promise-tracker "^2.1.1"
     set-value "^4.1.0"
+    uuid "^9.0.0"
 
 "@jridgewell/gen-mapping@^0.1.0":
   version "0.1.1"

@@ -1,8 +1,8 @@
 import 'cypress-file-upload'; // eslint-disable-line import/no-extraneous-dependencies
 
 Cypress.Commands.add('clearBmiSettings', () => {
-	cy.intercept('GET', '**/api/users/**').as('getUser');
-	cy.intercept('PUT', '**/api/users/**').as('putUser');
+	cy.intercept('GET', '**/api/users/*').as('getUser');
+	cy.intercept('PUT', '**/api/users/*').as('putUser');
 
 	cy.visit('/profile');
 	cy.wait('@getUser').its('response.statusCode').should('equal', 200);
@@ -30,13 +30,12 @@ Cypress.Commands.add('createFood', (name, servingSize, attributes = {}, addToFav
 	}
 	cy.get('.formosa-button').contains('Save').click();
 	cy.wait('@postFoodRecord').its('response.statusCode').should('equal', 201);
-	cy.contains('Food added successfully.').should('exist');
-	cy.get('.formosa-toast__close').click();
+	cy.closeToast('Food added successfully.');
 });
 
 Cypress.Commands.add('createMeal', (name, foods = [], addToFavourites = false) => {
 	cy.intercept('POST', '**/api/meals').as('postMealRecord');
-	cy.intercept('PUT', '**/api/meals/**').as('putMealRecord');
+	cy.intercept('PUT', '**/api/meals/*').as('putMealRecord');
 
 	cy.visit('/meals/new');
 	cy.get('[name="name"]').type(name);
@@ -45,8 +44,7 @@ Cypress.Commands.add('createMeal', (name, foods = [], addToFavourites = false) =
 	}
 	cy.get('.formosa-button').contains('Save').click();
 	cy.wait('@postMealRecord').its('response.statusCode').should('equal', 201);
-	cy.contains('Meal added successfully.').should('exist');
-	cy.get('.formosa-toast__close').click();
+	cy.closeToast('Meal added successfully.');
 
 	if (foods.length > 0) {
 		foods.forEach((food) => {
@@ -55,13 +53,12 @@ Cypress.Commands.add('createMeal', (name, foods = [], addToFavourites = false) =
 		});
 		cy.get('.formosa-button').contains('Save').click();
 		cy.wait('@putMealRecord').its('response.statusCode').should('equal', 200);
-		cy.contains('Meal saved successfully.').should('exist');
-		cy.get('.formosa-toast__close').click();
+		cy.closeToast('Meal saved successfully.');
 	}
 });
 
 Cypress.Commands.add('deleteAllData', () => {
-	cy.intercept('GET', '**/api/users/**').as('getUser');
+	cy.intercept('GET', '**/api/users/*').as('getUser');
 	cy.intercept('POST', '**/api/users/delete-data').as('deleteData');
 
 	cy.visit('/profile');
@@ -72,14 +69,18 @@ Cypress.Commands.add('deleteAllData', () => {
 	cy.get('.formosa-button--danger').contains('Delete selected data').click();
 	cy.get('dialog .formosa-button--danger').contains('Delete').click();
 	cy.wait('@deleteData').its('response.statusCode').should('equal', 204);
-	cy.contains('Data deleted successfully.').should('exist');
+	cy.closeToast('Data deleted successfully.');
+});
+
+Cypress.Commands.add('closeToast', (message) => {
+	cy.contains(message).should('exist');
 	cy.get('.formosa-toast__close').click();
 });
 
 Cypress.Commands.add('removeEntriesExtras', () => {
 	cy.intercept('GET', '**/api/date?**').as('getDate');
-	cy.intercept('DELETE', '**/api/entries/**').as('deleteEntryRecord');
-	cy.intercept('DELETE', '**/api/extras/**').as('deleteExtraRecord');
+	cy.intercept('DELETE', '**/api/entries/*').as('deleteEntryRecord');
+	cy.intercept('DELETE', '**/api/extras/*').as('deleteExtraRecord');
 
 	cy.visit('/');
 	cy.wait('@getDate').its('response.statusCode').should('equal', 200);
@@ -108,7 +109,7 @@ Cypress.Commands.add('removeEntriesExtras', () => {
 Cypress.Commands.add('setWeight', (weight) => {
 	cy.intercept('GET', '**/api/date?**').as('getDate');
 	cy.intercept('POST', '**/api/weights').as('postWeightRecord');
-	cy.intercept('PUT', '**/api/weights/**').as('putWeightRecord');
+	cy.intercept('PUT', '**/api/weights/*').as('putWeightRecord');
 
 	cy.visit('/');
 	cy.wait('@getDate').its('response.statusCode').should('equal', 200);
@@ -123,15 +124,14 @@ Cypress.Commands.add('setWeight', (weight) => {
 				} else {
 					cy.wait('@putWeightRecord').its('response.statusCode').should('equal', 200);
 				}
-				cy.contains('Weight saved successfully.').should('exist');
-				cy.get('.formosa-toast__close').click();
+				cy.closeToast('Weight saved successfully.');
 			}
 		});
 });
 
 Cypress.Commands.add('setTrackables', (trackables = []) => {
 	cy.intercept('GET', '**/api/trackables?**').as('getTrackables');
-	cy.intercept('GET', '**/api/users/**').as('getUserRecord');
+	cy.intercept('GET', '**/api/users/*').as('getUserRecord');
 
 	cy.visit('/profile');
 	cy.wait('@getUserRecord').its('response.statusCode').should('equal', 200);

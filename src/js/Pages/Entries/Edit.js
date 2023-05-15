@@ -19,26 +19,28 @@ export default function Edit() {
 
 	useEffect(() => {
 		Api.get(`entries/${id}?include=food&fields[food]=${foodFields.join(',')}`)
+			.catch((response) => {
+				setError(response);
+				throw response;
+			})
 			.then((response) => {
 				setRow(response);
-			})
-			.catch((response) => {
-				setError(response.status);
 			});
 
 		Api.get(`food?fields[food]=${foodFields.concat(['is_favourite']).join(',')}`)
+			.catch((response) => {
+				setErrorFood(response.status);
+				throw response;
+			})
 			.then((response) => {
 				setFood(response);
 				setFavouriteFood(response.filter((r) => (r.is_favourite)));
-			})
-			.catch((response) => {
-				setErrorFood(response.status);
 			});
 	}, [id]);
 
 	if (error) {
 		return (
-			<Error status={error} />
+			<Error error={error} />
 		);
 	}
 

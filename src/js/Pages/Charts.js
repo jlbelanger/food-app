@@ -31,6 +31,10 @@ export default function Charts() {
 
 	const getEntries = (ignore) => {
 		Api.get('charts')
+			.catch((response) => {
+				setError(response);
+				throw response;
+			})
 			.then((response) => {
 				if (ignore) {
 					return;
@@ -83,9 +87,6 @@ export default function Charts() {
 
 				setMin(newMin);
 				setDatasets(output);
-			})
-			.catch((response) => {
-				setError(response.status);
 			});
 	};
 
@@ -116,7 +117,7 @@ export default function Charts() {
 
 	if (error) {
 		return (
-			<Error status={error} />
+			<Error error={error} />
 		);
 	}
 
