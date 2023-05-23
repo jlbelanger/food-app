@@ -1,8 +1,10 @@
 import { Api, Field, FormosaContext } from '@jlbelanger/formosa';
 import React, { useContext, useState } from 'react';
+import { errorMessageText } from '../Utilities/Helpers';
 import Modal from './Modal';
+import PropTypes from 'prop-types';
 
-export default function UserDeleteData() {
+export default function UserDeleteData({ setDeleteError }) {
 	const { addToast } = useContext(FormosaContext);
 	const [types, setTypes] = useState([]);
 	const [showModal, setShowModal] = useState(false);
@@ -11,11 +13,12 @@ export default function UserDeleteData() {
 		setShowModal(false);
 		Api.post('users/delete-data', JSON.stringify({ types }))
 			.catch((response) => {
-				const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
-				addToast(text, 'error', 10000);
-				throw response;
+				setDeleteError(errorMessageText(response));
 			})
-			.then(() => {
+			.then((response) => {
+				if (!response) {
+					return;
+				}
 				addToast('Data deleted successfully.', 'success');
 			});
 	};
@@ -32,7 +35,14 @@ export default function UserDeleteData() {
 			/>
 
 			<p>
-				<button className="formosa-button formosa-button--danger" onClick={(e) => { setShowModal(e); }} type="button">
+				<button
+					className="formosa-button formosa-button--danger"
+					onClick={(e) => {
+						setDeleteError(false);
+						setShowModal(e);
+					}}
+					type="button"
+				>
 					Delete selected data
 				</button>
 			</p>
@@ -50,3 +60,7 @@ export default function UserDeleteData() {
 		</>
 	);
 }
+
+UserDeleteData.propTypes = {
+	setDeleteError: PropTypes.func.isRequired,
+};

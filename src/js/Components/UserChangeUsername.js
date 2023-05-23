@@ -1,5 +1,6 @@
-import { Field, Message, Submit } from '@jlbelanger/formosa';
+import { Field, FormAlert, Submit } from '@jlbelanger/formosa';
 import React, { useState } from 'react';
+import { errorMessageText } from '../Utilities/Helpers';
 import MyForm from './MyForm';
 import PropTypes from 'prop-types';
 
@@ -8,6 +9,7 @@ export default function UserChangeUsername({ user }) {
 
 	return (
 		<MyForm
+			errorMessageText={errorMessageText}
 			id={row.id}
 			method="PUT"
 			path="users"
@@ -19,7 +21,7 @@ export default function UserChangeUsername({ user }) {
 		>
 			<h3>Change username</h3>
 
-			<Message />
+			<FormAlert />
 
 			<Field
 				autoComplete="username"

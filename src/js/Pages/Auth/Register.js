@@ -1,14 +1,15 @@
 import { Field, Submit } from '@jlbelanger/formosa';
 import React, { useState } from 'react';
 import Auth from '../../Utilities/Auth';
+import { errorMessageText } from '../../Utilities/Helpers';
 import MetaTitle from '../../Components/MetaTitle';
 import MyForm from '../../Components/MyForm';
 
 export default function Register() {
 	const [row, setRow] = useState({});
-	const afterSubmit = (response) => {
-		Auth.login(response.user, response.token, response.remember);
-		window.location.href = '/';
+	const afterSubmitSuccess = (response) => {
+		Auth.login(response.user, response.token, response.user.remember);
+		window.location.href = process.env.PUBLIC_URL || '/';
 	};
 
 	return (
@@ -16,7 +17,8 @@ export default function Register() {
 			<MetaTitle title="Register" />
 
 			<MyForm
-				afterSubmit={afterSubmit}
+				afterSubmitSuccess={afterSubmitSuccess}
+				errorMessageText={errorMessageText}
 				method="POST"
 				path="auth/register"
 				row={row}

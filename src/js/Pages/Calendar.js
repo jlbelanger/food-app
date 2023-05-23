@@ -26,9 +26,11 @@ export default function Calendar() {
 		Api.get(`calendar/${date}`)
 			.catch((response) => {
 				setError(response);
-				throw response;
 			})
 			.then((response) => {
+				if (!response) {
+					return;
+				}
 				setMonths(response);
 			});
 	};

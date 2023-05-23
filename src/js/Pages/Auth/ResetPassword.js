@@ -1,6 +1,7 @@
 import { Field, Form, Submit } from '@jlbelanger/formosa';
 import React, { useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
+import { errorMessageText } from '../../Utilities/Helpers';
 import MetaTitle from '../../Components/MetaTitle';
 
 export default function ResetPassword() {
@@ -13,9 +14,10 @@ export default function ResetPassword() {
 			<MetaTitle title="Reset your password" />
 
 			<Form
-				afterSubmit={() => {
+				afterSubmitSuccess={() => {
 					history.push('/');
 				}}
+				errorMessageText={errorMessageText}
 				method="PUT"
 				path={`auth/reset-password/${token}`}
 				row={row}

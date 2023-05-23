@@ -202,14 +202,12 @@ describe('diary', () => {
 			cy.get('#weight-form button').click();
 			cy.wait('@addWeight').its('response.statusCode').should('equal', 422);
 			cy.get('#weight-error').should('have.text', 'The weight must be a number.');
-			cy.closeToast('Error.');
 
 			// Add without weight.
 			cy.get('#weight').clear();
 			cy.get('#weight-form button').click();
 			cy.wait('@addWeight').its('response.statusCode').should('equal', 422);
 			cy.get('#weight-error').should('have.text', 'The weight field is required.');
-			cy.closeToast('Error.');
 
 			// Add.
 			cy.get('#weight').type('11');
@@ -326,7 +324,7 @@ describe('diary', () => {
 				cy.createFood(`Bar ${timestamp}`, 1, {}, false);
 
 				// With option checked.
-				cy.reload();
+				cy.visit('/');
 				cy.get('#search-favourites').should('not.be.checked');
 				cy.get('#search-favourites').check();
 				cy.get('#food').type(`Foo ${timestamp}`);

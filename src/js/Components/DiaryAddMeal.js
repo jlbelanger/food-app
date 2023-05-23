@@ -1,45 +1,50 @@
-import { Api, FormosaContext } from '@jlbelanger/formosa';
+import { Alert, Api, FormosaContext } from '@jlbelanger/formosa';
 import React, { useContext, useEffect, useState } from 'react';
+import { errorMessageText } from '../Utilities/Helpers';
 import PropTypes from 'prop-types';
 
-export default function DiaryMeals({ date, entries, foodFields, setEntries }) {
+export default function DiaryAddMeal({ date, entries, foodFields, setActionError, setEntries }) {
 	const { addToast } = useContext(FormosaContext);
 	const [meals, setMeals] = useState([]);
-	const [error, setError] = useState(false);
+	const [mealsError, setMealsError] = useState(false);
 
 	useEffect(() => {
 		Api.get('meals?fields[meals]=name&filter[is_favourite][eq]=1&sort=name')
 			.catch((response) => {
-				setError(response);
-				throw response;
+				setMealsError(errorMessageText(response));
 			})
 			.then((response) => {
+				if (!response) {
+					return;
+				}
 				setMeals(response);
 			});
 	}, []);
 
-	const addMeal = (e) => {
-		Api.post(`meals/${e.target.getAttribute('data-id')}/add`, JSON.stringify({ date, fields: foodFields }))
-			.catch((response) => {
-				const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
-				addToast(text, 'error', 10000);
-				throw response;
-			})
-			.then((response) => {
-				addToast('Meal added successfully.', 'success');
-				setEntries([...entries].concat(response));
-			});
-	};
-
-	if (error) {
+	if (mealsError) {
 		return (
-			<p className="formosa-message formosa-message--error">Error getting meals.</p>
+			<Alert type="error">Error getting meals.</Alert>
 		);
 	}
 
 	if (meals.length <= 0) {
 		return null;
 	}
+
+	const addMeal = (e) => {
+		setActionError(false);
+		Api.post(`meals/${e.target.getAttribute('data-id')}/add`, JSON.stringify({ date, fields: foodFields }))
+			.catch((response) => {
+				setActionError(errorMessageText(response));
+			})
+			.then((response) => {
+				if (!response) {
+					return;
+				}
+				addToast('Meal added successfully.', 'success');
+				setEntries([...entries].concat(response));
+			});
+	};
 
 	return (
 		<fieldset id="add-meal">
@@ -53,9 +58,10 @@ export default function DiaryMeals({ date, entries, foodFields, setEntries }) {
 	);
 }
 
-DiaryMeals.propTypes = {
+DiaryAddMeal.propTypes = {
 	date: PropTypes.string.isRequired,
 	entries: PropTypes.array.isRequired,
 	foodFields: PropTypes.array.isRequired,
+	setActionError: PropTypes.func.isRequired,
 	setEntries: PropTypes.func.isRequired,
 };

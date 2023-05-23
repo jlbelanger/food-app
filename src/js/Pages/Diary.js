@@ -1,6 +1,6 @@
-import { Api, Field, Form, FormosaContext } from '@jlbelanger/formosa';
+import { Alert, Api, Field, Form, FormosaContext } from '@jlbelanger/formosa';
+import { errorMessageText, mapTrackables, pad, pluralize, prettyDate } from '../Utilities/Helpers';
 import { Link, useHistory } from 'react-router-dom';
-import { mapTrackables, pad, pluralize, prettyDate } from '../Utilities/Helpers';
 import React, { useContext, useEffect, useState } from 'react';
 import Auth from '../Utilities/Auth';
 import { ReactComponent as ChevronIcon } from '../../svg/chevron.svg';
@@ -26,14 +26,15 @@ export default function Diary() {
 	const foodFields = ['name', 'serving_size', 'serving_units', 'is_verified'].concat(Auth.trackables());
 
 	const { addToast } = useContext(FormosaContext);
-	const [error, setError] = useState(null);
 	const [entries, setEntries] = useState([]);
 	const [extras, setExtras] = useState([]);
 	const [weight, setWeight] = useState(null);
 	const [trackables, setTrackables] = useState([]);
 	const [food, setFood] = useState([]);
 	const [favouriteFood, setFavouriteFood] = useState([]);
+	const [entriesError, setEntriesError] = useState(false);
 	const [foodError, setFoodError] = useState(false);
+	const [actionError, setActionError] = useState(false);
 
 	const getEntries = (date) => {
 		if (!date) {
@@ -49,10 +50,12 @@ export default function Diary() {
 
 		Api.get(url)
 			.catch((response) => {
-				setError(response);
-				throw response;
+				setEntriesError(errorMessageText(response));
 			})
 			.then((response) => {
+				if (!response) {
+					return;
+				}
 				const w = Api.deserialize(response.weights);
 				setEntries(Api.deserialize(response.entries));
 				setExtras(Api.deserialize(response.extras));
@@ -70,16 +73,22 @@ export default function Diary() {
 
 		Api.get(`food?fields[food]=${foodFields.concat(['is_favourite']).join(',')}`)
 			.catch((response) => {
-				setFoodError(true);
-				throw response;
+				setFoodError(errorMessageText(response));
 			})
 			.then((response) => {
+				if (!response) {
+					return;
+				}
 				setFood(response);
 				setFavouriteFood(response.filter((r) => (r.is_favourite)));
 			});
 
 		getEntries(currentDate);
 	}, []);
+
+	const afterSubmitFailure = (response) => {
+		setActionError(errorMessageText(response));
+	};
 
 	const changeDay = (modifier = 1) => {
 		let newDate = new Date(`${currentDate}T12:00:00Z`);
@@ -99,13 +108,15 @@ export default function Diary() {
 	};
 
 	const deleteEntry = (e) => {
+		setActionError(false);
 		Api.delete(`entries/${e.target.getAttribute('data-id')}`)
 			.catch((response) => {
-				const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
-				addToast(text, 'error', 10000);
-				throw response;
+				setActionError(errorMessageText(response));
 			})
-			.then(() => {
+			.then((response) => {
+				if (!response) {
+					return;
+				}
 				addToast('Food removed successfully.', 'success');
 
 				const newEntries = [...entries];
@@ -115,13 +126,15 @@ export default function Diary() {
 	};
 
 	const deleteExtra = (e) => {
+		setActionError(false);
 		Api.delete(`extras/${e.target.getAttribute('data-id')}`)
 			.catch((response) => {
-				const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
-				addToast(text, 'error', 10000);
-				throw response;
+				setActionError(errorMessageText(response));
 			})
-			.then(() => {
+			.then((response) => {
+				if (!response) {
+					return;
+				}
 				addToast('Extra removed successfully.', 'success');
 
 				const newExtras = [...extras];
@@ -150,7 +163,7 @@ export default function Diary() {
 			<div id="diary">
 				<div id="diary-top">
 					{foodError ? (
-						<p className="formosa-message formosa-message--error form">Error getting food.</p>
+						<Alert className="form" type="error">Error getting food.</Alert>
 					) : (
 						<DiaryAddFood
 							date={currentDate}
@@ -158,18 +171,25 @@ export default function Diary() {
 							key={`add-food-${currentDate}`}
 							favouriteFood={favouriteFood}
 							food={food}
+							setActionError={setActionError}
 							setEntries={setEntries}
 						/>
 					)}
-					<DiaryAddExtra date={currentDate} extras={extras} key={`add-extra-${currentDate}`} setExtras={setExtras} />
-					<DiaryWeight date={currentDate} error={error} setWeight={setWeight} weight={weight} />
+					<DiaryAddExtra
+						date={currentDate}
+						extras={extras}
+						key={`add-extra-${currentDate}`}
+						setActionError={setActionError}
+						setExtras={setExtras}
+					/>
+					<DiaryWeight date={currentDate} error={entriesError} setActionError={setActionError} setWeight={setWeight} weight={weight} />
 				</div>
 
-				<DiaryAddMeal date={currentDate} entries={entries} foodFields={foodFields} setEntries={setEntries} />
+				<DiaryAddMeal date={currentDate} entries={entries} foodFields={foodFields} setActionError={setActionError} setEntries={setEntries} />
 			</div>
 
-			{error && (<p className="formosa-message formosa-message--error">Error getting entries.</p>)}
-			{error && (<p className="formosa-message formosa-message--error">Error getting extras.</p>)}
+			{actionError && (<Alert type="error">{actionError}</Alert>)}
+			{entriesError && (<Alert type="error">Error getting entries.</Alert>)}
 
 			{(entries.length > 0 || extras.length > 0) && (
 				<table className="responsive-table" id="diary-table">
@@ -189,6 +209,8 @@ export default function Diary() {
 								</td>
 								<td className="column--serving">
 									<Form
+										afterSubmitFailure={afterSubmitFailure}
+										beforeSubmit={() => { setActionError(false); return true; }}
 										id={entry.id}
 										method="PUT"
 										path="entries"
@@ -243,6 +265,8 @@ export default function Diary() {
 							<tr className="extra" id={`extra-row-${i}`} key={extra.id}>
 								<td className="column--name">
 									<Form
+										afterSubmitFailure={afterSubmitFailure}
+										beforeSubmit={() => { setActionError(false); return true; }}
 										id={extra.id}
 										method="PUT"
 										path="extras"
@@ -285,6 +309,8 @@ export default function Diary() {
 									<div className="trackable-list">
 										{trackables.map((trackable, j) => (
 											<Form
+												afterSubmitFailure={afterSubmitFailure}
+												beforeSubmit={() => { setActionError(false); return true; }}
 												className="trackable-item"
 												id={extra.id}
 												key={trackable.id}

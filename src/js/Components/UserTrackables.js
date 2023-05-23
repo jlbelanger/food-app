@@ -1,24 +1,33 @@
-import { Api, Field, Message, Submit } from '@jlbelanger/formosa';
+import { Alert, Api, Field, FormAlert, Submit } from '@jlbelanger/formosa';
 import React, { useEffect, useState } from 'react';
 import Auth from '../Utilities/Auth';
+import { errorMessageText } from '../Utilities/Helpers';
 import MyForm from './MyForm';
 import PropTypes from 'prop-types';
 
 export default function UserTrackables({ user }) {
 	const [row, setRow] = useState(user);
-	const [errorTrackables, setErrorTrackables] = useState(false);
+	const [trackablesError, setTrackablesError] = useState(false);
 	const [allTrackables, setAllTrackables] = useState([]);
 
 	useEffect(() => {
 		Api.get('trackables?fields[trackables]=name,slug&sort=slug')
 			.catch((response) => {
-				setErrorTrackables(response.status);
-				throw response;
+				setTrackablesError(errorMessageText(response));
 			})
 			.then((response) => {
+				if (!response) {
+					return;
+				}
 				setAllTrackables(response);
 			});
 	}, []);
+
+	if (trackablesError) {
+		return (
+			<Alert type="error">Error getting trackables.</Alert>
+		);
+	}
 
 	const checkAll = () => {
 		setRow({ ...row, trackables: [...allTrackables] });
@@ -28,20 +37,15 @@ export default function UserTrackables({ user }) {
 		setRow({ ...row, trackables: [] });
 	};
 
-	const afterSubmit = () => {
+	const afterSubmitSuccess = () => {
 		Auth.setTrackables(row.trackables.sort((a, b) => (a.id > b.id)));
 	};
 
-	if (errorTrackables) {
-		return (
-			<p className="formosa-message formosa-message--error">Error getting trackables.</p>
-		);
-	}
-
 	return (
 		<MyForm
-			afterSubmit={afterSubmit}
-			afterNoSubmit={afterSubmit}
+			afterSubmitSuccess={afterSubmitSuccess}
+			afterNoSubmit={afterSubmitSuccess}
+			errorMessageText={errorMessageText}
 			id={row.id}
 			method="PUT"
 			path="users"
@@ -58,7 +62,7 @@ export default function UserTrackables({ user }) {
 				<button className="formosa-button button--small button--secondary" onClick={uncheckAll} type="button">Uncheck All</button>
 			</h2>
 
-			<Message />
+			<FormAlert />
 
 			<Field
 				name="trackables"

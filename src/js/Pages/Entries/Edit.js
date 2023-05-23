@@ -1,5 +1,5 @@
-import { Api, Field } from '@jlbelanger/formosa';
-import { foodLabelFn, foodLabelLinkFn, pluralize } from '../../Utilities/Helpers';
+import { Alert, Api, Field } from '@jlbelanger/formosa';
+import { errorMessageText, foodLabelFn, foodLabelLinkFn, pluralize } from '../../Utilities/Helpers';
 import { Link, useParams } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import Auth from '../../Utilities/Auth';
@@ -11,7 +11,7 @@ export default function Edit() {
 	const { id } = useParams();
 	const [row, setRow] = useState(null);
 	const [error, setError] = useState(false);
-	const [errorFood, setErrorFood] = useState(false);
+	const [foodError, setFoodError] = useState(false);
 	const [favouritesOnly, setFavouritesOnly] = useState(Auth.getValue('favourites_only', false));
 	const [favouriteFood, setFavouriteFood] = useState([]);
 	const [food, setFood] = useState([]);
@@ -21,18 +21,22 @@ export default function Edit() {
 		Api.get(`entries/${id}?include=food&fields[food]=${foodFields.join(',')}`)
 			.catch((response) => {
 				setError(response);
-				throw response;
 			})
 			.then((response) => {
+				if (!response) {
+					return;
+				}
 				setRow(response);
 			});
 
 		Api.get(`food?fields[food]=${foodFields.concat(['is_favourite']).join(',')}`)
 			.catch((response) => {
-				setErrorFood(response.status);
-				throw response;
+				setFoodError(errorMessageText(response));
 			})
 			.then((response) => {
+				if (!response) {
+					return;
+				}
 				setFood(response);
 				setFavouriteFood(response.filter((r) => (r.is_favourite)));
 			});
@@ -56,12 +60,11 @@ export default function Edit() {
 				<button className="formosa-button button--small" form="edit-form" type="submit">Save</button>
 			</MetaTitle>
 
-			{errorFood && (
-				<p className="formosa-message formosa-message--error">Error getting food.</p>
-			)}
+			{foodError && (<Alert type="error">Error getting food.</Alert>)}
 
 			<MyForm
 				className="formosa-responsive"
+				errorMessageText={errorMessageText}
 				htmlId="edit-form"
 				id={id}
 				method="PUT"
@@ -84,7 +87,7 @@ export default function Edit() {
 					size={10}
 					type="date"
 				/>
-				{!errorFood && (
+				{!foodError && (
 					<Field
 						label="Food"
 						labelFn={foodLabelLinkFn}

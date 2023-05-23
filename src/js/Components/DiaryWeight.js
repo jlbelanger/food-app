@@ -1,14 +1,21 @@
-import { Api, Form, FormosaContext } from '@jlbelanger/formosa';
+import { Alert, Api, Form, FormosaContext } from '@jlbelanger/formosa';
 import React, { useContext } from 'react';
 import DiaryWeightFieldset from './DiaryWeightFieldset';
+import { errorMessageText } from '../Utilities/Helpers';
 import PropTypes from 'prop-types';
 
-export default function DiaryWeight({ date, error, setWeight, weight }) {
+export default function DiaryWeight({ date, error, setActionError, setWeight, weight }) {
 	const { addToast } = useContext(FormosaContext);
+
+	const afterSubmitFailure = (response) => {
+		if (response.status !== 422) {
+			setActionError(errorMessageText(response));
+		}
+	};
 
 	if (error) {
 		return (
-			<p className="formosa-message formosa-message--error form">Error getting weight.</p>
+			<Alert type="error" className="form">Error getting weight.</Alert>
 		);
 	}
 
@@ -22,21 +29,24 @@ export default function DiaryWeight({ date, error, setWeight, weight }) {
 
 	return (
 		<Form
-			afterSubmit={(response, formState, setFormState) => {
+			afterSubmitFailure={afterSubmitFailure}
+			afterSubmitSuccess={(response, formState, setFormState) => {
 				if (response.id && !weight.id) {
 					setWeight({ ...weight, id: response.id });
 					formState.setOriginalValue(formState, setFormState, 'id', response.id);
 				}
 			}}
 			beforeSubmit={() => {
+				setActionError(false);
 				if (weight.id && weight.weight === '') {
 					Api.delete(`weights/${weight.id}`)
 						.catch((response) => {
-							const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
-							addToast(text, 'error', 10000);
-							throw response;
+							setActionError(errorMessageText(response));
 						})
-						.then(() => {
+						.then((response) => {
+							if (!response) {
+								return;
+							}
 							addToast('Weight removed successfully.', 'success');
 							setWeight({ date });
 						});
@@ -65,6 +75,7 @@ export default function DiaryWeight({ date, error, setWeight, weight }) {
 DiaryWeight.propTypes = {
 	date: PropTypes.string,
 	error: PropTypes.object,
+	setActionError: PropTypes.func.isRequired,
 	setWeight: PropTypes.func.isRequired,
 	weight: PropTypes.object,
 };

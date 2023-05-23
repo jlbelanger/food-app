@@ -1,5 +1,6 @@
-import { Field, Message, Submit } from '@jlbelanger/formosa';
+import { Field, FormAlert, Submit } from '@jlbelanger/formosa';
 import React, { useState } from 'react';
+import { errorMessageText } from '../Utilities/Helpers';
 import MyForm from './MyForm';
 import PropTypes from 'prop-types';
 
@@ -9,6 +10,7 @@ export default function UserChangePassword({ user }) {
 	return (
 		<MyForm
 			clearOnSubmit
+			errorMessageText={errorMessageText}
 			method="PUT"
 			path={`users/${row.id}/change-password`}
 			preventEmptyRequest
@@ -19,7 +21,7 @@ export default function UserChangePassword({ user }) {
 		>
 			<h3>Change password</h3>
 
-			<Message />
+			<FormAlert />
 
 			<Field
 				autoComplete="current-password"

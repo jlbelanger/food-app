@@ -1,19 +1,26 @@
 import { Field, Form } from '@jlbelanger/formosa';
 import React, { useState } from 'react';
+import { errorMessageText } from '../Utilities/Helpers';
 import { ReactComponent as PlusIcon } from '../../svg/plus.svg';
 import PropTypes from 'prop-types';
 
-export default function DiaryAddExtra({ date, extras, setExtras }) {
+export default function DiaryAddExtra({ date, extras, setActionError, setExtras }) {
 	const [row, setRow] = useState({ date });
+
+	const afterSubmitFailure = (response) => {
+		setActionError(errorMessageText(response));
+	};
 
 	return (
 		<Form
-			afterSubmit={(response) => {
+			afterSubmitFailure={afterSubmitFailure}
+			afterSubmitSuccess={(response) => {
 				const newExtras = [...extras];
 				newExtras.push({ ...response });
 				setExtras(newExtras);
 				setRow({ ...row, note: '' });
 			}}
+			beforeSubmit={() => { setActionError(false); return true; }}
 			className="form"
 			htmlId="extra-form"
 			method="POST"
@@ -47,5 +54,6 @@ export default function DiaryAddExtra({ date, extras, setExtras }) {
 DiaryAddExtra.propTypes = {
 	date: PropTypes.string.isRequired,
 	extras: PropTypes.array.isRequired,
+	setActionError: PropTypes.func.isRequired,
 	setExtras: PropTypes.func.isRequired,
 };

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { errorMessageText } from '../../Utilities/Helpers';
 import { Field } from '@jlbelanger/formosa';
 import Fields from './Partials/Fields';
 import MetaTitle from '../../Components/MetaTitle';
@@ -11,7 +12,7 @@ export default function New() {
 	const [addAnother, setAddAnother] = useState(false);
 	const history = useHistory();
 
-	const afterSubmit = (response) => {
+	const afterSubmitSuccess = (response) => {
 		if (addAnother) {
 			setRow(defaultRow);
 		} else {
@@ -34,7 +35,8 @@ export default function New() {
 			</MetaTitle>
 
 			<MyForm
-				afterSubmit={afterSubmit}
+				afterSubmitSuccess={afterSubmitSuccess}
+				errorMessageText={errorMessageText}
 				htmlId="add-form"
 				method="POST"
 				path="food"

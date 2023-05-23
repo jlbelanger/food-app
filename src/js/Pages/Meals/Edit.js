@@ -1,5 +1,5 @@
-import { Api, Field, FormosaContext, Input } from '@jlbelanger/formosa';
-import { foodLabelFn, mapTrackables, pluralize } from '../../Utilities/Helpers';
+import { Alert, Api, Field, FormosaContext, Input } from '@jlbelanger/formosa';
+import { errorMessageText, foodLabelFn, mapTrackables, pluralize } from '../../Utilities/Helpers';
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import Auth from '../../Utilities/Auth';
@@ -21,7 +21,8 @@ export default function Edit() {
 	const { id } = useParams();
 	const [row, setRow] = useState(null);
 	const [error, setError] = useState(false);
-	const [errorFood, setErrorFood] = useState(false);
+	const [foodError, setFoodError] = useState(false);
+	const [actionError, setActionError] = useState(false);
 	const [favouritesOnly, setFavouritesOnly] = useState(Auth.getValue('favourites_only', false));
 	const [favouriteFood, setFavouriteFood] = useState([]);
 	const [allFood, setAllFood] = useState([]);
@@ -36,18 +37,22 @@ export default function Edit() {
 		Api.get(`meals/${id}?${mealParams}`)
 			.catch((response) => {
 				setError(response);
-				throw response;
 			})
 			.then((response) => {
+				if (!response) {
+					return;
+				}
 				setRow(response);
 			});
 
 		Api.get(`food?fields[food]=${foodFields.concat(['is_favourite']).join(',')}`)
 			.catch((response) => {
-				setErrorFood(response.status);
-				throw response;
+				setFoodError(errorMessageText(response));
 			})
 			.then((response) => {
+				if (!response) {
+					return;
+				}
 				setAllFood(response);
 				setFavouriteFood(response.filter((r) => (r.is_favourite)));
 			});
@@ -73,6 +78,7 @@ export default function Edit() {
 	}
 
 	const favourite = () => {
+		setActionError(false);
 		const isFavourite = !row.is_favourite;
 		const body = {
 			data: {
@@ -84,11 +90,12 @@ export default function Edit() {
 
 		Api.put(`meals/${id}`, JSON.stringify(body))
 			.catch((response) => {
-				const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
-				addToast(text, 'error', 10000);
-				throw response;
+				setActionError(errorMessageText(response));
 			})
-			.then(() => {
+			.then((response) => {
+				if (!response) {
+					return;
+				}
 				setRow({ ...row, is_favourite: isFavourite });
 				addToast(`Meal ${isFavourite ? '' : 'un'}favourited successfully.`, 'success');
 			});
@@ -98,11 +105,12 @@ export default function Edit() {
 		setShowModal(false);
 		Api.delete(`meals/${id}`)
 			.catch((response) => {
-				const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
-				addToast(text, 'error', 10000);
-				throw response;
+				setActionError(errorMessageText(response));
 			})
-			.then(() => {
+			.then((response) => {
+				if (!response) {
+					return;
+				}
 				addToast('Meal deleted successfully.', 'success');
 				history.push('/meals');
 			});
@@ -126,7 +134,10 @@ export default function Edit() {
 				<button className="formosa-button button--small" form="edit-form" type="submit">Save</button>
 				<button
 					className="formosa-button formosa-button--danger button--small"
-					onClick={(e) => { setShowModal(e); }}
+					onClick={(e) => {
+						setActionError(false);
+						setShowModal(e);
+					}}
 					type="button"
 				>
 					Delete
@@ -144,7 +155,8 @@ export default function Edit() {
 			</MetaTitle>
 
 			<MyForm
-				afterSubmit={(response) => {
+				afterSubmitFailure={(response) => { setActionError(errorMessageText(response)); }}
+				afterSubmitSuccess={(response) => {
 					setRow({ ...row, foods: response.foods });
 				}}
 				filterValues={(values) => {
@@ -167,12 +179,14 @@ export default function Edit() {
 				setRow={setRow}
 				successToastText="Meal saved successfully."
 			>
+				{actionError && (<Alert type="error">{actionError}</Alert>)}
+
 				<Fields row={row} />
 
 				<h2>Foods</h2>
 
-				{errorFood ? (
-					<p className="formosa-message formosa-message--error">Error getting food.</p>
+				{foodError ? (
+					<Alert type="error">Error getting food.</Alert>
 				) : (
 					<>
 						<Input

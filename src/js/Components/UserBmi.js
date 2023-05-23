@@ -1,6 +1,7 @@
-import { Field, Message, Submit } from '@jlbelanger/formosa';
+import { Field, FormAlert, Submit } from '@jlbelanger/formosa';
 import React, { useState } from 'react';
 import Auth from '../Utilities/Auth';
+import { errorMessageText } from '../Utilities/Helpers';
 import MyForm from './MyForm';
 import PropTypes from 'prop-types';
 
@@ -24,7 +25,7 @@ export default function UserBmi({ user }) {
 		m: 'metric (weight in kilograms, height in centimetres)',
 	};
 
-	const afterSubmit = () => {
+	const afterSubmitSuccess = () => {
 		if (row.measurement_units) {
 			setIsMeasurementUnitsDisabled(true);
 			Auth.setValue('measurement_units', row.measurement_units);
@@ -99,7 +100,8 @@ export default function UserBmi({ user }) {
 
 	return (
 		<MyForm
-			afterSubmit={afterSubmit}
+			afterSubmitSuccess={afterSubmitSuccess}
+			errorMessageText={errorMessageText}
 			id={row.id}
 			method="PUT"
 			path="users"
@@ -111,7 +113,7 @@ export default function UserBmi({ user }) {
 		>
 			<h2>BMI</h2>
 
-			<Message />
+			<FormAlert />
 
 			{showBmi ? (
 				/* eslint-disable react/jsx-one-expression-per-line */

@@ -1,5 +1,6 @@
 import { Field, Form, Submit } from '@jlbelanger/formosa';
 import React, { useState } from 'react';
+import { errorMessageText } from '../../Utilities/Helpers';
 import { Link } from 'react-router-dom';
 import MetaTitle from '../../Components/MetaTitle';
 
@@ -12,6 +13,7 @@ export default function ForgotPassword() {
 
 			<Form
 				clearOnSubmit
+				errorMessageText={errorMessageText}
 				method="POST"
 				path="auth/forgot-password"
 				row={row}

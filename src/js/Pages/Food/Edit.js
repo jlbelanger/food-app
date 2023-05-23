@@ -1,6 +1,6 @@
-import { Api, FormosaContext } from '@jlbelanger/formosa';
+import { Alert, Api, FormosaContext } from '@jlbelanger/formosa';
+import { errorMessageText, pluralize, prettyDate } from '../../Utilities/Helpers';
 import { Link, useHistory, useParams } from 'react-router-dom';
-import { pluralize, prettyDate } from '../../Utilities/Helpers';
 import React, { useContext, useEffect, useState } from 'react';
 import Auth from '../../Utilities/Auth';
 import { ReactComponent as CheckIcon } from '../../../svg/check.svg';
@@ -19,6 +19,7 @@ export default function Edit() {
 	const [row, setRow] = useState(null);
 	const [isFavourite, setIsFavourite] = useState(false);
 	const [error, setError] = useState(false);
+	const [actionError, setActionError] = useState(false);
 	const [showModal, setShowModal] = useState(false);
 	const history = useHistory();
 
@@ -37,9 +38,11 @@ export default function Edit() {
 		Api.get(url)
 			.catch((response) => {
 				setError(response);
-				throw response;
 			})
 			.then((response) => {
+				if (!response) {
+					return;
+				}
 				setRow(response);
 				setIsFavourite(response.is_favourite);
 			});
@@ -58,13 +61,15 @@ export default function Edit() {
 	}
 
 	const favourite = () => {
+		setActionError(false);
 		Api.post(`food/${id}/favourite`)
 			.catch((response) => {
-				const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
-				addToast(text, 'error', 10000);
-				throw response;
+				setActionError(errorMessageText(response));
 			})
-			.then(() => {
+			.then((response) => {
+				if (!response) {
+					return;
+				}
 				const newIsFavourite = !isFavourite;
 				setIsFavourite(newIsFavourite);
 				addToast(`Food ${newIsFavourite ? '' : 'un'}favourited successfully.`, 'success');
@@ -75,11 +80,12 @@ export default function Edit() {
 		setShowModal(false);
 		Api.delete(`food/${id}`)
 			.catch((response) => {
-				const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
-				addToast(text, 'error', 10000);
-				throw response;
+				setActionError(errorMessageText(response));
 			})
-			.then(() => {
+			.then((response) => {
+				if (!response) {
+					return;
+				}
 				addToast('Food deleted successfully.', 'success');
 				history.push('/food');
 			});
@@ -104,7 +110,10 @@ export default function Edit() {
 					<>
 						<button
 							className="formosa-button formosa-button--danger button--small"
-							onClick={(e) => { setShowModal(e); }}
+							onClick={(e) => {
+								setActionError(false);
+								setShowModal(e);
+							}}
 							type="button"
 						>
 							Delete
@@ -124,7 +133,8 @@ export default function Edit() {
 			</MetaTitle>
 
 			<MyForm
-				afterSubmit={(response) => {
+				afterSubmitFailure={(response) => { setActionError(errorMessageText(response)); }}
+				afterSubmitSuccess={(response) => {
 					const newRow = { ...row };
 					let hasChanged = false;
 					if (response.front_image !== row.front_image) {
@@ -149,6 +159,7 @@ export default function Edit() {
 				setRow={setRow}
 				successToastText="Food saved successfully."
 			>
+				{actionError && (<Alert type="error">{actionError}</Alert>)}
 				<Fields readOnly={readOnly} row={row} />
 			</MyForm>
 

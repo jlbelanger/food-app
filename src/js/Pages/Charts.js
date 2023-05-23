@@ -33,10 +33,9 @@ export default function Charts() {
 		Api.get('charts')
 			.catch((response) => {
 				setError(response);
-				throw response;
 			})
 			.then((response) => {
-				if (ignore) {
+				if (!response || ignore) {
 					return;
 				}
 

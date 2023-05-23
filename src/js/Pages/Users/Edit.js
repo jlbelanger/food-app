@@ -1,10 +1,10 @@
-import { Api, FormosaContext } from '@jlbelanger/formosa';
-import React, { useContext, useEffect, useState } from 'react';
+import { Alert, Api } from '@jlbelanger/formosa';
+import React, { useEffect, useState } from 'react';
 import Auth from '../../Utilities/Auth';
 import Error from '../../Error';
+import { errorMessageText } from '../../Utilities/Helpers';
 import MetaTitle from '../../Components/MetaTitle';
 import Modal from '../../Components/Modal';
-import { useHistory } from 'react-router-dom';
 import UserBmi from '../../Components/UserBmi';
 import UserChangeEmail from '../../Components/UserChangeEmail';
 import UserChangePassword from '../../Components/UserChangePassword';
@@ -13,23 +13,23 @@ import UserDeleteData from '../../Components/UserDeleteData';
 import UserTrackables from '../../Components/UserTrackables';
 
 export default function Edit() {
-	const { addToast } = useContext(FormosaContext);
 	const id = Auth.id();
 	const [row, setRow] = useState(null);
 	const [error, setError] = useState(false);
+	const [deleteError, setDeleteError] = useState(false);
 	const [showModal, setShowModal] = useState(false);
-	const history = useHistory();
 
-	const onClickDelete = () => {
+	const deleteRow = () => {
 		setShowModal(false);
 		Api.delete(`users/${row.id}`)
 			.catch((response) => {
-				const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
-				addToast(text, 'error', 10000);
-				throw response;
+				setDeleteError(errorMessageText(response));
 			})
-			.then(() => {
-				Auth.logout(history);
+			.then((response) => {
+				if (!response) {
+					return;
+				}
+				Auth.logout();
 			});
 	};
 
@@ -37,9 +37,11 @@ export default function Edit() {
 		Api.get(`users/${id}?fields[trackables]=name,slug&include=trackables`)
 			.catch((response) => {
 				setError(response);
-				throw response;
 			})
 			.then((response) => {
+				if (!response) {
+					return;
+				}
 				setRow(response);
 			});
 	}, [id]);
@@ -79,10 +81,19 @@ export default function Edit() {
 
 			<h3>Delete data</h3>
 
-			<UserDeleteData user={row} />
+			{deleteError && (<Alert type="error">{deleteError}</Alert>)}
+
+			<UserDeleteData setDeleteError={setDeleteError} user={row} />
 
 			<p>
-				<button className="formosa-button formosa-button--danger" onClick={(e) => { setShowModal(e); }} type="button">
+				<button
+					className="formosa-button formosa-button--danger"
+					onClick={(e) => {
+						setDeleteError(false);
+						setShowModal(e);
+					}}
+					type="button"
+				>
 					Delete account
 				</button>
 			</p>
@@ -92,7 +103,7 @@ export default function Edit() {
 					event={showModal}
 					okButtonClass="formosa-button--danger"
 					okButtonText="Delete"
-					onClickOk={onClickDelete}
+					onClickOk={deleteRow}
 					onClickCancel={() => { setShowModal(false); }}
 					text="Are you sure you want to delete your account?"
 				/>

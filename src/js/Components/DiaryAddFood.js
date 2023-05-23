@@ -1,17 +1,22 @@
+import { errorMessageText, foodLabelFn } from '../Utilities/Helpers';
 import { Field, Form } from '@jlbelanger/formosa';
 import React, { useState } from 'react';
 import Auth from '../Utilities/Auth';
-import { foodLabelFn } from '../Utilities/Helpers';
 import { ReactComponent as PlusIcon } from '../../svg/plus.svg';
 import PropTypes from 'prop-types';
 
-export default function DiaryAddFood({ date, entries, favouriteFood, food, setEntries }) {
+export default function DiaryAddFood({ date, entries, favouriteFood, food, setActionError, setEntries }) {
 	const [row, setRow] = useState({ date });
 	const [favouritesOnly, setFavouritesOnly] = useState(Auth.getValue('favourites_only', false));
 
+	const afterSubmitFailure = (response) => {
+		setActionError(errorMessageText(response));
+	};
+
 	return (
 		<Form
-			afterSubmit={(response) => {
+			afterSubmitFailure={afterSubmitFailure}
+			afterSubmitSuccess={(response) => {
 				const newEntries = [...entries];
 				newEntries.push({ ...response, food: row.food });
 				setEntries(newEntries);
@@ -20,6 +25,7 @@ export default function DiaryAddFood({ date, entries, favouriteFood, food, setEn
 					document.getElementById('food').focus();
 				}, 100);
 			}}
+			beforeSubmit={() => { setActionError(false); return true; }}
 			className="form"
 			htmlId="food-form"
 			method="POST"
@@ -75,5 +81,6 @@ DiaryAddFood.propTypes = {
 	entries: PropTypes.array.isRequired,
 	favouriteFood: PropTypes.array.isRequired,
 	food: PropTypes.array.isRequired,
+	setActionError: PropTypes.func.isRequired,
 	setEntries: PropTypes.func.isRequired,
 };

@@ -1,4 +1,5 @@
-import { Api, FormosaContext, Input } from '@jlbelanger/formosa';
+import { Alert, Api, FormosaContext, Input } from '@jlbelanger/formosa';
+import { errorMessageText, mapTrackables } from '../../Utilities/Helpers';
 import { filterByKeys, sortByKey } from '../../Utilities/Table';
 import React, { useContext, useEffect, useState } from 'react';
 import { ReactComponent as ArrowIcon } from '../../../svg/arrow.svg';
@@ -8,7 +9,6 @@ import Error from '../../Error';
 import FoodLink from '../../Components/FoodLink';
 import { ReactComponent as HeartIcon } from '../../../svg/heart.svg';
 import { Link } from 'react-router-dom';
-import { mapTrackables } from '../../Utilities/Helpers';
 import MetaTitle from '../../Components/MetaTitle';
 import TrackableBody from '../../Components/TrackableBody';
 
@@ -21,6 +21,7 @@ export default function List() {
 	const [filteredRows, setFilteredRows] = useState([]);
 	const [trackables, setTrackables] = useState([]);
 	const [error, setError] = useState(false);
+	const [actionError, setActionError] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
@@ -29,9 +30,11 @@ export default function List() {
 			.catch((response) => {
 				setError(response);
 				setIsLoading(false);
-				throw response;
 			})
 			.then((response) => {
+				if (!response) {
+					return;
+				}
 				setRows(response);
 				setFilteredRows(response);
 				setIsLoading(false);
@@ -54,14 +57,16 @@ export default function List() {
 	const total = rows ? rows.length : 0;
 
 	const favourite = (e) => {
+		setActionError(false);
 		const id = e.target.getAttribute('data-id');
 		Api.post(`food/${id}/favourite`)
 			.catch((response) => {
-				const text = response.message ? response.message : response.errors.map((err) => (err.title)).join(' ');
-				addToast(text, 'error', 10000);
-				throw response;
+				setActionError(errorMessageText(response));
 			})
-			.then(() => {
+			.then((response) => {
+				if (!response) {
+					return;
+				}
 				const newRows = [...rows];
 				const i = newRows.findIndex((row) => (row.id === id));
 				if (i > -1) {
@@ -69,7 +74,7 @@ export default function List() {
 					setRows(newRows);
 					addToast(`Food ${newRows[i].is_favourite ? '' : 'un'}favourited successfully.`, 'success');
 				} else {
-					addToast('Error.', 'error');
+					setActionError(`Error: Unable to ${newRows[i].is_favourite ? '' : 'un'}favourite food.`);
 				}
 			});
 	};
@@ -118,6 +123,8 @@ export default function List() {
 			>
 				<Link className="formosa-button button--small" to="/food/new">Add</Link>
 			</MetaTitle>
+
+			{actionError && (<Alert type="error">{actionError}</Alert>)}
 
 			<div id="search-container">
 				<label className="formosa-label" htmlFor="search">Search</label>

@@ -13,7 +13,7 @@ Cypress.Commands.add('login', (username = '', password = '') => {
 		cy.wait(`@login${timestamp}`);
 		cy.get('body')
 			.then(($body) => {
-				if ($body.find('.formosa-message--error').length > 0) {
+				if ($body.find('.formosa-alert--error').length > 0) {
 					cy.register(username, password);
 				}
 			});

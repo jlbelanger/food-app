@@ -1,11 +1,12 @@
+import { Alert } from '@jlbelanger/formosa';
 import MetaTitle from './Components/MetaTitle';
 import React from 'react';
 
-export default function Error() {
+export default function Error404() {
 	return (
 		<>
 			<MetaTitle title="404 Not Found" />
-			<p>The requested URL was not found on this server.</p>
+			<Alert type="error">The requested URL was not found on this server.</Alert>
 		</>
 	);
 }
