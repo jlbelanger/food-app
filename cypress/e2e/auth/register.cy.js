@@ -42,8 +42,8 @@ describe('register', () => {
 			cy.visit('/register');
 			cy.get('[name="username"]').type(username);
 			cy.get('[name="email"]').type(`${username}@example.com`);
-			cy.get('[name="password"]').type('foo1');
-			cy.get('[name="password_confirmation"]').type('foo2');
+			cy.get('[name="password"]').type(`${Cypress.env('default_password')}1`);
+			cy.get('[name="password_confirmation"]').type(`${Cypress.env('default_password')}2`);
 			cy.get('[type="submit"]').click();
 			cy.wait('@register').its('response.statusCode').should('equal', 422);
 			cy.get('#password-error').invoke('text').should('equal', 'The password confirmation does not match.');
