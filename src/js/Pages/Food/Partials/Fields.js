@@ -15,7 +15,7 @@ export default function Fields({ readOnly, row }) {
 		const headerHeight = 88;
 		const margin = 8;
 		const threshold = imageTop - headerHeight - margin;
-		if (window.pageYOffset >= threshold) {
+		if (window.scrollY >= threshold) {
 			image.current.classList.add('sticky');
 		} else {
 			image.current.classList.remove('sticky');
