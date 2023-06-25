@@ -1,4 +1,4 @@
-import { Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
 import Auth from './Utilities/Auth';
 import Calendar from './Pages/Calendar';
 import Charts from './Pages/Charts';
@@ -19,6 +19,8 @@ import Register from './Pages/Auth/Register';
 import ResetPassword from './Pages/Auth/ResetPassword';
 
 export default function Routes() {
+	const location = useLocation();
+
 	if (!Auth.isLoggedIn()) {
 		return (
 			<Switch>
@@ -26,7 +28,7 @@ export default function Routes() {
 				<Route exact path="/register"><Register /></Route>
 				<Route exact path="/forgot-password"><ForgotPassword /></Route>
 				<Route exact path="/reset-password/:token"><ResetPassword /></Route>
-				<Route><Error404 /></Route>
+				<Route><Redirect to={`/?redirect=${encodeURIComponent(`${location.pathname}${location.search}`)}`} /></Route>
 			</Switch>
 		);
 	}

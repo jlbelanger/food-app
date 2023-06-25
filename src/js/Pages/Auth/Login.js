@@ -11,8 +11,15 @@ export default function Login() {
 	const [error, setError] = useState(false);
 
 	const afterSubmitSuccess = (response) => {
+		const urlSearchParams = new URLSearchParams(history.location.search);
+		let redirect;
+		if (urlSearchParams.get('redirect') && urlSearchParams.get('redirect')[0] === '/') {
+			redirect = urlSearchParams.get('redirect');
+		} else {
+			redirect = process.env.PUBLIC_URL || '/';
+		}
 		Auth.login(response.user, response.token, response.user.remember);
-		window.location.href = process.env.PUBLIC_URL || '/';
+		window.location.href = redirect;
 	};
 
 	useEffect(() => {
