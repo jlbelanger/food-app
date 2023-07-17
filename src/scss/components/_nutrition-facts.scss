@@ -22,7 +22,7 @@ $breakpoint2: $image-width + ($list-width + $margin + $article-padding) * 2;
 		}
 	}
 
-	@media screen and (min-width: $breakpoint1) {
+	@media (min-width: $breakpoint1) {
 		flex-direction: row;
 		position: relative;
 	}
@@ -52,13 +52,13 @@ $breakpoint2: $image-width + ($list-width + $margin + $article-padding) * 2;
 		vertical-align: bottom;
 	}
 
-	@media screen and (min-width: $breakpoint1) {
+	@media (min-width: $breakpoint1) {
 		.nutrition-facts--no-image & {
 			flex-direction: row;
 		}
 	}
 
-	@media screen and (min-width: $breakpoint2) {
+	@media (min-width: $breakpoint2) {
 		flex-direction: row;
 	}
 }
@@ -68,7 +68,7 @@ $breakpoint2: $image-width + ($list-width + $margin + $article-padding) * 2;
 	font-size: 0;
 	margin-bottom: 12px;
 
-	@media screen and (min-width: $breakpoint1) {
+	@media (min-width: $breakpoint1) {
 		align-self: flex-start;
 		margin-bottom: 0;
 		margin-left: auto;
@@ -97,7 +97,7 @@ $breakpoint2: $image-width + ($list-width + $margin + $article-padding) * 2;
 	padding: 0;
 	width: 100%;
 
-	@media screen and (min-width: $breakpoint1) {
+	@media (min-width: $breakpoint1) {
 		width: $list-width;
 	}
 }
@@ -137,14 +137,14 @@ $breakpoint2: $image-width + ($list-width + $margin + $article-padding) * 2;
 		display: none;
 	}
 
-	@media screen and (min-width: $breakpoint1) {
+	@media (min-width: $breakpoint1) {
 		.nutrition-facts--no-image & {
 			box-shadow: none;
 			margin-top: 0;
 		}
 	}
 
-	@media screen and (min-width: $breakpoint2) {
+	@media (min-width: $breakpoint2) {
 		box-shadow: none;
 		margin-top: 0;
 	}

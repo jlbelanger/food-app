@@ -11,19 +11,19 @@ $radio-breakpoint-xlarge: 1030px;
 		margin-top: 0;
 	}
 
-	@media screen and (min-width: $radio-breakpoint-small) {
+	@media (min-width: $radio-breakpoint-small) {
 		column-count: 2;
 	}
 
-	@media screen and (min-width: $radio-breakpoint-medium) {
+	@media (min-width: $radio-breakpoint-medium) {
 		column-count: 3;
 	}
 
-	@media screen and (min-width: $radio-breakpoint-large) {
+	@media (min-width: $radio-breakpoint-large) {
 		column-count: 4;
 	}
 
-	@media screen and (min-width: $radio-breakpoint-xlarge) {
+	@media (min-width: $radio-breakpoint-xlarge) {
 		column-count: 5;
 	}
 }
