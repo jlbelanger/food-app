@@ -156,7 +156,9 @@ export default function List() {
 						{isLoading ? (
 							<tr>
 								<td colSpan={4 + trackables.length}>
-									<div className="formosa-spinner" style={{ justifyContent: 'center', margin: '16px auto' }}>Loading...</div>
+									<div className="formosa-spinner" role="status" style={{ justifyContent: 'center', margin: '16px auto' }}>
+										Loading...
+									</div>
 								</td>
 							</tr>
 						)
