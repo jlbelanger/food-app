@@ -1,26 +1,28 @@
-$skip-height: 32px;
-$skip-width: 150px;
+$skip-width: 200px;
 
 #skip {
 	background: $pink;
 	border: 0;
 	border-radius: 0;
 	color: $black;
-	height: $skip-height;
+	font-size: 20px;
+	font-weight: bold;
+	height: $button-size;
 	left: 50%;
-	line-height: $skip-height;
+	line-height: $button-size;
 	margin-left: #{$skip-width * -.5};
 	opacity: 0;
+	padding: 0;
 	position: absolute;
 	text-align: center;
 	text-decoration: none;
-	top: #{-1 * $skip-height};
+	top: -$button-size;
 	width: $skip-width;
 	z-index: 99999;
 
 	&:active,
 	&:focus {
-		box-shadow: inset 0 0 0 $formosa-focus-border-width $formosa-focus-box-shadow-color;
+		box-shadow: 0 0 10px 5px rgba($black, .2), 0 0 0 $formosa-focus-border-width $formosa-focus-box-shadow-color;
 		opacity: 1;
 		top: 0;
 	}

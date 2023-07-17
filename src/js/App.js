@@ -17,6 +17,7 @@ export default function App() {
 
 	// Accessibility: skip to content (https://www.bignerdranch.com/blog/web-accessibility-skip-navigation-links/).
 	const onClick = (e) => {
+		e.preventDefault();
 		const id = e.target.getAttribute('href').split('#')[1];
 		const elem = document.getElementById(id);
 		elem.setAttribute('tabindex', -1);
