@@ -22,7 +22,7 @@ export const pad = (n, width = 2, z = '0') => {
 	return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
 };
 
-export const pluralize = (servingUnits, servingSize) => { // eslint-disable-line import/prefer-default-export
+export const pluralize = (servingUnits, servingSize) => {
 	if (!servingUnits) {
 		return '';
 	}
