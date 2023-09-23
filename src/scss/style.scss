@@ -1,7 +1,7 @@
 @use 'sass:math';
-@import './node_modules/normalize.css/normalize';
+@import 'normalize.css/normalize';
 @import 'utilities/variables';
-@import './node_modules/@jlbelanger/formosa/src/style';
+@import '@jlbelanger/formosa/src/style';
 @import 'layout/layout';
 @import 'layout/header';
 @import 'layout/footer';
