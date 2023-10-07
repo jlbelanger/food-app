@@ -2,35 +2,3 @@
 	bottom: 0;
 	order: 2;
 }
-
-#nav {
-	display: flex;
-	justify-content: space-between;
-	margin: 0 auto;
-}
-
-.nav__button,
-.nav__link {
-	color: $white;
-	height: $nav-height;
-}
-
-.nav__link {
-	align-items: center;
-	border-color: transparent;
-	border-style: solid;
-	border-width: 3px 0;
-	display: flex;
-	flex: 1 1 auto;
-	justify-content: center;
-	text-decoration: none;
-
-	& + .nav__link {
-		margin-left: 2px;
-	}
-}
-
-.nav__link--active {
-	border-bottom-color: $yellow;
-	color: $yellow;
-}

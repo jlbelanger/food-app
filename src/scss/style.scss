@@ -1,45 +1,33 @@
 @use 'sass:math';
-@import 'normalize.css/normalize';
 @import 'utilities/variables';
+@import 'normalize.css/normalize';
 @import '@jlbelanger/formosa/src/style';
-@import 'layout/layout';
+@import 'layout/typography';
+@import 'layout/main';
 @import 'layout/header';
+@import 'layout/content';
+@import 'layout/nav';
 @import 'layout/footer';
-@import 'components/buttons';
+@import 'components/add-another';
+@import 'components/button';
 @import 'components/calendar';
 @import 'components/chart';
+@import 'components/contain';
 @import 'components/diary';
 @import 'components/favourite';
 @import 'components/food';
 @import 'components/formosa';
-@import 'components/headings';
-@import 'components/hrs';
-@import 'components/links';
+@import 'components/heading';
+@import 'components/hr';
+@import 'components/icon';
+@import 'components/link';
 @import 'components/meal';
-@import 'components/modals';
+@import 'components/modal';
 @import 'components/nutrition-facts';
 @import 'components/pagination';
+@import 'components/password';
+@import 'components/radio';
 @import 'components/search';
 @import 'components/skip';
-@import 'components/radio-lists';
-@import 'components/tables';
+@import 'components/table';
 @import 'components/verified';
-
-p {
-	line-height: 1.5;
-	margin: $margin 0 0;
-}
-
-svg {
-	pointer-events: none;
-}
-
-.formosa-field--add-another {
-	font-size: 16px;
-	margin-left: 8px;
-	margin-top: 0;
-}
-
-.formosa-password-wrapper {
-	display: flex;
-}

@@ -1,3 +1,5 @@
+// Colors
+
 $white: #fff;
 $off-white: #f9f9f9;
 $lightest-gray: #ddd;
@@ -20,8 +22,9 @@ $dark-yellow: scale-color($yellow, $lightness: -10%, $saturation: -20%);
 $red: #c33;
 $dark-red: scale-color($red, $lightness: -20%, $saturation: -25%);
 
+// Sizes
+
 $body-background-color: $off-white;
-$breakpoint: 800px;
 $button-border-bottom-width: 4px;
 $button-size: 44px;
 $article-padding: 16px;
@@ -42,6 +45,8 @@ $modal-max-width: 800px !default;
 $modal-padding: 32px !default;
 $modal-text-color: $black !default;
 $modal-zindex: 9999 !default;
+
+// Overrides
 
 $formosa-autocomplete-options-background-color-highlighted: $yellow;
 
@@ -73,3 +78,7 @@ $formosa-spinner-color-alternate: $pink;
 
 $formosa-toast-bottom: $nav-height;
 $formosa-toast-padding: 12px;
+
+// Breakpoints
+
+$breakpoint: 800px;
