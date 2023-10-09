@@ -36,15 +36,10 @@ describe('login', () => {
 			cy.intercept('DELETE', '**/api/auth/logout').as('logout');
 
 			// Register.
-			const username = `foo+${Date.now()}`;
+			const username = `foo${Date.now()}`;
 			cy.clearCookies();
 			cy.visit('/register');
-			cy.get('[name="username"]').type(username);
-			cy.get('[name="email"]').type(`${username}@example.com`);
-			cy.get('[name="password"]').type(Cypress.env('default_password'));
-			cy.get('[name="password_confirmation"]').type(Cypress.env('default_password'));
-			cy.get('[type="submit"]').click();
-			cy.wait('@register').its('response.statusCode').should('equal', 200);
+			cy.register(username, Cypress.env('default_password'));
 			cy.get('.nav__link').contains('Profile').click();
 			cy.get('.nav__button').contains('Logout').click();
 			cy.wait('@logout').its('response.statusCode').should('equal', 204);

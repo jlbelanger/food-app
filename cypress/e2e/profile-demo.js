@@ -20,8 +20,8 @@ describe('profile demo', () => {
 			cy.get('[name="username"]').clear().type('newdemousername');
 			cy.get('button').contains('Change username').click();
 			cy.wait('@putUser').its('response.statusCode').should('equal', 422);
-			cy.get('.formosa-alert--error').invoke('text').should('equal', 'Error: The username cannot be changed.');
-			cy.get('#username-error').invoke('text').should('equal', 'The username cannot be changed.');
+			cy.get('.formosa-alert--error').invoke('text').should('equal', 'Error: The username field is prohibited.');
+			cy.get('#username-error').invoke('text').should('equal', 'The username field is prohibited.');
 			cy.reload();
 			cy.wait('@getUser').its('response.statusCode').should('equal', 200);
 			cy.get('[name="username"]').should('have.value', Cypress.env('demo_username'));

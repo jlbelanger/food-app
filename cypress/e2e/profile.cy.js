@@ -327,8 +327,8 @@ describe('profile', () => {
 				cy.get('#current-password-email').clear().type('wrongpassword');
 				cy.get('button').contains('Change email').click();
 				cy.wait('@changeEmail').its('response.statusCode').should('equal', 422);
-				cy.get('.formosa-alert--error').invoke('text').should('equal', 'Error: Current password is incorrect.');
-				cy.get('#current-password-email-error').invoke('text').should('equal', 'Current password is incorrect.');
+				cy.get('.formosa-alert--error').invoke('text').should('equal', 'Error: The current password is incorrect.');
+				cy.get('#current-password-email-error').invoke('text').should('equal', 'The current password is incorrect.');
 				cy.reload();
 				cy.wait('@getUser').its('response.statusCode').should('equal', 200);
 				cy.get(`[name="email"][value="${Cypress.env('default_email')}"]`).should('exist');
@@ -415,8 +415,8 @@ describe('profile', () => {
 				cy.get('#current-password-password').clear().type('wrongpassword');
 				cy.get('button').contains('Change password').click();
 				cy.wait('@changePassword').its('response.statusCode').should('equal', 422);
-				cy.get('.formosa-alert--error').invoke('text').should('equal', 'Error: Current password is incorrect.');
-				cy.get('#current-password-password-error').invoke('text').should('equal', 'Current password is incorrect.');
+				cy.get('.formosa-alert--error').invoke('text').should('equal', 'Error: The current password is incorrect.');
+				cy.get('#current-password-password-error').invoke('text').should('equal', 'The current password is incorrect.');
 			});
 		});
 

@@ -21,13 +21,35 @@ Cypress.Commands.add('login', (username = '', password = '') => {
 });
 
 Cypress.Commands.add('register', (username = '', password = '') => {
+	cy.intercept('POST', '**/api/auth/register').as('register');
+	cy.intercept('POST', '**/api/auth/login').as('login');
+
+	const email = `${username}@example.com`;
 	cy.visit('/register');
 	cy.get('[name="username"]').type(username);
-	cy.get('[name="email"]').type(`${username}@example.com`);
+	cy.get('[name="email"]').type(email);
 	cy.get('[name="password"]').type(password);
 	cy.get('[name="password_confirmation"]').type(password);
-	cy.intercept('POST', '**/api/auth/register').as('register');
 	cy.get('[type="submit"]').click();
-	cy.wait('@register').its('response.statusCode').should('equal', 200);
+	cy.wait('@register').its('response.statusCode').should('equal', 204);
 	cy.location('pathname').should('eq', '/');
+	cy.get('.formosa-alert--success').first().invoke('text')
+		.should('equal', `Check your email (${email}) to continue the registration process.`);
+
+	// Verify email.
+	cy.visit(Cypress.env('mail_url'));
+	cy.contains('[Food Tracker] Verify Email Address').click();
+	cy.get('#nav-plain-text-tab').click();
+	cy.get('[href*="/verify-email"]')
+		.then(($a) => {
+			cy.visit($a.attr('href'));
+			cy.get('[data-cy="verify"]').click();
+			cy.closeToast('Email verified successfully.');
+
+			// Login.
+			cy.get('[name="username"]').type(username);
+			cy.get('[name="password"]').type(Cypress.env('default_password'));
+			cy.get('[type="submit"]').click();
+			cy.wait('@login').its('response.statusCode').should('equal', 200);
+		});
 });

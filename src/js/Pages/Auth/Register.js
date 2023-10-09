@@ -4,12 +4,18 @@ import Auth from '../../Utilities/Auth';
 import { errorMessageText } from '../../Utilities/Helpers';
 import MetaTitle from '../../Components/MetaTitle';
 import MyForm from '../../Components/MyForm';
+import { useHistory } from 'react-router-dom';
 
 export default function Register() {
+	const history = useHistory();
 	const [row, setRow] = useState({});
 	const afterSubmitSuccess = (response) => {
-		Auth.login(response.user, response.token, response.user.remember);
-		window.location.href = process.env.PUBLIC_URL || '/';
+		if (response.user) {
+			Auth.login(response.user, response.token, response.user.remember);
+			window.location.href = process.env.PUBLIC_URL || '/';
+		} else {
+			history.push(`/?verify=1&email=${row.email}&username=${row.username}`);
+		}
 	};
 
 	return (

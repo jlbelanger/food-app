@@ -23,7 +23,7 @@ describe('register', () => {
 
 			cy.clearCookies();
 			cy.visit('/register');
-			cy.get('[name="username"]').type(`foo+${Date.now()}`);
+			cy.get('[name="username"]').type(`foo${Date.now()}`);
 			cy.get('[name="email"]').type(Cypress.env('taken_email'));
 			cy.get('[name="password"]').type(Cypress.env('default_password'));
 			cy.get('[name="password_confirmation"]').type(Cypress.env('default_password'));
@@ -37,7 +37,7 @@ describe('register', () => {
 		it('shows an error', () => {
 			cy.intercept('POST', '**/api/auth/register').as('register');
 
-			const username = `foo+${Date.now()}`;
+			const username = `foo${Date.now()}`;
 			cy.clearCookies();
 			cy.visit('/register');
 			cy.get('[name="username"]').type(username);
@@ -54,46 +54,70 @@ describe('register', () => {
 		it('works', () => {
 			cy.intercept('GET', '**/api/calendar/*').as('getCalendar');
 			cy.intercept('POST', '**/api/auth/register').as('register');
+			cy.intercept('POST', '**/api/auth/login').as('login');
+			cy.intercept('GET', '**/api/users/*').as('getUser');
 			cy.intercept('DELETE', '**/api/users/*').as('deleteUser');
 
 			// Register.
-			const username = `foo+${Date.now()}`;
+			const username = `foo${Date.now()}`;
+			const email = `${username}@example.com`;
 			cy.clearCookies();
 			cy.visit('/register');
 			cy.get('[name="username"]').type(username);
-			cy.get('[name="email"]').type(`${username}@example.com`);
+			cy.get('[name="email"]').type(email);
 			cy.get('[name="password"]').type(Cypress.env('default_password'));
 			cy.get('[name="password_confirmation"]').type(Cypress.env('default_password'));
 			cy.get('[type="submit"]').click();
-			cy.wait('@register').its('response.statusCode').should('equal', 200);
+			cy.wait('@register').its('response.statusCode').should('equal', 204);
 			cy.location('pathname').should('eq', '/');
+			cy.get('.formosa-alert--success').first().invoke('text')
+				.should('equal', `Check your email (${email}) to continue the registration process.`);
 
-			// Set measurement units.
-			cy.get('.nav__link').contains('Profile').click();
-			cy.get('#height + .formosa-suffix').should('contain', 'centimetres');
-			cy.get('[id="weight.weight"] + .formosa-suffix').should('contain', 'kgs');
-			cy.get('#measurement_units').select('imperial (weight in pounds, height in inches)');
-			cy.get('#height + .formosa-suffix').should('contain', 'inches');
-			cy.get('[id="weight.weight"] + .formosa-suffix').should('contain', 'lbs');
-			cy.get('#save-bmi').click();
-			cy.get('#measurement_units').should('be.disabled');
+			// Verify email.
+			cy.visit(Cypress.env('mail_url'));
+			cy.contains('[Food Tracker] Verify Email Address').click();
+			cy.get('#nav-plain-text-tab').click();
+			cy.get('[href*="/verify-email"]')
+				.then(($a) => {
+					cy.visit($a.attr('href'));
+					cy.get('[data-cy="verify"]').click();
+					cy.closeToast('Email verified successfully.');
 
-			// Shows correct weight units on diary.
-			cy.get('.nav__link').contains('Diary').click();
-			cy.get('#weight + .formosa-suffix').should('contain', 'lbs');
+					// Login.
+					cy.get('[name="username"]').type(username);
+					cy.get('[name="password"]').type(Cypress.env('default_password'));
+					cy.get('[type="submit"]').click();
+					cy.wait('@login').its('response.statusCode').should('equal', 200);
+					cy.location('pathname').should('eq', '/');
 
-			// Shows correct weight units on calendar.
-			cy.setWeight('130.5');
-			cy.get('.nav__link').contains('Calendar').click();
-			cy.wait('@getCalendar').its('response.statusCode').should('equal', 200);
-			cy.get('.calendar__item').contains('130.5 lbs').should('be.visible');
+					// Set measurement units.
+					cy.get('.nav__link').contains('Profile').click();
+					cy.get('#height + .formosa-suffix').should('contain', 'centimetres');
+					cy.get('[id="weight.weight"] + .formosa-suffix').should('contain', 'kgs');
+					cy.get('#measurement_units').select('imperial (weight in pounds, height in inches)');
+					cy.get('#height + .formosa-suffix').should('contain', 'inches');
+					cy.get('[id="weight.weight"] + .formosa-suffix').should('contain', 'lbs');
+					cy.get('#save-bmi').click();
+					cy.get('#measurement_units').should('be.disabled');
 
-			// Delete.
-			cy.get('.nav__link').contains('Profile').click();
-			cy.get('.formosa-button--danger').contains('Delete account').click();
-			cy.get('dialog .formosa-button--danger').contains('Delete').click();
-			cy.wait('@deleteUser').its('response.statusCode').should('equal', 204);
-			cy.location('pathname').should('eq', '/');
+					// Shows correct weight units on diary.
+					cy.get('.nav__link').contains('Diary').click();
+					cy.get('#weight + .formosa-suffix').should('contain', 'lbs');
+
+					// Shows correct weight units on calendar.
+					cy.setWeight('130.5');
+					cy.get('.nav__link').contains('Calendar').click();
+					cy.wait('@getCalendar').its('response.statusCode').should('equal', 200);
+					cy.get('.calendar__item').contains('130.5 lbs').should('be.visible');
+
+					// Delete.
+					cy.get('.nav__link').contains('Profile').click();
+					cy.wait('@getUser').its('response.statusCode').should('equal', 200);
+					cy.get('.formosa-button--danger').contains('Delete account').click();
+					cy.get('dialog .formosa-button--danger').contains('Delete').click();
+					cy.wait('@deleteUser').its('response.statusCode').should('equal', 204);
+					cy.location('pathname').should('eq', '/');
+				});
 		});
 	});
 
@@ -101,7 +125,7 @@ describe('register', () => {
 		it('shows an error', () => {
 			mockServerError('POST', '**/api/auth/register').as('register');
 
-			const username = `foo+${Date.now()}`;
+			const username = `foo${Date.now()}`;
 			cy.clearCookies();
 			cy.visit('/register');
 			cy.get('[name="username"]').type(username);

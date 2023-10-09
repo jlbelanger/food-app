@@ -21,7 +21,7 @@
 		"test:cypress": "node_modules/.bin/cypress open"
 	},
 	"dependencies": {
-		"@jlbelanger/formosa": "jlbelanger/formosa#f3e6f984adfdcf33efe66017f5f1bbf56dcf8d6e",
+		"@jlbelanger/formosa": "jlbelanger/formosa#0855a1eeab64f8ff9322738b110aaa2a339647ae",
 		"chart.js": "^4.1.1",
 		"chartjs-adapter-luxon": "^1.3.0",
 		"chartjs-plugin-zoom": "^2.0.0",
