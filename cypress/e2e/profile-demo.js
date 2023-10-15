@@ -8,8 +8,8 @@ describe('profile demo', () => {
 		it('does not allow changing login info', () => {
 			cy.intercept('GET', '**/api/users/*').as('getUser');
 			cy.intercept('PUT', '**/api/users/*').as('putUser');
-			cy.intercept('PUT', '**/api/users/*/change-email').as('changeEmail');
-			cy.intercept('PUT', '**/api/users/*/change-password').as('changePassword');
+			cy.intercept('PUT', '**/api/auth/change-email').as('changeEmail');
+			cy.intercept('PUT', '**/api/auth/change-password').as('changePassword');
 			cy.intercept('DELETE', '**/api/auth/logout').as('logout');
 
 			// Go to profile.

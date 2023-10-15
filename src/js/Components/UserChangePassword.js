@@ -12,7 +12,7 @@ export default function UserChangePassword({ user }) {
 			clearOnSubmit
 			errorMessageText={errorMessageText}
 			method="PUT"
-			path={`users/${row.id}/change-password`}
+			path="auth/change-password"
 			preventEmptyRequest
 			row={row}
 			setRow={setRow}

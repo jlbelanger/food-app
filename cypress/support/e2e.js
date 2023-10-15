@@ -38,7 +38,7 @@ Cypress.Commands.add('register', (username = '', password = '') => {
 
 	// Verify email.
 	cy.visit(Cypress.env('mail_url'));
-	cy.contains('[Food Tracker] Verify Email Address').click();
+	cy.contains(`[${Cypress.env('site_name')}] Verify Email Address`).click();
 	cy.get('#nav-plain-text-tab').click();
 	cy.get('[href*="/verify-email"]')
 		.then(($a) => {

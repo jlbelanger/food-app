@@ -163,7 +163,10 @@ export default function Edit() {
 					const oldFoods = JSON.parse(JSON.stringify(values.foods));
 					const newFoods = [];
 					oldFoods.forEach((f) => {
-						delete f.food;
+						f.food = {
+							id: f.food.id,
+							type: f.food.type,
+						};
 						newFoods.push(f);
 					});
 					return { ...values, foods: newFoods };
@@ -174,7 +177,7 @@ export default function Edit() {
 				path="meals"
 				params={mealParams}
 				preventEmptyRequest
-				relationshipNames={['foods', 'foods.food', 'user']}
+				relationshipNames={['foods', 'foods.food', 'foods.meal', 'user']}
 				row={row}
 				setRow={setRow}
 				successToastText="Meal saved successfully."
@@ -203,8 +206,10 @@ export default function Edit() {
 								const newValue = {
 									id: `temp-${uuidv4()}`,
 									type: 'food-meal',
-									food_id: food.id,
-									meal_id: row.id,
+									meal: {
+										id: row.id,
+										type: row.type,
+									},
 									food,
 									user_serving_size: food.serving_size,
 								};

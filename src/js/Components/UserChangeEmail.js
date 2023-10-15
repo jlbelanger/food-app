@@ -11,7 +11,7 @@ export default function UserChangeEmail({ user }) {
 		<MyForm
 			errorMessageText={errorMessageText}
 			method="PUT"
-			path={`users/${row.id}/change-email`}
+			path="auth/change-email"
 			preventEmptyRequest
 			row={row}
 			setRow={setRow}
