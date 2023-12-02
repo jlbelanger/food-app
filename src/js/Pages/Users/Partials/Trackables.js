@@ -1,11 +1,11 @@
 import { Alert, Api, Field, FormAlert, Submit } from '@jlbelanger/formosa';
 import React, { useEffect, useState } from 'react';
-import Auth from '../Utilities/Auth';
-import { errorMessageText } from '../Utilities/Helpers';
-import MyForm from './MyForm';
+import Auth from '../../../Utilities/Auth';
+import { errorMessageText } from '../../../Utilities/Helpers';
+import MyForm from '../../../Components/MyForm';
 import PropTypes from 'prop-types';
 
-export default function UserTrackables({ user }) {
+export default function Trackables({ user }) {
 	const [row, setRow] = useState(user);
 	const [trackablesError, setTrackablesError] = useState(false);
 	const [allTrackables, setAllTrackables] = useState([]);
@@ -77,6 +77,6 @@ export default function UserTrackables({ user }) {
 	);
 }
 
-UserTrackables.propTypes = {
+Trackables.propTypes = {
 	user: PropTypes.object.isRequired,
 };

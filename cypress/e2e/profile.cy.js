@@ -194,7 +194,7 @@ describe('profile', () => {
 			cy.get('.table-heading').contains('Fat').should('not.exist');
 
 			// Add and remove a trackable.
-			cy.get('.nav__link').contains('Profile').click();
+			cy.get('[data-cy="profile"]').click();
 			cy.wait('@getUser').its('response.statusCode').should('equal', 200);
 			cy.wait('@getTrackables').its('response.statusCode').should('equal', 200);
 			cy.get('#trackable-calories').should('not.be.checked');
@@ -284,7 +284,6 @@ describe('profile', () => {
 				cy.intercept('GET', '**/api/users/*').as('getUser');
 				mockServerError('PUT', '**/api/users/*').as('putUser');
 
-				// Change.
 				const name = `${Cypress.env('default_username')}2`;
 				cy.visit('/profile');
 				cy.wait('@getUser').its('response.statusCode').should('equal', 200);
@@ -304,8 +303,8 @@ describe('profile', () => {
 
 				cy.visit('/profile');
 				cy.wait('@getUser').its('response.statusCode').should('equal', 200);
-				cy.get('[name="email"]').clear().type(Cypress.env('taken_email'));
 				cy.get('#current-password-email').clear().type(Cypress.env('default_password'));
+				cy.get('[name="email"]').clear().type(Cypress.env('taken_email'));
 				cy.get('button').contains('Change email').click();
 				cy.wait('@changeEmail').its('response.statusCode').should('equal', 422);
 				cy.get('.formosa-alert--error').invoke('text').should('equal', 'Error: The email has already been taken.');
@@ -323,8 +322,8 @@ describe('profile', () => {
 
 				cy.visit('/profile');
 				cy.wait('@getUser').its('response.statusCode').should('equal', 200);
-				cy.get('[name="email"]').clear().type(`${Cypress.env('default_email')}2`);
 				cy.get('#current-password-email').clear().type('wrongpassword');
+				cy.get('[name="email"]').clear().type(`${Cypress.env('default_email')}2`);
 				cy.get('button').contains('Change email').click();
 				cy.wait('@changeEmail').its('response.statusCode').should('equal', 422);
 				cy.get('.formosa-alert--error').invoke('text').should('equal', 'Error: The current password is incorrect.');
@@ -344,8 +343,8 @@ describe('profile', () => {
 				const email = `${Cypress.env('default_email')}2`;
 				cy.visit('/profile');
 				cy.wait('@getUser').its('response.statusCode').should('equal', 200);
-				cy.get('[name="email"]').clear().type(email);
 				cy.get('#current-password-email').clear().type(Cypress.env('default_password'));
+				cy.get('[name="email"]').clear().type(email);
 				cy.get('button').contains('Change email').click();
 				cy.wait('@changeEmail').its('response.statusCode').should('equal', 204);
 				cy.closeToast('Email changed successfully.');
@@ -354,8 +353,8 @@ describe('profile', () => {
 				cy.get(`[name="email"][value="${email}"]`).should('exist');
 
 				// Change back.
-				cy.get('[name="email"]').clear().type(Cypress.env('default_email'));
 				cy.get('#current-password-email').clear().type(Cypress.env('default_password'));
+				cy.get('[name="email"]').clear().type(Cypress.env('default_email'));
 				cy.get('button').contains('Change email').click();
 				cy.wait('@changeEmail').its('response.statusCode').should('equal', 204);
 				cy.closeToast('Email changed successfully.');
@@ -373,8 +372,8 @@ describe('profile', () => {
 				const email = `${Cypress.env('default_email')}2`;
 				cy.visit('/profile');
 				cy.wait('@getUser').its('response.statusCode').should('equal', 200);
-				cy.get('[name="email"]').clear().type(email);
 				cy.get('#current-password-email').clear().type(Cypress.env('default_password'));
+				cy.get('[name="email"]').clear().type(email);
 				cy.get('button').contains('Change email').click();
 				cy.wait('@changeEmail').its('response.statusCode').should('equal', 500);
 				cy.get('.formosa-alert--error').invoke('text').should('equal', 'Error: Unable to connect to the server. Please try again later.');
@@ -388,12 +387,11 @@ describe('profile', () => {
 				cy.intercept('GET', '**/api/users/*').as('getUser');
 				cy.intercept('PUT', '**/api/auth/change-password').as('changePassword');
 
-				// Change.
 				cy.visit('/profile');
 				cy.wait('@getUser').its('response.statusCode').should('equal', 200);
+				cy.get('#current-password-password').clear().type(Cypress.env('default_password'));
 				cy.get('#new_password').clear().type(`${Cypress.env('default_password')}2`);
 				cy.get('#new_password_confirmation').clear().type('somethingelse');
-				cy.get('#current-password-password').clear().type(Cypress.env('default_password'));
 				cy.get('button').contains('Change password').click();
 				cy.wait('@changePassword').its('response.statusCode').should('equal', 422);
 				cy.get('.formosa-alert--error').invoke('text').should('equal', 'Error: The new password confirmation does not match.');
@@ -406,13 +404,12 @@ describe('profile', () => {
 				cy.intercept('GET', '**/api/users/*').as('getUser');
 				cy.intercept('PUT', '**/api/auth/change-password').as('changePassword');
 
-				// Change.
 				const password = `${Cypress.env('default_password')}2`;
 				cy.visit('/profile');
 				cy.wait('@getUser').its('response.statusCode').should('equal', 200);
+				cy.get('#current-password-password').clear().type('wrongpassword');
 				cy.get('#new_password').clear().type(password);
 				cy.get('#new_password_confirmation').clear().type(password);
-				cy.get('#current-password-password').clear().type('wrongpassword');
 				cy.get('button').contains('Change password').click();
 				cy.wait('@changePassword').its('response.statusCode').should('equal', 422);
 				cy.get('.formosa-alert--error').invoke('text').should('equal', 'Error: The current password is incorrect.');
@@ -429,9 +426,9 @@ describe('profile', () => {
 				const password = `${Cypress.env('default_password')}2`;
 				cy.visit('/profile');
 				cy.wait('@getUser').its('response.statusCode').should('equal', 200);
+				cy.get('#current-password-password').clear().type(Cypress.env('default_password'));
 				cy.get('#new_password').clear().type(password);
 				cy.get('#new_password_confirmation').clear().type(password);
-				cy.get('#current-password-password').clear().type(Cypress.env('default_password'));
 				cy.get('button').contains('Change password').click();
 				cy.wait('@changePassword').its('response.statusCode').should('equal', 204);
 				cy.closeToast('Password changed successfully.');
@@ -439,9 +436,9 @@ describe('profile', () => {
 				// Change back.
 				cy.reload();
 				cy.wait('@getUser').its('response.statusCode').should('equal', 200);
+				cy.get('#current-password-password').clear().type(password);
 				cy.get('#new_password').clear().type(Cypress.env('default_password'));
 				cy.get('#new_password_confirmation').clear().type(Cypress.env('default_password'));
-				cy.get('#current-password-password').clear().type(password);
 				cy.get('button').contains('Change password').click();
 				cy.wait('@changePassword').its('response.statusCode').should('equal', 204);
 				cy.closeToast('Password changed successfully.');
@@ -456,9 +453,9 @@ describe('profile', () => {
 				const password = `${Cypress.env('default_password')}2`;
 				cy.visit('/profile');
 				cy.wait('@getUser').its('response.statusCode').should('equal', 200);
+				cy.get('#current-password-password').clear().type(Cypress.env('default_password'));
 				cy.get('#new_password').clear().type(password);
 				cy.get('#new_password_confirmation').clear().type(password);
-				cy.get('#current-password-password').clear().type(Cypress.env('default_password'));
 				cy.get('button').contains('Change password').click();
 				cy.wait('@changePassword').its('response.statusCode').should('equal', 500);
 				cy.get('.formosa-alert--error').invoke('text').should('equal', 'Error: Unable to connect to the server. Please try again later.');
@@ -513,7 +510,7 @@ describe('profile', () => {
 				// Logout.
 				cy.get('.nav__button').contains('Logout').click();
 				cy.wait('@logout').its('response.statusCode').should('equal', 500);
-				cy.location('pathname').should('eq', '/');
+				cy.location('pathname').should('eq', Cypress.env('public_path'));
 			});
 		});
 	});

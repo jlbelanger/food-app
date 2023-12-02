@@ -1,11 +1,11 @@
 import { Field, FormAlert, Submit } from '@jlbelanger/formosa';
 import React, { useState } from 'react';
-import Auth from '../Utilities/Auth';
-import { errorMessageText } from '../Utilities/Helpers';
-import MyForm from './MyForm';
+import Auth from '../../../Utilities/Auth';
+import { errorMessageText } from '../../../Utilities/Helpers';
+import MyForm from '../../../Components/MyForm';
 import PropTypes from 'prop-types';
 
-export default function UserBmi({ user }) {
+export default function Bmi({ user }) {
 	const [row, setRow] = useState(user);
 	const [isMeasurementUnitsDisabled, setIsMeasurementUnitsDisabled] = useState(!!row.measurement_units);
 
@@ -173,6 +173,6 @@ export default function UserBmi({ user }) {
 	);
 }
 
-UserBmi.propTypes = {
+Bmi.propTypes = {
 	user: PropTypes.object.isRequired,
 };

@@ -1,16 +1,16 @@
 import { Alert, Api } from '@jlbelanger/formosa';
 import React, { useEffect, useState } from 'react';
 import Auth from '../../Utilities/Auth';
+import Bmi from './Partials/Bmi';
+import ChangeEmail from './Partials/ChangeEmail';
+import ChangePassword from './Partials/ChangePassword';
+import ChangeUsername from './Partials/ChangeUsername';
+import DeleteData from './Partials/DeleteData';
 import Error from '../../Error';
 import { errorMessageText } from '../../Utilities/Helpers';
 import MetaTitle from '../../Components/MetaTitle';
 import Modal from '../../Components/Modal';
-import UserBmi from '../../Components/UserBmi';
-import UserChangeEmail from '../../Components/UserChangeEmail';
-import UserChangePassword from '../../Components/UserChangePassword';
-import UserChangeUsername from '../../Components/UserChangeUsername';
-import UserDeleteData from '../../Components/UserDeleteData';
-import UserTrackables from '../../Components/UserTrackables';
+import Trackables from './Partials/Trackables';
 
 export default function Edit() {
 	const id = Auth.id();
@@ -62,28 +62,26 @@ export default function Edit() {
 		<>
 			<MetaTitle title="Profile" />
 
-			<UserBmi user={row} />
+			<Bmi user={row} />
 
 			<hr />
 
-			<UserTrackables user={row} />
+			<Trackables user={row} />
 
 			<hr />
 
 			<h2>Account</h2>
-			<UserChangeUsername user={row} />
+			<ChangeUsername id={row.id} username={row.username} />
 			<hr />
-			<UserChangeEmail user={row} />
+			<ChangeEmail email={row.email} />
 			<hr />
-			<UserChangePassword user={row} />
+			<ChangePassword />
 
 			<hr />
 
 			<h3>Delete data</h3>
-
 			{deleteError && (<Alert type="error">{deleteError}</Alert>)}
-
-			<UserDeleteData setDeleteError={setDeleteError} user={row} />
+			<DeleteData setDeleteError={setDeleteError} user={row} />
 
 			<p>
 				<button

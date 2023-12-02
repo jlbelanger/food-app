@@ -17,7 +17,7 @@ describe('register', () => {
 		});
 	});
 
-	describe('with an email that is taken', () => {
+	describe('with email that is taken', () => {
 		it('shows an error', () => {
 			cy.intercept('POST', '**/api/auth/register').as('register');
 
@@ -69,16 +69,20 @@ describe('register', () => {
 			cy.get('[name="password_confirmation"]').type(Cypress.env('default_password'));
 			cy.get('[type="submit"]').click();
 			cy.wait('@register').its('response.statusCode').should('equal', 204);
-			cy.location('pathname').should('eq', '/');
+			cy.location('pathname').should('eq', Cypress.env('public_path'));
 			cy.get('.formosa-alert--success').first().invoke('text')
 				.should('equal', `Check your email (${email}) to continue the registration process.`);
 
 			// Verify email.
+			// TODO: With expired token on page load.
+			// TODO: With expired token on submit.
 			cy.visit(Cypress.env('mail_url'));
 			cy.contains(`[${Cypress.env('site_name')}] Verify Email Address`).click();
 			cy.get('#nav-plain-text-tab').click();
 			cy.get('[href*="/verify-email"]')
 				.then(($a) => {
+					// TODO: With invalid token.
+					// TODO: With invalid signature.
 					cy.visit($a.attr('href'));
 					cy.get('[data-cy="verify"]').click();
 					cy.closeToast('Email verified successfully.');
@@ -88,10 +92,10 @@ describe('register', () => {
 					cy.get('[name="password"]').type(Cypress.env('default_password'));
 					cy.get('[type="submit"]').click();
 					cy.wait('@login').its('response.statusCode').should('equal', 200);
-					cy.location('pathname').should('eq', '/');
+					cy.location('pathname').should('eq', Cypress.env('public_path'));
 
 					// Set measurement units.
-					cy.get('.nav__link').contains('Profile').click();
+					cy.get('[data-cy="profile"]').click();
 					cy.get('#height + .formosa-suffix').should('contain', 'centimetres');
 					cy.get('[id="weight.weight"] + .formosa-suffix').should('contain', 'kgs');
 					cy.get('#measurement_units').select('imperial (weight in pounds, height in inches)');
@@ -111,12 +115,12 @@ describe('register', () => {
 					cy.get('.calendar__item').contains('130.5 lbs').should('be.visible');
 
 					// Delete.
-					cy.get('.nav__link').contains('Profile').click();
+					cy.get('[data-cy="profile"]').click();
 					cy.wait('@getUser').its('response.statusCode').should('equal', 200);
 					cy.get('.formosa-button--danger').contains('Delete account').click();
 					cy.get('dialog .formosa-button--danger').contains('Delete').click();
 					cy.wait('@deleteUser').its('response.statusCode').should('equal', 204);
-					cy.location('pathname').should('eq', '/');
+					cy.location('pathname').should('eq', Cypress.env('public_path'));
 				});
 		});
 	});

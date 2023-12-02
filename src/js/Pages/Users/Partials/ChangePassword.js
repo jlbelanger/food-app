@@ -1,16 +1,15 @@
 import { Field, FormAlert, Submit } from '@jlbelanger/formosa';
 import React, { useState } from 'react';
-import { errorMessageText } from '../Utilities/Helpers';
-import MyForm from './MyForm';
-import PropTypes from 'prop-types';
+import { errorMessageText } from '../../../Utilities/Helpers';
+import MyForm from '../../../Components/MyForm';
 
-export default function UserChangePassword({ user }) {
-	const [row, setRow] = useState(user);
+export default function ChangePassword() {
+	const [row, setRow] = useState({});
 
 	return (
 		<MyForm
-			clearOnSubmit
 			errorMessageText={errorMessageText}
+			clearOnSubmit
 			method="PUT"
 			path="auth/change-password"
 			preventEmptyRequest
@@ -28,12 +27,13 @@ export default function UserChangePassword({ user }) {
 				id="current-password-password"
 				label="Current password"
 				name="password"
+				note="You must enter your current password to change your password."
 				required
 				type="password"
 			/>
 
 			<Field
-				autcomplete="new-password"
+				autoComplete="new-password"
 				label="New password"
 				name="new_password"
 				required
@@ -41,7 +41,7 @@ export default function UserChangePassword({ user }) {
 			/>
 
 			<Field
-				autcomplete="new-password"
+				autoComplete="new-password"
 				label="Confirm new password"
 				name="new_password_confirmation"
 				required
@@ -52,7 +52,3 @@ export default function UserChangePassword({ user }) {
 		</MyForm>
 	);
 }
-
-UserChangePassword.propTypes = {
-	user: PropTypes.object.isRequired,
-};

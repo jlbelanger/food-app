@@ -1,10 +1,10 @@
 import { Api, Field, FormosaContext } from '@jlbelanger/formosa';
 import React, { useContext, useState } from 'react';
-import { errorMessageText } from '../Utilities/Helpers';
-import Modal from './Modal';
+import { errorMessageText } from '../../../Utilities/Helpers';
+import Modal from '../../../Components/Modal';
 import PropTypes from 'prop-types';
 
-export default function UserDeleteData({ setDeleteError }) {
+export default function DeleteData({ setDeleteError }) {
 	const { addToast } = useContext(FormosaContext);
 	const [types, setTypes] = useState([]);
 	const [showModal, setShowModal] = useState(false);
@@ -61,6 +61,6 @@ export default function UserDeleteData({ setDeleteError }) {
 	);
 }
 
-UserDeleteData.propTypes = {
+DeleteData.propTypes = {
 	setDeleteError: PropTypes.func.isRequired,
 };

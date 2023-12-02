@@ -279,7 +279,7 @@ describe('diary', () => {
 			cy.get('#weight').should('have.value', '66');
 
 			// Add then check profile.
-			cy.get('.nav__link').contains('Profile').click();
+			cy.get('[data-cy="profile"]').click();
 			cy.wait('@getUser').its('response.statusCode').should('equal', 200);
 			cy.get('[id="weight.weight"]').should('have.value', '66');
 
@@ -291,7 +291,7 @@ describe('diary', () => {
 			cy.get('#weight-form button').click();
 			cy.wait('@deleteWeight').its('response.statusCode').should('equal', 204);
 			cy.closeToast('Weight removed successfully.');
-			cy.get('.nav__link').contains('Profile').click();
+			cy.get('[data-cy="profile"]').click();
 			cy.wait('@getUser').its('response.statusCode').should('equal', 200);
 			cy.get('[id="weight.weight"]').should('have.value', '');
 

@@ -1,7 +1,7 @@
 import { mockServerError } from '../../support/commands';
 
 describe('login', () => {
-	describe('with an invalid username', () => {
+	describe('with invalid username', () => {
 		it('shows an error', () => {
 			cy.intercept('POST', '**/api/auth/login').as('login');
 
@@ -15,7 +15,7 @@ describe('login', () => {
 		});
 	});
 
-	describe('with an invalid password', () => {
+	describe('with invalid password', () => {
 		it('shows an error', () => {
 			cy.intercept('POST', '**/api/auth/login').as('login');
 
@@ -29,7 +29,7 @@ describe('login', () => {
 		});
 	});
 
-	describe('with a valid username and password', () => {
+	describe('with valid username and password', () => {
 		it('works', () => {
 			cy.intercept('POST', '**/api/auth/register').as('register');
 			cy.intercept('POST', '**/api/auth/login').as('login');
@@ -38,12 +38,11 @@ describe('login', () => {
 			// Register.
 			const username = `foo${Date.now()}`;
 			cy.clearCookies();
-			cy.visit('/register');
 			cy.register(username, Cypress.env('default_password'));
-			cy.get('.nav__link').contains('Profile').click();
-			cy.get('.nav__button').contains('Logout').click();
+			cy.get('[data-cy="profile"]').click();
+			cy.get('[data-cy="logout"]').click();
 			cy.wait('@logout').its('response.statusCode').should('equal', 204);
-			cy.location('pathname').should('eq', '/');
+			cy.location('pathname').should('eq', Cypress.env('public_path'));
 
 			// Login.
 			cy.clearCookies();
@@ -52,13 +51,13 @@ describe('login', () => {
 			cy.get('[name="password"]').type(Cypress.env('default_password'));
 			cy.get('[type="submit"]').click();
 			cy.wait('@login').its('response.statusCode').should('equal', 200);
-			cy.location('pathname').should('eq', '/');
+			cy.location('pathname').should('eq', Cypress.env('public_path'));
 
 			// Logout.
-			cy.get('.nav__link').contains('Profile').click();
-			cy.get('.nav__button').contains('Logout').click();
+			cy.get('[data-cy="profile"]').click();
+			cy.get('[data-cy="logout"]').click();
 			cy.wait('@logout').its('response.statusCode').should('equal', 204);
-			cy.location('pathname').should('eq', '/');
+			cy.location('pathname').should('eq', Cypress.env('public_path'));
 		});
 	});
 

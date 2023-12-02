@@ -27,8 +27,8 @@ describe('profile demo', () => {
 			cy.get('[name="username"]').should('have.value', Cypress.env('demo_username'));
 
 			// Change email.
-			cy.get('[name="email"]').clear().type('newdemoemail@example.com');
 			cy.get('#current-password-email').clear().type(Cypress.env('demo_password'));
+			cy.get('[name="email"]').clear().type('newdemoemail@example.com');
 			cy.get('button').contains('Change email').click();
 			cy.wait('@changeEmail').its('response.statusCode').should('equal', 403);
 			cy.get('.formosa-alert--error').invoke('text').should('equal', 'Error: You do not have permission to update this record.');
@@ -38,9 +38,9 @@ describe('profile demo', () => {
 
 			// Change password.
 			const password = 'newdemopassword';
+			cy.get('#current-password-password').clear().type(Cypress.env('demo_password'));
 			cy.get('#new_password').clear().type(password);
 			cy.get('#new_password_confirmation').clear().type(password);
-			cy.get('#current-password-password').clear().type(Cypress.env('demo_password'));
 			cy.get('button').contains('Change password').click();
 			cy.wait('@changePassword').its('response.statusCode').should('equal', 403);
 			cy.get('.formosa-alert--error').invoke('text').should('equal', 'Error: You do not have permission to update this record.');
