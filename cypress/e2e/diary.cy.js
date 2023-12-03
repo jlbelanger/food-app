@@ -38,7 +38,7 @@ describe('diary', () => {
 		it('works', () => {
 			cy.removeEntriesExtras();
 
-			cy.intercept('GET', '**/api/date?**').as('getDate');
+			cy.intercept('GET', '**/api/date?*').as('getDate');
 			cy.intercept('POST', '**/api/extras').as('postExtra');
 			cy.intercept('PUT', '**/api/extras/*').as('putExtra');
 			cy.intercept('DELETE', '**/api/extras/*').as('deleteExtra');
@@ -170,7 +170,7 @@ describe('diary', () => {
 
 	describe('weight', () => {
 		it('works', () => {
-			cy.intercept('GET', '**/api/date?**').as('getDate');
+			cy.intercept('GET', '**/api/date?*').as('getDate');
 			cy.intercept('POST', '**/api/weights').as('addWeight');
 			cy.intercept('PUT', '**/api/weights/*').as('putWeight');
 			cy.intercept('DELETE', '**/api/weights/*').as('deleteWeight');
@@ -347,7 +347,7 @@ describe('diary', () => {
 			it('works', () => {
 				cy.removeEntriesExtras();
 
-				cy.intercept('GET', '**/api/date?**').as('getDate');
+				cy.intercept('GET', '**/api/date?*').as('getDate');
 				cy.intercept('POST', '**/api/entries').as('postEntry');
 				cy.intercept('PUT', '**/api/entries/*').as('putEntry');
 				cy.intercept('DELETE', '**/api/entries/*').as('deleteEntry');
@@ -461,7 +461,7 @@ describe('diary', () => {
 		it('works', () => {
 			cy.removeEntriesExtras();
 
-			cy.intercept('GET', '**/api/meals?**').as('getMeals');
+			cy.intercept('GET', '**/api/meals?*').as('getMeals');
 
 			// Ensure calories is in trackables.
 			cy.setTrackables(['calories']);

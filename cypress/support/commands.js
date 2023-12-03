@@ -17,7 +17,7 @@ Cypress.Commands.add('clearBmiSettings', () => {
 
 Cypress.Commands.add('createFood', (name, servingSize, attributes = {}, addToFavourites = false) => {
 	cy.intercept('POST', '**/api/food').as('postFoodRecord');
-	cy.intercept('POST', '**/api/food/**/favourite').as('favouriteFoodRecord');
+	cy.intercept('POST', '**/api/food/*/favourite').as('favouriteFoodRecord');
 
 	cy.visit('/food/new');
 	cy.get('[name="name"]').type(name);
@@ -78,7 +78,7 @@ Cypress.Commands.add('closeToast', (message) => {
 });
 
 Cypress.Commands.add('removeEntriesExtras', () => {
-	cy.intercept('GET', '**/api/date?**').as('getDate');
+	cy.intercept('GET', '**/api/date?*').as('getDate');
 	cy.intercept('DELETE', '**/api/entries/*').as('deleteEntryRecord');
 	cy.intercept('DELETE', '**/api/extras/*').as('deleteExtraRecord');
 
@@ -107,7 +107,7 @@ Cypress.Commands.add('removeEntriesExtras', () => {
 });
 
 Cypress.Commands.add('setWeight', (weight) => {
-	cy.intercept('GET', '**/api/date?**').as('getDate');
+	cy.intercept('GET', '**/api/date?*').as('getDate');
 	cy.intercept('POST', '**/api/weights').as('postWeightRecord');
 	cy.intercept('PUT', '**/api/weights/*').as('putWeightRecord');
 
@@ -130,7 +130,7 @@ Cypress.Commands.add('setWeight', (weight) => {
 });
 
 Cypress.Commands.add('setTrackables', (trackables = []) => {
-	cy.intercept('GET', '**/api/trackables?**').as('getTrackables');
+	cy.intercept('GET', '**/api/trackables?*').as('getTrackables');
 	cy.intercept('GET', '**/api/users/*').as('getUserRecord');
 
 	cy.visit('/profile');

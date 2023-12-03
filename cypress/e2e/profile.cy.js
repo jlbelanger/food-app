@@ -102,8 +102,8 @@ describe('profile', () => {
 		it('works', () => {
 			cy.intercept('GET', '**/api/trackables?').as('getTrackables');
 			cy.intercept('GET', '**/api/users/*').as('getUser');
-			cy.intercept('GET', '**/api/meals?**').as('getMeals');
-			cy.intercept('GET', '**/api/food?**').as('getFoods');
+			cy.intercept('GET', '**/api/meals?*').as('getMeals');
+			cy.intercept('GET', '**/api/food?*').as('getFoods');
 			cy.intercept('GET', '**/api/meals**').as('getMeal');
 			cy.intercept('PUT', '**/api/users/*').as('putUser');
 			cy.intercept('POST', '**/api/entries').as('postEntry');
