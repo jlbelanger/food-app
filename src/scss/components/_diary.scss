@@ -28,13 +28,13 @@ $add-meal-button-margin: 8px;
 		padding-bottom: #{$fieldset-padding - $add-meal-button-margin};
 	}
 
-	@media (min-width: $breakpoint) {
+	@media (width >= $breakpoint) {
 		margin-top: -$margin;
 	}
 }
 
 #diary-table {
-	@media (min-width: $breakpoint) {
+	@media (width >= $breakpoint) {
 		.formosa-input-wrapper {
 			margin-left: #{-1 * ($margin - $table-cell-padding)};
 			margin-right: #{-1 * ($margin - $table-cell-padding)};
@@ -43,7 +43,7 @@ $add-meal-button-margin: 8px;
 }
 
 #extra-form {
-	@media (min-width: $breakpoint) {
+	@media (width >= $breakpoint) {
 		min-width: 30%;
 	}
 }
@@ -56,7 +56,7 @@ $add-meal-button-margin: 8px;
 		width: 100%;
 	}
 
-	@media (min-width: $breakpoint) {
+	@media (width >= $breakpoint) {
 		display: flex;
 
 		.form {

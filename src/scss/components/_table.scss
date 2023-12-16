@@ -27,13 +27,13 @@ table {
 		margin-top: 0;
 	}
 
-	@media (min-width: $max-width) {
+	@media (width >= $max-width) {
 		margin-left: 0;
 		margin-right: 0;
 		width: 100%;
 	}
 
-	@media (min-width: $breakpoint) {
+	@media (width >= $breakpoint) {
 		td {
 			padding: $table-cell-padding $margin;
 		}
@@ -98,14 +98,11 @@ th {
 	display: flex;
 
 	tbody & {
-		bottom: 0;
-		left: 0;
+		inset: 0;
 		position: absolute;
-		right: 0;
-		top: 0;
 	}
 
-	@media (max-width: ($breakpoint - 1px)) {
+	@media (width < $breakpoint) {
 		overflow: auto;
 	}
 }
@@ -137,7 +134,7 @@ th {
 
 	thead &,
 	tfoot & {
-		@media (min-width: $breakpoint) {
+		@media (width >= $breakpoint) {
 			background: transparent !important; // stylelint-disable-line declaration-no-important
 		}
 	}
@@ -183,7 +180,7 @@ th {
 	}
 }
 
-@media (max-width: ($breakpoint - 1px)) {
+@media (width < $breakpoint) {
 	#food-list {
 		.column--name {
 			width: calc(100% - 44px);

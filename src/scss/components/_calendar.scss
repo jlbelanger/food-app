@@ -63,7 +63,7 @@ $calendar__legend__item-margin: 4px;
 
 .calendar__th--avg {
 	&::after {
-		@media (min-width: $calendar-breakpoint) {
+		@media (width >= $calendar-breakpoint) {
 			content: 'Avg';
 		}
 	}
@@ -93,7 +93,7 @@ $calendar__legend__item-margin: 4px;
 		border-right-width: 0;
 	}
 
-	@media (min-width: $calendar-breakpoint) {
+	@media (width >= $calendar-breakpoint) {
 		font-size: 16px;
 		padding: #{$calendar__item-padding * 2} #{$calendar__item-padding * 2} $calendar__item-padding;
 	}
@@ -103,28 +103,22 @@ $calendar__legend__item-margin: 4px;
 	padding: 0;
 	vertical-align: bottom;
 
-	@media (min-width: $calendar-breakpoint) {
+	@media (width >= $calendar-breakpoint) {
 		padding: $calendar__item-padding;
 	}
 }
 
 .calendar__link {
-	bottom: 0;
 	color: $black;
 	font-weight: bold;
-	left: 0;
+	inset: 0;
 	padding: $calendar__item-padding;
 	position: absolute;
-	right: 0;
 	text-decoration: none;
-	top: 0;
 
-	@media (min-width: $calendar-breakpoint) {
+	@media (width >= $calendar-breakpoint) {
 		border: 1px solid $dark-gray;
-		bottom: $calendar__item-padding;
-		left: $calendar__item-padding;
-		right: $calendar__item-padding;
-		top: $calendar__item-padding;
+		inset: $calendar__item-padding;
 	}
 }
 
@@ -135,7 +129,7 @@ $calendar__legend__item-margin: 4px;
 		margin-top: #{20px + $calendar__item-padding};
 	}
 
-	@media (min-width: $calendar-breakpoint) {
+	@media (width >= $calendar-breakpoint) {
 		margin-top: 24px;
 
 		.calendar__day--avg & {
@@ -155,7 +149,7 @@ $calendar__legend__item-margin: 4px;
 		margin-right: #{-1 * $calendar__item-padding};
 	}
 
-	@media (min-width: $calendar-breakpoint) {
+	@media (width >= $calendar-breakpoint) {
 		font-size: $font-size;
 	}
 }

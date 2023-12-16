@@ -6,14 +6,11 @@
 	align-items: center;
 	background: transparent;
 	border: 0;
-	bottom: 0;
 	display: flex;
+	inset: 0;
 	justify-content: center;
-	left: 0;
 	padding: 0;
 	position: fixed;
-	right: 0;
-	top: 0;
 	z-index: $modal-zindex;
 }
 

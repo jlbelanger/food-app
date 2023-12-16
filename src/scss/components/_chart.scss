@@ -78,14 +78,11 @@ $scale-border-top-width: 2px;
 		background: transparent;
 		border: 0;
 		border-radius: 0;
-		bottom: -$button-border-bottom-width;
 		box-shadow: none;
 		height: auto;
-		left: 0;
+		inset: -$scale-border-top-width 0;
 		margin: 0;
 		position: absolute;
-		right: 0;
-		top: -$scale-border-top-width;
 		width: auto;
 
 		&:active,
