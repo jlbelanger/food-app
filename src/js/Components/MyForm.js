@@ -1,16 +1,15 @@
-import { Form } from '@jlbelanger/formosa';
+import { Form, FormosaContext } from '@jlbelanger/formosa';
+import React, { useContext } from 'react'; // eslint-disable-line import/no-unresolved
 import MyFormPrompt from './MyFormPrompt';
 import PropTypes from 'prop-types';
-import React from 'react';
 
-export default function MyForm({
-	children,
-	...otherProps
-}) {
+export default function MyForm({ children, ...otherProps }) {
+	const { showWarningPrompt } = useContext(FormosaContext);
+
 	return (
 		<Form {...otherProps}>
 			{children}
-			<MyFormPrompt />
+			{showWarningPrompt && <MyFormPrompt />}
 		</Form>
 	);
 }
