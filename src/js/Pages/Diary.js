@@ -32,7 +32,7 @@ export default function Diary() {
 	const [trackables, setTrackables] = useState([]);
 	const [food, setFood] = useState([]);
 	const [favouriteFood, setFavouriteFood] = useState([]);
-	const [entriesError, setEntriesError] = useState(false);
+	const [entriesError, setEntriesError] = useState(null);
 	const [foodError, setFoodError] = useState(false);
 	const [actionError, setActionError] = useState(false);
 
