@@ -9,6 +9,7 @@ import { mapTrackables } from '../Utilities/Helpers';
 import MetaTitle from '../Components/MetaTitle';
 
 export default function Calendar() {
+	const api = Api.instance();
 	const history = useHistory();
 	const thisYear = (new Date()).getFullYear();
 	const urlSearchParams = new URLSearchParams(history.location.search);
@@ -23,7 +24,7 @@ export default function Calendar() {
 			return;
 		}
 
-		Api.get(`calendar/${date}`)
+		api(`calendar/${date}`)
 			.catch((response) => {
 				setError(response);
 			})
@@ -37,7 +38,7 @@ export default function Calendar() {
 
 	useEffect(() => {
 		if (Auth.hasTrackables()) {
-			Api.get(`trackables?fields[trackables]=name,slug,units&filter[slug][in]=${Auth.trackables().join(',')}`)
+			api(`trackables?fields[trackables]=name,slug,units&filter[slug][in]=${Auth.trackables().join(',')}`)
 				.then((response) => {
 					setTrackables(mapTrackables(response));
 				});

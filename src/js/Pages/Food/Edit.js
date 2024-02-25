@@ -14,6 +14,7 @@ import PaginatedTable from '../../Components/PaginatedTable';
 import { ReactComponent as PencilIcon } from '../../../svg/pencil.svg';
 
 export default function Edit() {
+	const api = Api.instance();
 	const { addToast } = useContext(FormosaContext);
 	const { id } = useParams();
 	const [row, setRow] = useState(null);
@@ -35,7 +36,7 @@ export default function Edit() {
 			url += '&fields[users]=username';
 		}
 
-		Api.get(url)
+		api(url)
 			.catch((response) => {
 				setError(response);
 			})

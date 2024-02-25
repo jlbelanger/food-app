@@ -6,12 +6,13 @@ import MyForm from '../../../Components/MyForm';
 import PropTypes from 'prop-types';
 
 export default function Trackables({ user }) {
+	const api = Api.instance();
 	const [row, setRow] = useState(user);
 	const [trackablesError, setTrackablesError] = useState(false);
 	const [allTrackables, setAllTrackables] = useState([]);
 
 	useEffect(() => {
-		Api.get('trackables?fields[trackables]=name,slug&sort=slug')
+		api('trackables?fields[trackables]=name,slug&sort=slug')
 			.catch((response) => {
 				setTrackablesError(errorMessageText(response));
 			})

@@ -13,6 +13,7 @@ import MetaTitle from '../../Components/MetaTitle';
 import TrackableBody from '../../Components/TrackableBody';
 
 export default function List() {
+	const api = Api.instance();
 	const { addToast } = useContext(FormosaContext);
 	const [sortKey, setSortKey] = useState('slug');
 	const [sortDir, setSortDir] = useState('asc');
@@ -26,7 +27,7 @@ export default function List() {
 
 	useEffect(() => {
 		const foodFields = ['is_favourite', 'is_verified', 'name', 'serving_size', 'serving_units', 'slug'].concat(Auth.trackables());
-		Api.get(`food?fields[food]=${foodFields.join(',')}&sort=slug`, false)
+		api(`food?fields[food]=${foodFields.join(',')}&sort=slug`, false)
 			.catch((response) => {
 				setError(response);
 				setIsLoading(false);
@@ -40,7 +41,7 @@ export default function List() {
 				setIsLoading(false);
 			});
 		if (Auth.hasTrackables()) {
-			Api.get(`trackables?fields[trackables]=name,slug,units&filter[slug][in]=${Auth.trackables().join(',')}`, false)
+			api(`trackables?fields[trackables]=name,slug,units&filter[slug][in]=${Auth.trackables().join(',')}`, false)
 				.then((response) => {
 					setTrackables(mapTrackables(response));
 				});

@@ -13,6 +13,7 @@ import Modal from '../../Components/Modal';
 import Trackables from './Partials/Trackables';
 
 export default function Edit() {
+	const api = Api.instance();
 	const id = Auth.id();
 	const [row, setRow] = useState(null);
 	const [error, setError] = useState(false);
@@ -34,7 +35,7 @@ export default function Edit() {
 	};
 
 	useEffect(() => {
-		Api.get(`users/${id}?fields[trackables]=name,slug&include=trackables`)
+		api(`users/${id}?fields[trackables]=name,slug&include=trackables`)
 			.catch((response) => {
 				setError(response);
 			})

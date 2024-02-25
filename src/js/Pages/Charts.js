@@ -20,6 +20,7 @@ import MetaTitle from '../Components/MetaTitle';
 import zoomPlugin from 'chartjs-plugin-zoom';
 
 export default function Charts() {
+	const api = Api.instance();
 	const chartSlugs = ['weight'].concat(Auth.trackables());
 	const chartRefs = useMemo(() => (
 		chartSlugs.map(() => createRef())
@@ -30,7 +31,7 @@ export default function Charts() {
 	const [min, setMin] = useState('original');
 
 	const getEntries = (ignore) => {
-		Api.get('charts')
+		api('charts')
 			.catch((response) => {
 				setError(response);
 			})

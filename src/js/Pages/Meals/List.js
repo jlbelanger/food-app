@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 import MetaTitle from '../../Components/MetaTitle';
 
 export default function List() {
+	const api = Api.instance();
 	const { addToast } = useContext(FormosaContext);
 	const [sortKey, setSortKey] = useState('name');
 	const [sortDir, setSortDir] = useState('asc');
@@ -20,7 +21,7 @@ export default function List() {
 	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
-		Api.get('meals?fields[meals]=is_favourite,name&sort=name', false)
+		api('meals?fields[meals]=is_favourite,name&sort=name', false)
 			.catch((response) => {
 				setError(response);
 				setIsLoading(false);

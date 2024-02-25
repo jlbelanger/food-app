@@ -4,12 +4,13 @@ import { errorMessageText } from '../Utilities/Helpers';
 import PropTypes from 'prop-types';
 
 export default function DiaryAddMeal({ date, entries, foodFields, setActionError, setEntries }) {
+	const api = Api.instance();
 	const { addToast } = useContext(FormosaContext);
 	const [meals, setMeals] = useState([]);
 	const [mealsError, setMealsError] = useState(false);
 
 	useEffect(() => {
-		Api.get('meals?fields[meals]=name&filter[is_favourite][eq]=1&sort=name')
+		api('meals?fields[meals]=name&filter[is_favourite][eq]=1&sort=name')
 			.catch((response) => {
 				setMealsError(errorMessageText(response));
 			})

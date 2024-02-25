@@ -18,6 +18,7 @@ import TrackableHead from '../Components/TrackableHead';
 import { ReactComponent as XIcon } from '../../svg/x.svg';
 
 export default function Diary() {
+	const api = Api.instance();
 	const history = useHistory();
 	const ymd = (date) => `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
 	const today = ymd(new Date());
@@ -48,7 +49,7 @@ export default function Diary() {
 		url += '&fields[weights]=date,weight';
 		url += '&include=food';
 
-		Api.get(url)
+		api(url)
 			.catch((response) => {
 				setEntriesError(errorMessageText(response));
 			})
@@ -65,13 +66,13 @@ export default function Diary() {
 
 	useEffect(() => {
 		if (Auth.hasTrackables()) {
-			Api.get(`trackables?fields[trackables]=name,slug,units&filter[slug][in]=${Auth.trackables().join(',')}`)
+			api(`trackables?fields[trackables]=name,slug,units&filter[slug][in]=${Auth.trackables().join(',')}`)
 				.then((response) => {
 					setTrackables(mapTrackables(response));
 				});
 		}
 
-		Api.get(`food?fields[food]=${foodFields.concat(['is_favourite']).join(',')}`)
+		api(`food?fields[food]=${foodFields.concat(['is_favourite']).join(',')}`)
 			.catch((response) => {
 				setFoodError(errorMessageText(response));
 			})

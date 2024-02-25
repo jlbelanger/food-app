@@ -17,6 +17,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { ReactComponent as XIcon } from '../../../svg/x.svg';
 
 export default function Edit() {
+	const api = Api.instance();
 	const { addToast } = useContext(FormosaContext);
 	const { id } = useParams();
 	const [row, setRow] = useState(null);
@@ -34,7 +35,7 @@ export default function Edit() {
 	const mealParams = `include=foods,foods.food&fields[food]=${foodFields.join(',')}&fields[food_meal]=user_serving_size`;
 
 	useEffect(() => {
-		Api.get(`meals/${id}?${mealParams}`)
+		api(`meals/${id}?${mealParams}`)
 			.catch((response) => {
 				setError(response);
 			})
@@ -45,7 +46,7 @@ export default function Edit() {
 				setRow(response);
 			});
 
-		Api.get(`food?fields[food]=${foodFields.concat(['is_favourite']).join(',')}`)
+		api(`food?fields[food]=${foodFields.concat(['is_favourite']).join(',')}`)
 			.catch((response) => {
 				setFoodError(errorMessageText(response));
 			})
@@ -58,7 +59,7 @@ export default function Edit() {
 			});
 
 		if (Auth.hasTrackables()) {
-			Api.get(`trackables?fields[trackables]=name,slug,units&filter[slug][in]=${Auth.trackables().join(',')}`)
+			api(`trackables?fields[trackables]=name,slug,units&filter[slug][in]=${Auth.trackables().join(',')}`)
 				.then((response) => {
 					setTrackables(mapTrackables(response));
 				});

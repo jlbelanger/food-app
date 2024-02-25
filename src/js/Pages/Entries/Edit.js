@@ -8,6 +8,7 @@ import MetaTitle from '../../Components/MetaTitle';
 import MyForm from '../../Components/MyForm';
 
 export default function Edit() {
+	const api = Api.instance();
 	const { id } = useParams();
 	const [row, setRow] = useState(null);
 	const [error, setError] = useState(false);
@@ -18,7 +19,7 @@ export default function Edit() {
 	const foodFields = ['name', 'serving_units', 'is_verified'];
 
 	useEffect(() => {
-		Api.get(`entries/${id}?include=food&fields[food]=${foodFields.join(',')}`)
+		api(`entries/${id}?include=food&fields[food]=${foodFields.join(',')}`)
 			.catch((response) => {
 				setError(response);
 			})
@@ -29,7 +30,7 @@ export default function Edit() {
 				setRow(response);
 			});
 
-		Api.get(`food?fields[food]=${foodFields.concat(['is_favourite']).join(',')}`)
+		api(`food?fields[food]=${foodFields.concat(['is_favourite']).join(',')}`)
 			.catch((response) => {
 				setFoodError(errorMessageText(response));
 			})
