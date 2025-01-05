@@ -1,3 +1,7 @@
+@use 'sass:color';
+@use '~@jlbelanger/formosa/src/scss/utilities/variables' as formosa;
+@use '../utilities/variables';
+
 button {
 	cursor: pointer;
 
@@ -9,7 +13,7 @@ button {
 .button--link {
 	background-color: transparent;
 	border-color: transparent;
-	color: $blue;
+	color: variables.$blue;
 
 	&:hover,
 	&:active,
@@ -20,18 +24,18 @@ button {
 
 .button--secondary,
 .formosa-button--toggle-password {
-	background: $lightest-pink;
-	border-color: scale-color($lightest-pink, $lightness: -5%);
+	background: variables.$lightest-pink;
+	border-color: color.scale(variables.$lightest-pink, $lightness: -5%);
 
 	&:hover,
 	&:active,
 	&:focus {
-		background: scale-color($lightest-pink, $lightness: -2.5%);
-		border-color: scale-color($lightest-pink, $lightness: -7.5%);
+		background: color.scale(variables.$lightest-pink, $lightness: -2.5%);
+		border-color: color.scale(variables.$lightest-pink, $lightness: -7.5%);
 	}
 
 	&[disabled] {
-		border-color: $formosa-input-border-color;
+		border-color: formosa.$formosa-input-border-color;
 	}
 
 	& + .button--secondary {
@@ -40,31 +44,31 @@ button {
 }
 
 .button--tertiary {
-	background-color: $yellow;
-	border-color: $dark-yellow;
+	background-color: variables.$yellow;
+	border-color: variables.$dark-yellow;
 
 	&:hover,
 	&:active,
 	&:focus {
-		background-color: scale-color($yellow, $lightness: -5%);
+		background-color: color.scale(variables.$yellow, $lightness: -5%);
 	}
 }
 
 .button--header {
-	background-color: $dark-gray;
-	border-color: scale-color($dark-gray, $lightness: -20%);
-	border-top-color: scale-color($dark-gray, $lightness: 15%);
-	color: $white;
+	background-color: variables.$dark-gray;
+	border-color: color.scale(variables.$dark-gray, $lightness: -20%);
+	border-top-color: color.scale(variables.$dark-gray, $lightness: 15%);
+	color: variables.$white;
 
 	&:hover,
 	&:active,
 	&:focus {
-		background-color: scale-color($dark-gray, $lightness: 5%);
+		background-color: color.scale(variables.$dark-gray, $lightness: 5%);
 	}
 
 	&:active {
-		border-bottom-color: scale-color($dark-gray, $lightness: 5%);
-		border-top-color: scale-color($dark-gray, $lightness: -20%);
+		border-bottom-color: color.scale(variables.$dark-gray, $lightness: 5%);
+		border-top-color: color.scale(variables.$dark-gray, $lightness: -20%);
 	}
 }
 
@@ -74,8 +78,8 @@ button {
 
 .formosa-button.formosa-postfix {
 	display: inline-block;
-	padding-bottom: #{$formosa-input-padding - 3px};
-	padding-top: $formosa-input-padding;
+	padding-bottom: calc(formosa.$formosa-input-padding - 3px);
+	padding-top: formosa.$formosa-input-padding;
 }
 
 .button--icon {

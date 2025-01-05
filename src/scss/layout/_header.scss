@@ -1,3 +1,5 @@
+@use '../utilities/variables';
+
 #header {
 	align-items: center;
 	display: flex;
@@ -29,13 +31,13 @@
 
 	.nav__button,
 	.nav__link {
-		height: #{$nav-height - 1px};
+		height: calc(variables.$nav-height - 1px);
 	}
 }
 
 #title {
 	align-items: center;
-	color: $white;
+	color: variables.$white;
 	display: flex;
 	flex: 1 1 auto;
 	font-size: 20px;

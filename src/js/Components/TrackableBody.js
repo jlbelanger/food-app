@@ -2,7 +2,7 @@ import { colorsLight } from '../Utilities/Colors';
 import PropTypes from 'prop-types';
 import { React } from 'react';
 
-export default function TrackableBody({ food, servingSize, trackables }) {
+export default function TrackableBody({ food, servingSize, trackables = [] }) {
 	return (
 		<td className="center column--trackables">
 			<div className="trackable-list">
@@ -32,8 +32,4 @@ TrackableBody.propTypes = {
 	food: PropTypes.object.isRequired,
 	servingSize: PropTypes.number.isRequired,
 	trackables: PropTypes.array,
-};
-
-TrackableBody.defaultProps = {
-	trackables: [],
 };

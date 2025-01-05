@@ -1,10 +1,12 @@
+@use '../utilities/variables';
+
 #search-container {
 	align-items: center;
 	display: flex;
 	position: relative;
 
 	input {
-		padding-right: $button-size;
+		padding-right: variables.$button-size;
 	}
 
 	label {
@@ -13,16 +15,16 @@
 
 	svg {
 		bottom: 0;
-		height: $button-size;
+		height: variables.$button-size;
 		margin-top: 0;
 		padding: 12px;
 		position: absolute;
 		right: 0;
 		top: 0;
-		width: $button-size;
+		width: variables.$button-size;
 
 		path {
-			fill: $gray;
+			fill: variables.$gray;
 		}
 	}
 }

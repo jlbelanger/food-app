@@ -2,16 +2,16 @@ import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 export default function Modal({
-	cancelable,
-	cancelButtonClass,
-	cancelButtonText,
-	children,
+	cancelable = true,
+	cancelButtonClass = 'button--secondary',
+	cancelButtonText = 'Cancel',
+	children = null,
 	event,
-	okButtonClass,
-	okButtonText,
-	onClickCancel,
-	onClickOk,
-	text,
+	okButtonClass = '',
+	okButtonText = 'OK',
+	onClickCancel = null,
+	onClickOk = null,
+	text = null,
 }) {
 	const dialogRef = useRef(null);
 
@@ -86,16 +86,4 @@ Modal.propTypes = {
 	onClickCancel: PropTypes.func,
 	onClickOk: PropTypes.func,
 	text: PropTypes.string,
-};
-
-Modal.defaultProps = {
-	cancelable: true,
-	cancelButtonClass: 'button--secondary',
-	cancelButtonText: 'Cancel',
-	children: null,
-	okButtonClass: '',
-	okButtonText: 'OK',
-	onClickCancel: null,
-	onClickOk: null,
-	text: null,
 };

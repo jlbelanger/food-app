@@ -1,16 +1,18 @@
+@use '../utilities/variables';
+
 table {
 	border-collapse: collapse;
-	border-color: $lightest-gray;
+	border-color: variables.$lightest-gray;
 	border-style: solid;
 	border-width: 1px;
-	margin: $margin #{-1 * $article-padding} 0;
-	width: calc(100% + #{$article-padding * 2});
+	margin: variables.$margin calc(variables.$article-padding * -1) 0;
+	width: calc(100% + #{variables.$article-padding * 2});
 
 	td {
-		border-color: $lightest-gray;
+		border-color: variables.$lightest-gray;
 		border-style: solid;
 		border-width: 1px 0 0;
-		padding: $table-cell-padding #{$table-cell-padding * 2};
+		padding: variables.$table-cell-padding calc(variables.$table-cell-padding * 2);
 	}
 
 	th {
@@ -19,7 +21,7 @@ table {
 
 	tbody {
 		tr:nth-of-type(odd) {
-			background-color: $white;
+			background-color: variables.$white;
 		}
 	}
 
@@ -27,21 +29,21 @@ table {
 		margin-top: 0;
 	}
 
-	@media (width >= $max-width) {
+	@media (width >= variables.$max-width) {
 		margin-left: 0;
 		margin-right: 0;
 		width: 100%;
 	}
 
-	@media (width >= $breakpoint) {
+	@media (width >= variables.$breakpoint) {
 		td {
-			padding: $table-cell-padding $margin;
+			padding: variables.$table-cell-padding variables.$margin;
 		}
 	}
 }
 
 th {
-	border-color: $yellow;
+	border-color: variables.$yellow;
 	border-style: solid;
 	border-width: 0 0 4px;
 
@@ -52,22 +54,22 @@ th {
 
 .table-heading {
 	display: block;
-	height: $button-size;
-	line-height: $button-size;
+	height: variables.$button-size;
+	line-height: variables.$button-size;
 }
 
 .column--button {
 	padding-left: 0;
 	padding-right: 0;
 	white-space: nowrap;
-	width: $button-size;
+	width: variables.$button-size;
 }
 
 .column--button-large {
 	padding-left: 0;
 	padding-right: 0;
 	white-space: nowrap;
-	width: #{$button-size * 2};
+	width: calc(variables.$button-size * 2);
 }
 
 .column--name {
@@ -102,7 +104,7 @@ th {
 		position: absolute;
 	}
 
-	@media (width < $breakpoint) {
+	@media (width < variables.$breakpoint) {
 		overflow: auto;
 	}
 }
@@ -134,8 +136,8 @@ th {
 
 	thead &,
 	tfoot & {
-		@media (width >= $breakpoint) {
-			background: transparent !important; // stylelint-disable-line declaration-no-important
+		@media (width >= variables.$breakpoint) {
+			background: transparent !important; /* stylelint-disable-line declaration-no-important */
 		}
 	}
 }
@@ -159,9 +161,9 @@ th {
 	background: transparent;
 	border: 0;
 	border-radius: 0;
-	color: $black;
+	color: variables.$black;
 	font-weight: bold;
-	height: $button-size;
+	height: variables.$button-size;
 	padding: 0 0 0 12px;
 	white-space: nowrap;
 	width: 100%;
@@ -180,7 +182,7 @@ th {
 	}
 }
 
-@media (width < $breakpoint) {
+@media (width < variables.$breakpoint) {
 	#food-list {
 		.column--name {
 			width: calc(100% - 44px);
@@ -188,7 +190,7 @@ th {
 	}
 
 	.responsive-table {
-		margin-bottom: -$article-padding;
+		margin-bottom: calc(variables.$article-padding * -1);
 
 		thead {
 			.column--name,
@@ -223,14 +225,14 @@ th {
 		.column--serving {
 			display: inline-block;
 			padding-top: 0;
-			width: calc(100% - #{$button-size * 2});
+			width: calc(100% - #{variables.$button-size * 2});
 		}
 
 		.column--size {
-			color: $dark-gray;
+			color: variables.$dark-gray;
 			display: inline-block;
 			font-size: 14px;
-			margin-left: #{$button-size + ($table-cell-padding * 2)};
+			margin-left: calc(variables.$button-size + (variables.$table-cell-padding * 2));
 			margin-top: -6px;
 			min-width: 0;
 			padding: 0 0 12px;
@@ -243,7 +245,7 @@ th {
 		}
 
 		.column--units {
-			color: $dark-gray;
+			color: variables.$dark-gray;
 			display: inline-block;
 			font-size: 14px;
 			margin-top: -6px;
@@ -264,14 +266,14 @@ th {
 			display: inline-block;
 			padding-bottom: 0;
 			padding-top: 0;
-			width: $button-size;
+			width: variables.$button-size;
 		}
 
 		.column--button-large {
 			display: inline-block;
 			padding-bottom: 0;
 			padding-top: 0;
-			width: #{$button-size * 2};
+			width: calc(variables.$button-size * 2);
 		}
 
 		.column--trackables {
@@ -284,7 +286,7 @@ th {
 			.column--name {
 				padding-bottom: 6px;
 				padding-top: 6px;
-				width: calc(100% - #{$button-size * 2});
+				width: calc(100% - #{variables.$button-size * 2});
 			}
 
 			.column--serving {
@@ -298,7 +300,7 @@ th {
 
 		tbody {
 			.column--trackables {
-				border-bottom-color: $dark-gray;
+				border-bottom-color: variables.$dark-gray;
 				border-bottom-width: 1px;
 			}
 		}

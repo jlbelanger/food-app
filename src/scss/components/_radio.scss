@@ -1,3 +1,5 @@
+@use '~@jlbelanger/formosa/src/scss/utilities/variables' as formosa;
+
 $radio-breakpoint-small: 430px;
 $radio-breakpoint-medium: 630px;
 $radio-breakpoint-large: 830px;
@@ -7,7 +9,7 @@ $radio-breakpoint-xlarge: 1030px;
 	column-count: 1;
 
 	.formosa-radio__item {
-		margin-bottom: $formosa-radio-margin;
+		margin-bottom: formosa.$formosa-radio-margin;
 		margin-top: 0;
 	}
 

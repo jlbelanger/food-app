@@ -1,41 +1,72 @@
-@use 'sass:math';
-@import 'utilities/variables';
-@import 'normalize.css/normalize';
-@import '@jlbelanger/formosa/src/style';
-@import 'layout/typography';
-@import 'layout/main';
-@import 'layout/header';
-@import 'layout/content';
-@import 'layout/nav';
-@import 'layout/footer';
-@import 'components/add-another';
-@import 'components/button';
-@import 'components/calendar';
-@import 'components/chart';
-@import 'components/contain';
-@import 'components/diary';
-@import 'components/favourite';
-@import 'components/food';
-@import 'components/formosa';
-@import 'components/heading';
-@import 'components/hr';
-@import 'components/icon';
-@import 'components/link';
-@import 'components/meal';
-@import 'components/modal';
-@import 'components/nutrition-facts';
-@import 'components/pagination';
-@import 'components/password';
-@import 'components/radio';
-@import 'components/search';
-@import 'components/skip';
-@import 'components/table';
-@import 'components/verified';
+@use 'utilities/variables' as *;
+@use '~normalize.css/normalize';
+@use '~@jlbelanger/formosa/src/scss/utilities/variables' as formosa with (
+	$formosa-autocomplete-options-background-color-highlighted: $yellow,
+
+	$formosa-button-background-color: $pink,
+	$formosa-button-border-color: $border-color,
+	$formosa-button-danger-border-color: $dark-red,
+	$formosa-button-padding: 8px,
+
+	$formosa-color-danger: $red,
+	$formosa-error-color: $white,
+
+	$formosa-field-error-color: $dark-red,
+
+	$formosa-input-border-radius: 4px,
+	$formosa-input-font-size: 16px,
+	$formosa-input-padding: 10px,
+
+	$formosa-margin-large: $margin,
+
+	$formosa-label-error-color: $dark-red,
+
+	$formosa-radio-size: 20px,
+
+	$formosa-responsive-breakpoint: 700px,
+
+	$formosa-spinner-color: transparent,
+	$formosa-spinner-border-width: 8px,
+	$formosa-spinner-color-alternate: $pink,
+
+	$formosa-toast-bottom: $nav-height,
+	$formosa-toast-padding: 12px,
+);
+@use '~@jlbelanger/formosa/src/style';
+@use 'layout/typography';
+@use 'layout/main';
+@use 'layout/header';
+@use 'layout/content';
+@use 'layout/nav';
+@use 'layout/footer';
+@use 'components/add-another';
+@use 'components/button';
+@use 'components/calendar';
+@use 'components/chart';
+@use 'components/contain';
+@use 'components/diary';
+@use 'components/favourite';
+@use 'components/food';
+@use 'components/formosa-overrides';
+@use 'components/heading';
+@use 'components/hr';
+@use 'components/icon';
+@use 'components/link';
+@use 'components/meal';
+@use 'components/modal';
+@use 'components/nutrition-facts';
+@use 'components/pagination';
+@use 'components/password';
+@use 'components/radio';
+@use 'components/search';
+@use 'components/skip';
+@use 'components/table';
+@use 'components/verified';
 
 .post-alert-button {
 	border-top-left-radius: 0;
 	border-top-right-radius: 0;
-	margin-top: -$formosa-input-border-radius;
+	margin-top: calc(formosa.$formosa-input-border-radius * -1);
 	padding-top: 0;
 	text-align: right;
 }

@@ -3,7 +3,7 @@ import Auth from '../Utilities/Auth';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-export default function DiaryWeightFieldset({ disabled }) {
+export default function DiaryWeightFieldset({ disabled = false }) {
 	return (
 		<fieldset>
 			<legend>Weight</legend>
@@ -30,8 +30,4 @@ export default function DiaryWeightFieldset({ disabled }) {
 
 DiaryWeightFieldset.propTypes = {
 	disabled: PropTypes.bool,
-};
-
-DiaryWeightFieldset.defaultProps = {
-	disabled: false,
 };

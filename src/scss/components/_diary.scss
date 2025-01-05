@@ -1,13 +1,16 @@
+@use '~@jlbelanger/formosa/src/scss/utilities/variables' as formosa;
+@use '../utilities/variables';
+
 $fieldset-padding: 16px;
 $add-meal-button-margin: 8px;
 
 #diary {
 	fieldset {
-		background: $lightest-yellow;
-		border-color: $dark-yellow;
+		background: variables.$lightest-yellow;
+		border-color: variables.$dark-yellow;
 		border-style: solid;
 		border-width: 1px;
-		margin-top: $margin;
+		margin-top: variables.$margin;
 		padding: $fieldset-padding;
 
 		.formosa-field {
@@ -25,25 +28,25 @@ $add-meal-button-margin: 8px;
 	}
 
 	#add-meal {
-		padding-bottom: #{$fieldset-padding - $add-meal-button-margin};
+		padding-bottom: calc($fieldset-padding - $add-meal-button-margin);
 	}
 
-	@media (width >= $breakpoint) {
-		margin-top: -$margin;
+	@media (width >= variables.$breakpoint) {
+		margin-top: calc(variables.$margin * -1);
 	}
 }
 
 #diary-table {
-	@media (width >= $breakpoint) {
+	@media (width >= variables.$breakpoint) {
 		.formosa-input-wrapper {
-			margin-left: #{-1 * ($margin - $table-cell-padding)};
-			margin-right: #{-1 * ($margin - $table-cell-padding)};
+			margin-left: calc((variables.$margin - variables.$table-cell-padding) * -1);
+			margin-right: calc((variables.$margin - variables.$table-cell-padding) * -1);
 		}
 	}
 }
 
 #extra-form {
-	@media (width >= $breakpoint) {
+	@media (width >= variables.$breakpoint) {
 		min-width: 30%;
 	}
 }
@@ -56,12 +59,12 @@ $add-meal-button-margin: 8px;
 		width: 100%;
 	}
 
-	@media (width >= $breakpoint) {
+	@media (width >= variables.$breakpoint) {
 		display: flex;
 
 		.form {
-			margin-left: #{$margin * .5};
-			margin-right: #{$margin * .5};
+			margin-left: calc(variables.$margin * .5);
+			margin-right: calc(variables.$margin * .5);
 		}
 
 		& > :first-child {
@@ -82,8 +85,8 @@ $add-meal-button-margin: 8px;
 .formosa-field--weight,
 .formosa-field--fake-weight {
 	.formosa-suffix {
-		font-size: $formosa-input-font-size;
-		line-height: $formosa-input-height;
+		font-size: formosa.$formosa-input-font-size;
+		line-height: formosa.$formosa-input-height;
 		padding-bottom: 0;
 		padding-top: 0;
 		position: absolute;
@@ -106,17 +109,17 @@ $add-meal-button-margin: 8px;
 	background: transparent;
 	border-radius: 0;
 	border-width: 0;
-	height: $button-size;
+	height: variables.$button-size;
 	padding: 0;
-	width: $button-size;
+	width: variables.$button-size;
 
 	path {
-		fill: $white;
+		fill: variables.$white;
 	}
 }
 
 #previous {
-	margin-left: -$heading-inner-padding;
+	margin-left: calc(variables.$heading-inner-padding * -1);
 }
 
 #previous + h1 {
@@ -124,7 +127,7 @@ $add-meal-button-margin: 8px;
 }
 
 #next {
-	margin-right: -$heading-inner-padding;
+	margin-right: calc(variables.$heading-inner-padding * -1);
 	transform: rotate(180deg);
 
 	&:disabled {
@@ -139,19 +142,19 @@ $add-meal-button-margin: 8px;
 	border-radius: 0;
 	border-width: 0;
 	display: flex;
-	height: $button-size;
+	height: variables.$button-size;
 	justify-content: center;
 	padding: 0;
 	position: relative;
 	text-align: center;
 	vertical-align: middle;
-	width: $button-size;
+	width: variables.$button-size;
 	z-index: 1;
 }
 
 .button--remove {
 	path {
-		fill: $dark-red;
+		fill: variables.$dark-red;
 	}
 }
 

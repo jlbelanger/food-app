@@ -1,3 +1,5 @@
+@use '../utilities/variables';
+
 #nav {
 	display: flex;
 	justify-content: space-between;
@@ -6,8 +8,8 @@
 
 .nav__button,
 .nav__link {
-	color: $white;
-	height: $nav-height;
+	color: variables.$white;
+	height: variables.$nav-height;
 }
 
 .nav__link {
@@ -26,6 +28,6 @@
 }
 
 .nav__link--active {
-	border-bottom-color: $yellow;
-	color: $yellow;
+	border-bottom-color: variables.$yellow;
+	color: variables.$yellow;
 }

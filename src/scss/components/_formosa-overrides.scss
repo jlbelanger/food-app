@@ -1,23 +1,26 @@
+@use '~@jlbelanger/formosa/src/scss/utilities/variables' as formosa;
+@use '../utilities/variables';
+
 .formosa-alert,
 .formosa-toast {
-	border-radius: $formosa-input-border-radius;
+	border-radius: formosa.$formosa-input-border-radius;
 }
 
 .formosa-autocomplete,
 .formosa-button,
 .formosa-field__input,
 .formosa-file-input-wrapper {
-	border-bottom-width: $button-border-bottom-width;
+	border-bottom-width: variables.$button-border-bottom-width;
 }
 
 .formosa-button,
 .formosa-field__input,
 .formosa-file-input-wrapper {
-	padding-bottom: #{$formosa-button-padding - $button-border-bottom-width + 3px};
+	padding-bottom: calc(formosa.$formosa-button-padding - variables.$button-border-bottom-width + 3px);
 }
 
 input.formosa-autocomplete__input {
-	padding: 10px 10px #{$formosa-button-padding - $button-border-bottom-width + 3px};
+	padding: 10px 10px calc(formosa.$formosa-button-padding - variables.$button-border-bottom-width + 3px);
 }
 
 .formosa-autocomplete__value,
@@ -34,8 +37,8 @@ a.formosa-button {
 
 .formosa-field--read-only .formosa-field__input,
 [disabled] {
-	background-color: $lightest-gray;
-	color: $dark-gray;
+	background-color: variables.$lightest-gray;
+	color: variables.$dark-gray;
 }
 
 .formosa-suffix {
@@ -44,7 +47,7 @@ a.formosa-button {
 }
 
 .formosa-responsive {
-	margin-top: $margin;
+	margin-top: variables.$margin;
 
 	& > :first-child {
 		.formosa-label-wrapper,
@@ -55,7 +58,7 @@ a.formosa-button {
 }
 
 .formosa-autocomplete__options {
-	box-shadow: 0 0 10px rgba($black, .2);
+	box-shadow: 0 0 10px rgba(variables.$black, .2);
 }
 
 .formosa-input-inner-wrapper {
@@ -71,9 +74,9 @@ a.formosa-button {
 }
 
 .formosa-autocomplete__value {
-	margin: 5px $formosa-input-padding 4px;
+	margin: 5px formosa.$formosa-input-padding 4px;
 	padding-left: 0;
-	padding-right: $formosa-autocomplete-value-height;
+	padding-right: formosa.$formosa-autocomplete-value-height;
 }
 
 .formosa-autocomplete__value--input {

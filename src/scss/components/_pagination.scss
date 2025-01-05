@@ -1,3 +1,5 @@
+@use '../utilities/variables';
+
 table.paginated-table {
 	margin-left: 0;
 	margin-right: 0;
@@ -21,7 +23,7 @@ table.paginated-table {
 }
 
 .pagination__num {
-	color: $dark-gray;
+	color: variables.$dark-gray;
 	flex: 1 1 auto;
 	font-size: 14px;
 	text-align: center;

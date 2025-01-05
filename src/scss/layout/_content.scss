@@ -1,3 +1,5 @@
+@use '../utilities/variables';
+
 #article {
-	padding: 1px $article-padding $article-padding;
+	padding: 1px variables.$article-padding variables.$article-padding;
 }

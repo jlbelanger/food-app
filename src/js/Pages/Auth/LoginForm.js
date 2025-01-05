@@ -4,7 +4,13 @@ import { errorMessageText } from '../../Utilities/Helpers';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-export default function LoginForm({ message, row, setMessage, setShowVerificationButton, showVerificationButton }) {
+export default function LoginForm({
+	message = null,
+	row,
+	setMessage,
+	setShowVerificationButton,
+	showVerificationButton = false,
+}) {
 	const { clearAlert } = useContext(FormContext);
 
 	const resendVerificationEmail = () => {
@@ -84,9 +90,4 @@ LoginForm.propTypes = {
 	setMessage: PropTypes.func.isRequired,
 	setShowVerificationButton: PropTypes.func.isRequired,
 	showVerificationButton: PropTypes.bool,
-};
-
-LoginForm.defaultProps = {
-	message: null,
-	showVerificationButton: false,
 };

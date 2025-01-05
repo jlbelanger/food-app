@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from 'react';
 import Auth from '../../../Utilities/Auth';
 import PropTypes from 'prop-types';
 
-export default function Fields({ readOnly, row }) {
+export default function Fields({ readOnly = false, row = null }) {
 	const image = useRef(null);
 
 	const onScroll = () => {
@@ -248,9 +248,4 @@ export default function Fields({ readOnly, row }) {
 Fields.propTypes = {
 	readOnly: PropTypes.bool,
 	row: PropTypes.object,
-};
-
-Fields.defaultProps = {
-	readOnly: false,
-	row: null,
 };

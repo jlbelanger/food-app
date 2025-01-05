@@ -1,4 +1,6 @@
-// Colors
+@use 'sass:color';
+
+/* Colors. */
 
 $white: #fff;
 $off-white: #f9f9f9;
@@ -11,18 +13,20 @@ $black: #000;
 $blue: #06c;
 
 $pink: #f38;
-$light-pink: scale-color($pink, $lightness: 70%, $saturation: -25%);
+$light-pink: color.scale($pink, $lightness: 70%, $saturation: -25%);
 $lightest-pink: #f9e2ec;
 
 $yellow: #fd0;
-$muted-yellow: scale-color($yellow, $lightness: 30%, $saturation: -20%);
-$lightest-yellow: scale-color($yellow, $lightness: 95%);
-$dark-yellow: scale-color($yellow, $lightness: -10%, $saturation: -20%);
+$muted-yellow: color.scale($yellow, $lightness: 30%, $saturation: -20%);
+$lightest-yellow: color.scale($yellow, $lightness: 95%);
+$dark-yellow: color.scale($yellow, $lightness: -10%, $saturation: -20%);
 
 $red: #c33;
-$dark-red: scale-color($red, $lightness: -20%, $saturation: -25%);
+$dark-red: color.scale($red, $lightness: -20%, $saturation: -25%);
 
-// Sizes
+$border-color: color.scale($pink, $lightness: -20%, $saturation: -25%);
+
+/* Sizes. */
 
 $body-background-color: $off-white;
 $button-border-bottom-width: 4px;
@@ -35,50 +39,17 @@ $max-width: 1200px;
 $nav-height: $button-size;
 $table-cell-padding: 6px;
 
-$modal-background-color: $off-white !default;
-$modal-button-margin-side: 8px !default;
-$modal-button-margin-top: 20px !default;
-$modal-container-background-color: rgba($black, .6) !default;
-$modal-input-background-color: $white !default;
-$modal-margin: 32px !default;
-$modal-max-width: 800px !default;
-$modal-padding: 32px !default;
-$modal-text-color: $black !default;
-$modal-zindex: 9999 !default;
+$modal-background-color: $off-white;
+$modal-button-margin-side: 8px;
+$modal-button-margin-top: 20px;
+$modal-container-background-color: rgba($black, .6);
+$modal-input-background-color: $white;
+$modal-margin: 32px;
+$modal-max-width: 800px;
+$modal-padding: 32px;
+$modal-text-color: $black;
+$modal-zindex: 9999;
 
-// Overrides
-
-$formosa-autocomplete-options-background-color-highlighted: $yellow;
-
-$formosa-button-background-color: $pink;
-$formosa-button-border-color: scale-color($pink, $lightness: -20%, $saturation: -25%);
-$formosa-button-danger-border-color: $dark-red;
-$formosa-button-padding: 8px;
-
-$formosa-color-danger: $red;
-$formosa-error-color: $white;
-
-$formosa-field-error-color: $dark-red;
-
-$formosa-input-border-radius: 4px;
-$formosa-input-font-size: 16px;
-$formosa-input-padding: 10px;
-
-$formosa-margin-large: $margin;
-
-$formosa-label-error-color: $dark-red;
-
-$formosa-radio-size: 20px;
-
-$formosa-responsive-breakpoint: 700px;
-
-$formosa-spinner-color: transparent;
-$formosa-spinner-border-width: 8px;
-$formosa-spinner-color-alternate: $pink;
-
-$formosa-toast-bottom: $nav-height;
-$formosa-toast-padding: 12px;
-
-// Breakpoints
+/* Breakpoints. */
 
 $breakpoint: 800px;

@@ -1,3 +1,5 @@
+@use '../utilities/variables';
+
 .formosa-field--serving_size {
 	input + input {
 		margin-left: 8px;
@@ -17,12 +19,12 @@
 	text-align: center;
 }
 
-@media (width >= $breakpoint) {
+@media (width >= variables.$breakpoint) {
 	.food-relationships {
 		display: flex;
 		margin-left: -8px;
 		margin-right: -8px;
-		margin-top: $margin;
+		margin-top: variables.$margin;
 	}
 
 	.food-relationships__section {

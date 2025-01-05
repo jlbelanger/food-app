@@ -1,7 +1,12 @@
 import { React, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-export default function MetaTitle({ before, children, small, title }) {
+export default function MetaTitle({
+	before = null,
+	children = null,
+	small = '',
+	title = '',
+}) {
 	useEffect(() => {
 		let metaTitle = title;
 		if (process.env.REACT_APP_TITLE) {
@@ -35,11 +40,4 @@ MetaTitle.propTypes = {
 	children: PropTypes.node,
 	small: PropTypes.string,
 	title: PropTypes.string,
-};
-
-MetaTitle.defaultProps = {
-	before: null,
-	children: null,
-	small: '',
-	title: '',
 };

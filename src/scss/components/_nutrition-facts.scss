@@ -1,7 +1,9 @@
+@use '../utilities/variables';
+
 $list-width: 260px;
 $image-width: 300px;
-$breakpoint1: $image-width + $list-width + $margin + ($article-padding * 2);
-$breakpoint2: $image-width + ($list-width + $margin + $article-padding) * 2;
+$breakpoint1: $image-width + $list-width + variables.$margin + (variables.$article-padding * 2);
+$breakpoint2: $image-width + ($list-width + variables.$margin + variables.$article-padding) * 2;
 
 #nutrition-facts {
 	display: flex;
@@ -43,7 +45,7 @@ $breakpoint2: $image-width + ($list-width + $margin + $article-padding) * 2;
 	.nutrition-facts__section {
 		& + .formosa-field,
 		& + .nutrition-facts__section {
-			border-top: 1px solid $black;
+			border-top: 1px solid variables.$black;
 		}
 	}
 
@@ -76,7 +78,7 @@ $breakpoint2: $image-width + ($list-width + $margin + $article-padding) * 2;
 
 		&.sticky {
 			position: sticky;
-			top: #{$nav-height * 2 + 8px};
+			top: calc((variables.$nav-height * 2) + 8px);
 		}
 	}
 }
@@ -88,12 +90,12 @@ $breakpoint2: $image-width + ($list-width + $margin + $article-padding) * 2;
 
 .nutrition-facts__list {
 	align-self: flex-start;
-	background: $white;
-	border-color: $white;
+	background: variables.$white;
+	border-color: variables.$white;
 	border-style: solid;
 	border-width: 0 4px;
-	margin-right: $margin;
-	outline: 1px solid $black;
+	margin-right: variables.$margin;
+	outline: 1px solid variables.$black;
 	padding: 0;
 	width: 100%;
 
@@ -126,7 +128,7 @@ $breakpoint2: $image-width + ($list-width + $margin + $article-padding) * 2;
 }
 
 #vitamins {
-	box-shadow: -1px -6px 0 $black, 1px -6px 0 $black;
+	box-shadow: -1px -6px 0 variables.$black, 1px -6px 0 variables.$black;
 	margin-top: 6px;
 
 	.formosa-label-wrapper {

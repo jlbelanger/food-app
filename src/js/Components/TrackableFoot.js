@@ -2,7 +2,7 @@ import { colorsLight } from '../Utilities/Colors';
 import PropTypes from 'prop-types';
 import { React } from 'react';
 
-export default function TrackableFoot({ extras, rows, trackables }) {
+export default function TrackableFoot({ extras = [], rows = [], trackables = [] }) {
 	return (
 		<th className="center column--trackables" scope="col">
 			<div className="trackable-list">
@@ -38,10 +38,4 @@ TrackableFoot.propTypes = {
 	extras: PropTypes.array,
 	rows: PropTypes.array,
 	trackables: PropTypes.array,
-};
-
-TrackableFoot.defaultProps = {
-	extras: [],
-	rows: [],
-	trackables: [],
 };

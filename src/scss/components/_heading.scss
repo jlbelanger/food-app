@@ -1,9 +1,11 @@
+@use '../utilities/variables';
+
 h1 {
 	flex: 1 1 auto;
 	font-size: 18px;
 	font-weight: normal;
-	height: $nav-height;
-	line-height: $nav-height;
+	height: variables.$nav-height;
+	line-height: variables.$nav-height;
 	margin: 0;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -12,21 +14,21 @@ h1 {
 
 h2 {
 	font-size: 20px;
-	margin: $margin 0 0;
+	margin: variables.$margin 0 0;
 }
 
 h3 {
 	font-size: 18px;
-	margin: $margin 0 0;
+	margin: variables.$margin 0 0;
 }
 
 #heading {
-	background: $darkest-gray;
-	color: $white;
+	background: variables.$darkest-gray;
+	color: variables.$white;
 	left: 0;
 	position: fixed;
 	right: 0;
-	top: $nav-height;
+	top: variables.$nav-height;
 	z-index: 2;
 
 	.verified {
@@ -34,7 +36,7 @@ h3 {
 		order: -1;
 
 		path {
-			fill: $white;
+			fill: variables.$white;
 		}
 	}
 
@@ -48,8 +50,8 @@ h3 {
 	align-items: center;
 	display: flex;
 	margin: 0 auto;
-	max-width: $max-width;
-	padding: 0 $heading-inner-padding;
+	max-width: variables.$max-width;
+	padding: 0 variables.$heading-inner-padding;
 	width: 100%;
 }
 
@@ -58,6 +60,6 @@ h3 {
 }
 
 #heading-spacer {
-	height: $nav-height;
-	margin-bottom: $margin;
+	height: variables.$nav-height;
+	margin-bottom: variables.$margin;
 }

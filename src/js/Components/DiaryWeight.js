@@ -4,7 +4,13 @@ import DiaryWeightFieldset from './DiaryWeightFieldset';
 import { errorMessageText } from '../Utilities/Helpers';
 import PropTypes from 'prop-types';
 
-export default function DiaryWeight({ date, error, setActionError, setWeight, weight }) {
+export default function DiaryWeight({
+	date = null,
+	error = null,
+	setActionError,
+	setWeight,
+	weight = null,
+}) {
 	const { addToast } = useContext(FormosaContext);
 
 	const afterSubmitFailure = (response) => {
@@ -78,10 +84,4 @@ DiaryWeight.propTypes = {
 	setActionError: PropTypes.func.isRequired,
 	setWeight: PropTypes.func.isRequired,
 	weight: PropTypes.object,
-};
-
-DiaryWeight.defaultProps = {
-	date: null,
-	error: null,
-	weight: null,
 };

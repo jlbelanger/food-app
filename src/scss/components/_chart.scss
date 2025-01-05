@@ -1,3 +1,7 @@
+@use 'sass:color';
+@use '~@jlbelanger/formosa/src/scss/utilities/variables' as formosa;
+@use '../utilities/variables';
+
 $scale-border-top-width: 2px;
 
 .chart + .chart {
@@ -11,8 +15,8 @@ $scale-border-top-width: 2px;
 
 .chart-container {
 	height: 250px;
-	margin-left: #{$article-padding * -1};
-	margin-right: #{$article-padding * -1};
+	margin-left: calc(variables.$article-padding * -1);
+	margin-right: calc(variables.$article-padding * -1);
 }
 
 .chart-title {
@@ -45,10 +49,10 @@ $scale-border-top-width: 2px;
 	}
 
 	.formosa-radio__label--checked {
-		background: $muted-yellow;
-		border-color: scale-color($muted-yellow, $lightness: -40%);
-		border-bottom-color: $muted-yellow;
-		color: $formosa-button-color;
+		background: variables.$muted-yellow;
+		border-color: color.scale(variables.$muted-yellow, $lightness: -40%);
+		border-bottom-color: variables.$muted-yellow;
+		color: formosa.$formosa-button-color;
 		pointer-events: none;
 	}
 
@@ -57,16 +61,16 @@ $scale-border-top-width: 2px;
 
 		.formosa-button,
 		input.formosa-radio__input.formosa-field__input {
-			border-bottom-right-radius: $formosa-input-border-radius;
-			border-top-right-radius: $formosa-input-border-radius;
+			border-bottom-right-radius: formosa.$formosa-input-border-radius;
+			border-top-right-radius: formosa.$formosa-input-border-radius;
 		}
 	}
 
 	.formosa-radio__legend + .formosa-radio__item {
 		.formosa-button,
 		input.formosa-radio__input.formosa-field__input {
-			border-bottom-left-radius: $formosa-input-border-radius;
-			border-top-left-radius: $formosa-input-border-radius;
+			border-bottom-left-radius: formosa.$formosa-input-border-radius;
+			border-top-left-radius: formosa.$formosa-input-border-radius;
 		}
 	}
 
@@ -87,7 +91,7 @@ $scale-border-top-width: 2px;
 
 		&:active,
 		&:focus {
-			box-shadow: 0 0 0 $formosa-focus-border-width $formosa-focus-box-shadow-color;
+			box-shadow: 0 0 0 formosa.$formosa-focus-border-width formosa.$formosa-focus-box-shadow-color;
 			z-index: 1;
 		}
 	}

@@ -2,7 +2,7 @@ import { Field } from '@jlbelanger/formosa';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-export default function Fields({ row }) {
+export default function Fields({ row = null }) {
 	return (
 		<div className="formosa-responsive">
 			<Field label="Name" name="name" required />
@@ -19,8 +19,4 @@ export default function Fields({ row }) {
 
 Fields.propTypes = {
 	row: PropTypes.object,
-};
-
-Fields.defaultProps = {
-	row: null,
 };

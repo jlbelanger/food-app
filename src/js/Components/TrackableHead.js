@@ -2,7 +2,7 @@ import { colorsLight } from '../Utilities/Colors';
 import PropTypes from 'prop-types';
 import { React } from 'react';
 
-export default function TrackableHead({ trackables }) {
+export default function TrackableHead({ trackables = [] }) {
 	return (
 		<th className="column--trackables" scope="col">
 			<div className="trackable-list">
@@ -22,8 +22,4 @@ export default function TrackableHead({ trackables }) {
 
 TrackableHead.propTypes = {
 	trackables: PropTypes.array,
-};
-
-TrackableHead.defaultProps = {
-	trackables: [],
 };
