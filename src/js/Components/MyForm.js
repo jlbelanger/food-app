@@ -1,5 +1,5 @@
 import { Form, FormosaContext } from '@jlbelanger/formosa';
-import React, { useContext } from 'react'; // eslint-disable-line import/no-unresolved
+import React, { useContext } from 'react';
 import MyFormPrompt from './MyFormPrompt';
 import PropTypes from 'prop-types';
 
